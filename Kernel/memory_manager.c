@@ -1,8 +1,7 @@
 //RETORNA BLOQUES DE 1 BYTE, NO LIBERA MEMORIA
 
 //ASUMO QUE LA MEMORIA LIBRE ARRANCA EN 0x900000 (9MB)
-//PARA SABER ESTO HAY QUE LEER LA GUIA DE BUILDING (ver end_of_binary en el
-//script de linkeo, es .ld)
+//PARA SABER ESTO HAY QUE LEER LA GUIA DE BUILDING (ver end_of_binary en el script de linkeo, es .ld)
 #include "memory_manager.h"
 #include "drivers/include/videoDriver.h"
 

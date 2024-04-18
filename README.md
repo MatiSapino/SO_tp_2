@@ -20,3 +20,12 @@ docker run -d -v ${PWD}:/root --privileged  -ti --name RowDaBoat-x64barebones-d4
 
 //ejecuto el projecto
 sudo ./run.sh
+
+//inicializo el contenedor (1.0)
+docker start RowDaBoat-x64barebones-d4e1c147f975
+
+//compilo el projecto
+./build.sh
+
+//ejecuto el projecto
+sudo ./run.sh

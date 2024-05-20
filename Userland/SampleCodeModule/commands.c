@@ -6,9 +6,12 @@
 #include <snake.h>
 #include <snake2.h>
 #include <colors.h>
+#include <printmem.h>
+#include <printmemstate.h>
+#include <testmm.h>
 
-static char command_list[COMMAND_AMOUNT][14] = {"HELP", "TIME", "REGSTATE", "DIV0", "INVALOP", "ZOOMOUT", "ZOOMIN", "SNAKE", "CLEAR","EXIT", "SNAKE2", "MEMORYMANAGER"};
-void (*functionPointers[COMMAND_AMOUNT])() = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, memory_manager};
+static char command_list[COMMAND_AMOUNT][14] = {"HELP", "TIME", "REGSTATE", "DIV0", "INVALOP", "ZOOMOUT", "ZOOMIN", "SNAKE", "CLEAR","EXIT", "SNAKE2", "MEMORYMANAGER", "PRINTMEM", "MEM", "TESTMM"};
+void (*functionPointers[COMMAND_AMOUNT])() = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, memory_manager, print_mem, print_mem_state, test_mm};
 
 // searches for the command by going though the array of strings and comparing
 void checkCommands(char * command){
@@ -98,4 +101,18 @@ void memory_manager(){
     char memory_manager[50];
     call_memory_manager(memory_manager);
     own_printf("%s\n", memory_manager);
+}
+
+void print_mem(){
+    char *args[] = {"2", "1000000", NULL};
+    printmem(2, args);
+}
+
+void print_mem_state(){
+    printmemstate(0, 0);
+}
+
+void test_mm(){
+    char *args[] = {"2", "10", NULL};
+    testmm(2, args);
 }

@@ -1,5 +1,7 @@
 #ifndef USERSYSCALLS_H
 #define USERSYSCALLS_H
+#include <stdint.h>
+#include <stddef.h>
 
 void call_sys_read(char *buf, int size, int fd);
 void call_sys_write(char *buf, int size, int fd);
@@ -19,6 +21,10 @@ void call_beep(int freq);
 void call_put_char_in_set_position(char character, int color, int x, int y);
 
 void call_memory_manager();
+int call_get_mem(uint8_t *address, uint8_t *buffer, size_t count);
+void call_get_mem_state(int mem_state[]);
+void * call_malloc(size_t size);
+void call_free(void *ptr);
 
 void call_put_square(int x, int y, int size, int color);
 #endif /* USERSYSCALLS_H */

@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdarg.h>
-
+#include <stdint.h>
 
 char getC();
 void putC(char c, int color);
@@ -26,4 +26,21 @@ int readHexInt(int* d);
 void setFontSize(int size);
 void putCharColorPos(char character, int color, int x, int y);
 void putSquare(int x, int y, int size, int color);
+long strtol(const char *nptr, char **endptr, int base);
+int isspace(int c);
+int isdigit(int c);
+int isalpha(int c);
+int islower(int c);
+int isupper(int c);
+int64_t satoi(char *str);
+uint32_t GetUint();
+uint32_t GetUniform(uint32_t max);
+void *memset(void *destination, int32_t c, uint64_t length);
+uint8_t memcheck(void *start, uint8_t value, uint32_t size);
+char *itoa(int num, char *str, int base);
+char *strcpy(char *dest, const char *src);
+size_t strlen(const char *str);
+char *ltoa(long num, char *str, int base);
+void reverse(char str[], int length);
+void swap(char *c1, char *c2);
 #endif /* UTILS_H */

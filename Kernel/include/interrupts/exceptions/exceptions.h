@@ -1,5 +1,5 @@
-#ifndef EXCEPTIONS_H
-#define EXCEPTIONS_H
+#ifndef _EXCEPTIONS_H_
+#define _EXCEPTIONS_H_
 
 #include <registers.h>
 #include <exceptions.h>

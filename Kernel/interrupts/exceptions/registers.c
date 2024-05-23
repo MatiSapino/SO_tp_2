@@ -2,8 +2,6 @@
 #include <videoDriver.h>
 #include <interrupts.h>
 
-
-
 void printRegisters(registerStructT * registers) {
 	drawWordColor(WHITE, "RIP = ");
 	drawRegisters(registers->rip);

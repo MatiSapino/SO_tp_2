@@ -1,19 +1,4 @@
-#include <time.h>
-#include <stdint.h>
-#include <defs.h>
-#include <naiveConsole.h>
-#include <interrupts.h>
-#include <exceptions.h>
-#include <registers.h>
-#include <videoDriver.h>
-#include <keyboard_buffer.h>
-#include <lib.h>
-#include <time.h>
-#include <keyboard_driver.h>
-#include <syscalls.h>
-#include <sound_driver.h>
-#include <memory_manager.h>
-
+#include <irqDispatcher.h>
 
 static void int_20();
 static void int_21();

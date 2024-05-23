@@ -1,6 +1,8 @@
-
+#ifndef _KEYBOARD_BUFFER_H
+#define _KEYBOARD_BUFFER_H
 
 #include <stdint.h>
+
 #define BUFF_SIZE 4096
 typedef struct keyboard_buffer* buff_ptr; 
 
@@ -20,3 +22,5 @@ uint16_t getCharAt(int pos);
 void cleanBuffer();
 void consumeBuffAt(int pos);
 void getLastKey(char * c, int pos);
+
+#endif

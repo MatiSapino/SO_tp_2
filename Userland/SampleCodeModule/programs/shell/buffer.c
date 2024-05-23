@@ -39,7 +39,7 @@ void read_buffer(int screenIndx, char screen[SCREEN_SIZE], char buffer[BUFFER_SI
                 int argCount = parseCommand(buffer, args);
                 if (argCount > 0)
                 {
-                    checkCommands(args[0], args, argCount);
+                    checkCommands(args[0], args, argCount, status);
                 }
             }
             if (status)

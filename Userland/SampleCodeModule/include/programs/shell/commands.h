@@ -16,7 +16,7 @@
 
 #define COMMAND_AMOUNT 14
 
-void checkCommands(char *command, char *args[], int argCount); // searches for command
+void checkCommands(char *command, char *args[], int argCount, int status); // searches for command
 void commandNotFound(char *command);
 void help();      // prints list of commands
 void time();      // prints current time

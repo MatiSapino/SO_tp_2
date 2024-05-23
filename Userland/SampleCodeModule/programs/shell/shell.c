@@ -19,7 +19,7 @@ int start_shell()
     status = 1;
     while (status)
     {
-        read_buffer();
+        read_buffer(screenIndx, screen, buffer, status);
     }
     return 0;
 }

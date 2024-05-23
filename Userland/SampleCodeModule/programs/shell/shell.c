@@ -3,6 +3,7 @@
 static char buffer[BUFFER_SIZE] = {0};
 static char screen[SCREEN_SIZE] = {0};
 int screenIndx = 0;
+
 int status;
 
 void welcome()

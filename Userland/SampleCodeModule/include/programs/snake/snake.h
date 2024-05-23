@@ -4,6 +4,7 @@
 #include <utils.h>
 #include <colors.h>
 
+#include <commands.h>
 #include <UserSyscalls.h>
 
 void snake();

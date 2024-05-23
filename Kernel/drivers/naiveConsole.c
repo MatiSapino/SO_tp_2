@@ -1,54 +1,51 @@
 #include <naiveConsole.h>
-#include <lib.h>
 
-
-static char buffer[64] = { '0' };
-static uint8_t * const video = (uint8_t*)0xB8000;
-static uint8_t * currentVideo = (uint8_t*)0xB8000;
+static char buffer[64] = {'0'};
+static uint8_t *const video = (uint8_t *)0xB8000;
+static uint8_t *currentVideo = (uint8_t *)0xB8000;
 static const uint32_t width = 80;
-static const uint32_t height = 25 ;
-#define deafultcolor 0x0f
-#define defaultback 0x00
+static const uint32_t height = 25;
 
-//borra el ultimo caracter
-void ncBackspace(){
-	if(*currentVideo>=0xB8002){ // si no es el primer caracter
+// borra el ultimo caracter
+void ncBackspace()
+{
+	if (*currentVideo >= 0xB8002)
+	{ // si no es el primer caracter
 		currentVideo -= 2;
 		*currentVideo = ' ';
 	}
 }
 
-//imprime un string
-void ncPrint(const char * string)
+// imprime un string
+void ncPrint(const char *string)
 {
 	int i;
 
 	for (i = 0; string[i] != 0; i++)
 		ncPrintChar(string[i]);
 }
-//imprime un string con un color de letra y de fondo
-void ncPrintColor(const char * string, char color, char back){
+// imprime un string con un color de letra y de fondo
+void ncPrintColor(const char *string, char color, char back)
+{
 	int i;
 	for (i = 0; string[i] != 0; i++)
 		ncPrintCharColor(string[i], color, back);
-
 }
 
-//imprime un caracter con un color de letra y de fondo
-void ncPrintCharColor(char character, char color, char back){
-	
-	*currentVideo = character;
-	char font = color | back;   
-	currentVideo++;
-	*currentVideo = font;  
-	currentVideo++;
-	
+// imprime un caracter con un color de letra y de fondo
+void ncPrintCharColor(char character, char color, char back)
+{
 
+	*currentVideo = character;
+	char font = color | back;
+	currentVideo++;
+	*currentVideo = font;
+	currentVideo++;
 }
 
 void ncPrintChar(char character)
 {
-	
+
 	ncPrintCharColor(character, deafultcolor, defaultback);
 }
 
@@ -57,8 +54,7 @@ void ncNewline()
 	do
 	{
 		ncPrintChar(' ');
-	}
-	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
+	} while ((uint64_t)(currentVideo - video) % (width * 2) != 0);
 }
 
 void ncPrintDec(uint64_t value)
@@ -78,8 +74,8 @@ void ncPrintBin(uint64_t value)
 
 void ncPrintBase(uint64_t value, uint32_t base)
 {
-    uintToBase(value, buffer, base);
-    ncPrint(buffer);
+	uintToBase(value, buffer, base);
+	ncPrint(buffer);
 }
 
 void ncClear()
@@ -91,63 +87,60 @@ void ncClear()
 	currentVideo = video;
 }
 
-int get_hours();
-int get_minutes();
-int get_seconds();
-int get_weekDay();
-int get_monthDay();
-int get_month();
-int get_year();
+void convertToGMTMinus3(int *hours, int *days, int *month, int *year)
+{
+	int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+	int monthDays = daysInMonth[(*month - 1) % 12];
 
-void convertToGMTMinus3(int *hours, int *days, int *month, int *year) {
-    int daysInMonth[] = {31,28,31,30,31,30,31,31,30,31,30,31};
-    int monthDays = daysInMonth[(*month - 1) % 12];
-	
-    if ( *year % 4 == 0 && (*year % 100 != 0 || *year % 400 == 0)) {
-        daysInMonth[1] = 29;
-    }
-    *hours -= 3;
-    if (*hours < 0) {
-        *hours += 24;
-        *days -= 1;
-        if (*days < 1) {
-            *month -= 1;
-			monthDays=daysInMonth[(*month - 1) % 12];
-            if (*month < 1) {
-                *month = 12;
-                *year -= 1;
-            }
-            *days = monthDays;
-        }
-    }
+	if (*year % 4 == 0 && (*year % 100 != 0 || *year % 400 == 0))
+	{
+		daysInMonth[1] = 29;
+	}
+	*hours -= 3;
+	if (*hours < 0)
+	{
+		*hours += 24;
+		*days -= 1;
+		if (*days < 1)
+		{
+			*month -= 1;
+			monthDays = daysInMonth[(*month - 1) % 12];
+			if (*month < 1)
+			{
+				*month = 12;
+				*year -= 1;
+			}
+			*days = monthDays;
+		}
+	}
 }
 
- 
-char * TimeClock(char * buffer){
-	char * days[]={"sun", "lun", "mar", "mie", "jue", "vie", "sab"};
-	int  hours = get_hours();
-	int  minutes = get_minutes();
-	int  seconds = get_seconds();
-	int  weekday = get_weekDay();
-	int  monthDay = get_monthDay();
-	int  month = get_month();
-	int  year = get_year();
-    convertToGMTMinus3(&hours, &monthDay, &month, &year);
+char *TimeClock(char *buffer)
+{
+	char *days[] = {"sun", "lun", "mar", "mie", "jue", "vie", "sab"};
+	int hours = get_hours();
+	int minutes = get_minutes();
+	int seconds = get_seconds();
+	int weekday = get_weekDay();
+	int monthDay = get_monthDay();
+	int month = get_month();
+	int year = get_year();
+	convertToGMTMinus3(&hours, &monthDay, &month, &year);
 	int digits = uintToBase(hours, buffer, 10);
 	buffer[digits++] = ':';
-	digits += uintToBase(minutes, buffer+digits, 10);
+	digits += uintToBase(minutes, buffer + digits, 10);
 	buffer[digits++] = ':';
-	digits += uintToBase(seconds, buffer+digits, 10);
-	buffer[digits++] =' ';
-	for(int i = 0; i < 3; i++)
-		buffer[digits++] = days[weekday-1][i];
-	buffer[digits++] =' ';
-	digits += uintToBase(monthDay, buffer+digits, 10);
-	buffer[digits++] ='/';
-	digits += uintToBase(month, buffer+digits, 10);
-	buffer[digits++] ='/';
-	digits += uintToBase(year, buffer+digits, 10);
-	buffer[digits++] =' ';
+	digits += uintToBase(seconds, buffer + digits, 10);
+	buffer[digits++] = ' ';
+	for (int i = 0; i < 3; i++)
+		buffer[digits++] = days[weekday - 1][i];
+	buffer[digits++] = ' ';
+	digits += uintToBase(monthDay, buffer + digits, 10);
+	buffer[digits++] = '/';
+	digits += uintToBase(month, buffer + digits, 10);
+	buffer[digits++] = '/';
+	digits += uintToBase(year, buffer + digits, 10);
+	buffer[digits++] = ' ';
 	buffer[digits] = 0;
 	return buffer;
 }

@@ -1,8 +1,7 @@
 #include <registers.h>
-#include <videoDriver.h>
-#include <interrupts.h>
 
-void printRegisters(registerStructT * registers) {
+void printRegisters(registerStructT *registers)
+{
 	drawWordColor(WHITE, "RIP = ");
 	drawRegisters(registers->rip);
 	drawWordColor(WHITE, "RAX = ");
@@ -39,8 +38,9 @@ void printRegisters(registerStructT * registers) {
 	drawRegisters(registers->r15);
 }
 
-
-void printReg(){
-	if (!snapshot()) saveState();
+void printReg()
+{
+	if (!snapshot())
+		saveState();
 	printRegAsm();
 }

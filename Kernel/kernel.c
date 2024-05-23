@@ -2,9 +2,6 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <idtLoader.h>
-#include <videoDriver.h>
-#include <interrupts.h>
-#include <libasm.h>
 #include <memory_manager.h>
 
 extern uint8_t text;
@@ -16,31 +13,29 @@ extern uint8_t endOfKernel;
 
 static const uint64_t PageSize = 0x1000;
 
-static void * const sampleCodeModuleAddress = (void*)0x400000;
-static void * const sampleDataModuleAddress = (void*)0x500000;
+static void *const sampleCodeModuleAddress = (void *)0x400000;
+static void *const sampleDataModuleAddress = (void *)0x500000;
 
 typedef int (*EntryPoint)();
 
-
-void clearBSS(void * bssAddress, uint64_t bssSize)
+void clearBSS(void *bssAddress, uint64_t bssSize)
 {
 	memset(bssAddress, 0, bssSize);
 }
 
-void * retUserland(){
+void *retUserland()
+{
 	return sampleCodeModuleAddress;
 }
 
-void * getStackBase()
+void *getStackBase()
 {
-	return (void*)(
-		(uint64_t)&endOfKernel
-		+ PageSize * 8				//The size of the stack itself, 32KiB
-		- sizeof(uint64_t)			//Begin at the top of the stack
+	return (void *)((uint64_t)&endOfKernel + PageSize * 8 // The size of the stack itself, 32KiB
+					- sizeof(uint64_t)					  // Begin at the top of the stack
 	);
 }
 
-void * initializeKernelBinary()
+void *initializeKernelBinary()
 {
 	char buffer[10];
 
@@ -53,10 +48,9 @@ void * initializeKernelBinary()
 
 	ncPrint("[Loading modules]");
 	ncNewline();
-	void * moduleAddresses[] = {
+	void *moduleAddresses[] = {
 		sampleCodeModuleAddress,
-		sampleDataModuleAddress
-	};
+		sampleDataModuleAddress};
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
 	ncPrint("[Done]");
@@ -85,13 +79,14 @@ void * initializeKernelBinary()
 	ncNewline();
 	ncNewline();
 	return getStackBase();
-	
 }
 
-int main(){
+int main()
+{
 	init_mm();
 	load_idt();
 	((EntryPoint)sampleCodeModuleAddress)();
-	while(1);
+	while (1)
+		;
 	return 0;
 }

@@ -67,6 +67,16 @@
     "type.h": "c",
     "limits.h": "c",
     "screen.h": "c",
-    "std_lib.h": "c"
+    "std_lib.h": "c",
+    "defs.h": "c",
+    "registers.h": "c",
+    "sound_driver.h": "c",
+    "idtloader.h": "c",
+    "array": "c",
+    "buffer": "c",
+    "string_view": "c",
+    "initializer_list": "c",
+    "utility": "c",
+    "memory_manager.h": "c"
   }
 }

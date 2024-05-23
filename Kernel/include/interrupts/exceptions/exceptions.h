@@ -2,7 +2,6 @@
 #define _EXCEPTIONS_H_
 
 #include <registers.h>
-#include <exceptions.h>
 #include <videoDriver.h>
 #include <syscalls.h>
 

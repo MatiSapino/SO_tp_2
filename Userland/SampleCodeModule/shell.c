@@ -21,13 +21,23 @@ void clearScreenArray(){
     screenIndx = 0;
 }
 
+int parseCommand(char *buffer, char *args[]) {
+    int i = 0;
+    char *token = strtok(buffer, " ");
+    while (token != NULL && i < 10) {
+        args[i++] = token;
+        token = strtok(NULL, " ");
+    }
+    return i;
+}
+
 void read_buffer(){ 
     int i = 0;
     int end_of_buffer = 0;
     int flag = 0;
     while (i < BUFFER_SIZE) {
         char c = getC();
-        end_of_buffer = (i == BUFFER_SIZE-1);
+        end_of_buffer = (i == BUFFER_SIZE - 1);
         if (c == '\b'){
             if ( i > 0 && screenIndx > 0){
                 i--;
@@ -39,7 +49,13 @@ void read_buffer(){
             removeCursor();
             putC(c, GREEN);
             buffer[i]=0;
-            if(*buffer != 0) checkCommands(buffer);
+            if(*buffer != 0) {
+                char *args[10];
+                int argCount = parseCommand(buffer, args);
+                if (argCount > 0) {
+                    checkCommands(args[0], args, argCount);
+                }
+            }
             if(status) putLine();
             clearBuffer(); 
             return;

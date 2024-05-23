@@ -43,4 +43,6 @@ size_t strlen(const char *str);
 char *ltoa(long num, char *str, int base);
 void reverse(char str[], int length);
 void swap(char *c1, char *c2);
+char* strtok(char* str, const char* delim);
+char* strchr(const char* str, int c);
 #endif /* UTILS_H */

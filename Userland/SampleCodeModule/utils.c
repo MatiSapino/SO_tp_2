@@ -622,3 +622,50 @@ void swap(char *c1, char *c2) {
     *c1 = *c2;
     *c2 = aux;
 }
+
+char* strtok(char* str, const char* delim) {
+    static char* last;
+    if (str == NULL) {
+        str = last;
+    }
+
+    if (str == NULL) {
+        return NULL;
+    }
+
+    // Saltar delimitadores al principio
+    while (*str && strchr(delim, *str)) {
+        str++;
+    }
+
+    if (*str == '\0') {
+        last = NULL;
+        return NULL;
+    }
+
+    char* start = str;
+
+    // Encontrar el final del token
+    while (*str && !strchr(delim, *str)) {
+        str++;
+    }
+
+    if (*str) {
+        *str = '\0';
+        last = str + 1;
+    } else {
+        last = NULL;
+    }
+
+    return start;
+}
+
+char* strchr(const char* str, int c) {
+    while (*str) {
+        if (*str == (char)c) {
+            return (char*)str;
+        }
+        str++;
+    }
+    return NULL;
+}

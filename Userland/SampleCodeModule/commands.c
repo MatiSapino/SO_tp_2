@@ -11,14 +11,14 @@
 #include <testmm.h>
 
 static char command_list[COMMAND_AMOUNT][14] = {"HELP", "TIME", "REGSTATE", "DIV0", "INVALOP", "ZOOMOUT", "ZOOMIN", "SNAKE", "CLEAR","EXIT", "SNAKE2", "MEMORYMANAGER", "PRINTMEM", "MEM", "TESTMM"};
-void (*functionPointers[COMMAND_AMOUNT])() = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, memory_manager, print_mem, print_mem_state, test_mm};
+void (*functionPointers[COMMAND_AMOUNT])(char *args[], int argCount) = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, memory_manager, print_mem, print_mem_state, test_mm};
 
 // searches for the command by going though the array of strings and comparing
-void checkCommands(char * command){
+void checkCommands(char *command, char *args[], int argCount){
     removeLeadingTrailingSpaces(command);                       // deletes spaces at the beginning and end of the command
     for (int i = 0; i < COMMAND_AMOUNT; i++){
         if (strCompare(command_list[i], command) == 0){  
-                functionPointers[i]();
+                functionPointers[i](args, argCount);
                 return;
         }
     }
@@ -112,7 +112,8 @@ void print_mem_state(){
     printmemstate(0, 0);
 }
 
-void test_mm(){
-    char *args[] = {"2", "10", NULL};
-    testmm(2, args);
+void test_mm(char *args[], int argCount){
+    //char *arg[] = {"2", "10", NULL};
+    //testmm(2, arg);
+    testmm(argCount, args);
 }

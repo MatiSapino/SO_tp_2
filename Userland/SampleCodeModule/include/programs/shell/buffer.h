@@ -3,11 +3,11 @@
 
 #include <screen.h>
 #include <colors.h>
+#include <commands.h>
 
-#define STDIN 0
 #define BUFFER_SIZE 128
 
 void clearBuffer(char *buff);
-void read_buffer(int screenIndx, char screen[SCREEN_SIZE], char buffer[BUFFER_SIZE], int status);
+void read_buffer(int *screenIndx, char screen[], char buffer[], int *status);
 
 #endif

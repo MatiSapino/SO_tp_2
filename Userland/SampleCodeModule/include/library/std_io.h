@@ -4,7 +4,10 @@
 #include <colors.h>
 #include <stdarg.h>
 #include <stdint.h>
-#include <screen.h>
+#include <shell.h>
+#include <std_lib.h>
+#include <string_s.h>
+#include <utils.h>
 
 #include <UserSyscalls.h>
 

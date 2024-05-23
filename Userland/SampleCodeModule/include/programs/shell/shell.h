@@ -6,5 +6,9 @@
 #include <buffer.h>
 
 int start_shell();
+void changeStatus();
+void showScreen();
+void clearScreenArray();
+void putIntoScreen();
 
 #endif

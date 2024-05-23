@@ -66,6 +66,7 @@
     "ctype.h": "c",
     "type.h": "c",
     "limits.h": "c",
-    "screen.h": "c"
+    "screen.h": "c",
+    "std_lib.h": "c"
   }
 }

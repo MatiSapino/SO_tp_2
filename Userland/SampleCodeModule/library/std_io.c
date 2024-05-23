@@ -10,7 +10,7 @@ char getC()
 void putC(char c, int color)
 {
     call_sys_write(&c, 1, color);
-    putIntoScreen(&c, screenIndx, screen);
+    putIntoScreen(&c);
 }
 
 void putNewLine()

@@ -8,7 +8,7 @@ void clearBuffer(char *buff)
     }
 }
 
-void read_buffer(int screenIndx, char screen[SCREEN_SIZE], char buffer[BUFFER_SIZE], int status)
+void read_buffer(int *screenIndx, char screen[], char buffer[], int *status)
 {
     int i = 0;
     int end_of_buffer = 0;
@@ -19,11 +19,11 @@ void read_buffer(int screenIndx, char screen[SCREEN_SIZE], char buffer[BUFFER_SI
         end_of_buffer = (i == BUFFER_SIZE - 1);
         if (c == '\b')
         {
-            if (i > 0 && screenIndx > 0)
+            if (i > 0 && *screenIndx > 0)
             {
                 i--;
-                screen[screenIndx--] = 0;
-                screen[screenIndx--] = 0;
+                screen[(*screenIndx)--] = 0;
+                screen[(*screenIndx)--] = 0;
             }
             else
                 flag = 1;
@@ -39,10 +39,10 @@ void read_buffer(int screenIndx, char screen[SCREEN_SIZE], char buffer[BUFFER_SI
                 int argCount = parseCommand(buffer, args);
                 if (argCount > 0)
                 {
-                    checkCommands(args[0], args, argCount, status);
+                    checkCommands(args[0], args, argCount);
                 }
             }
-            if (status)
+            if (*status)
                 putLine();
             clearBuffer(buffer);
             return;

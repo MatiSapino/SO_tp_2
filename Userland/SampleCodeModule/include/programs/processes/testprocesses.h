@@ -6,6 +6,6 @@
 
 #include <UserSyscalls.h>
 
-int test_proc(int argc, char *argv[]);
+//int test_proc(int argc, char *argv[]);
 
 #endif

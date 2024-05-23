@@ -12,9 +12,6 @@ void removeCursor();
 void setFontSize(int size);
 void putCharColorPos(char character, int color, int x, int y);
 void putSquare(int x, int y, int size, int color);
-void putIntoScreen(char *str, int screenIndx, char screen[SCREEN_SIZE]);
-void clearScreenArray(char screen[SCREEN_SIZE], int screenIndx);
-void showScreen(char screen[SCREEN_SIZE]);
 void putLine();
 
 #endif

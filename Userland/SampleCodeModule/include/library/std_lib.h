@@ -3,6 +3,8 @@
 
 #include <limits.h>
 #include <stdint.h>
+#include <type.h>
+#include <string_s.h>
 
 char *itoa(int num, char *str, int base);
 char *ltoa(long num, char *str, int base);

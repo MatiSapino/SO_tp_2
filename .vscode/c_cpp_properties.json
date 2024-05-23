@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Userland/SampleCodeModule/include",
+                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Userland/SampleCodeModule/include/asm",
+                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Userland/SampleCodeModule/include/library",
+                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Userland/SampleCodeModule/include/programs",
+                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Userland/SampleCodeModule/include/programs/mem",
+                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Userland/SampleCodeModule/include/programs/processes",
+                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Userland/SampleCodeModule/include/programs/shell",
+                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Userland/SampleCodeModule/include/programs/snake"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}

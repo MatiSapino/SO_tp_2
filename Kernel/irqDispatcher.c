@@ -108,19 +108,16 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 		drawSquareInSetPosition(rsi, rdx, rcx, r8);
 		break;
 	case 18:
-		//memory_manager((char*)rsi);
-		break;
-	case 19:
 		return get_mem((uint8_t *)rsi, (uint8_t *)rdx, (uint16_t)rcx);
-	case 20:
+	case 19:
 		get_mem_state((int *)rsi);
 		break;
-	case 21:
+	case 20:
 		return (uintptr_t)malloc((size_t)rsi);
-	case 22:
+	case 21:
 		free((void *)rsi);
 		break;
-	case 23:
+	case 22:
 		return add_process((void *)rsi, (int)rdx, (char **)rcx);
 
 	default:

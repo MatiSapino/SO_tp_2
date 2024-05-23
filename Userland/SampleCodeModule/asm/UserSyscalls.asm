@@ -15,7 +15,6 @@ GLOBAL call_set_font_size
 GLOBAL call_put_char_in_set_position
 GLOBAL call_beep
 GLOBAL call_put_square
-GLOBAL call_memory_manager
 GLOBAL call_get_mem
 GLOBAL call_get_mem_state
 GLOBAL call_malloc
@@ -77,23 +76,21 @@ call_beep:
     call_to_handler 16
 call_put_square:
     call_to_handler 17
-call_memory_manager:
-    call_to_handler 18                 ; tengo que hacer todo el recorrido de esta funcion
 call_get_mem:
-    call_to_handler 19
+    call_to_handler 18
 call_get_mem_state:
-    call_to_handler 20
+    call_to_handler 19
 call_malloc:
-    call_to_handler 21
+    call_to_handler 20
 call_free:
-    call_to_handler 22
+    call_to_handler 21
 call_run:
-    call_to_handler 23
+    call_to_handler 22
 call_wait:
-    call_to_handler 24
+    call_to_handler 23
 call_kill:
-    call_to_handler 25
+    call_to_handler 24
 call_block:
-    call_to_handler 26
+    call_to_handler 25
 call_unblock:
-    call_to_handler 27
+    call_to_handler 26

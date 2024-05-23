@@ -1,6 +1,7 @@
 #include <printmemstate.h>
 
-int printmemstate(int argc, char *argv[]) {
+int printmemstate(int argc, char *argv[])
+{
     int mem_state[3];
     call_get_mem_state(mem_state);
     own_printf("%15s %15s %10s\n", "TOTAL_MEM", "OCCUPIED_MEM", "FREE_MEM");

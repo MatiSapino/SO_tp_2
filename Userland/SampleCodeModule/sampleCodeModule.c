@@ -2,7 +2,8 @@
 #include <UserSyscalls.h>
 #include <shell.h>
 
-int main() {
+int main()
+{
 	start_shell();
 	return 0;
 }

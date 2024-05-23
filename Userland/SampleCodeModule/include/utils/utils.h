@@ -9,7 +9,8 @@
 #include <colors.h>
 #include <limits.h>
 
-typedef enum pstatus {
+typedef enum pstatus
+{
     WAITING = 0,
     READY,
     TERMINATED,
@@ -17,22 +18,22 @@ typedef enum pstatus {
 
 char getC();
 void putC(char c, int color);
-void putString(char * str, int color);
-int strCompare(char * str1, char * str2);
+void putString(char *str, int color);
+int strCompare(char *str1, char *str2);
 void clearScreen();
-void removeLeadingTrailingSpaces(char* str);
-void removePreviousSpaces(char* str);
-void removeEndingSpaces(char* str);
+void removeLeadingTrailingSpaces(char *str);
+void removePreviousSpaces(char *str);
+void removeEndingSpaces(char *str);
 void putNewLine();
 void putInt(int num);
 void putIntColor(int num, int color);
 void putCursor();
 void removeCursor();
-void own_printf(const char * format, ...);
-int own_scanf(char * format, ...);
-int readInt(int* d);
+void own_printf(const char *format, ...);
+int own_scanf(char *format, ...);
+int readInt(int *d);
 int readString(char *s);
-int readHexInt(int* d);
+int readHexInt(int *d);
 void setFontSize(int size);
 void putCharColorPos(char character, int color, int x, int y);
 void putSquare(int x, int y, int size, int color);
@@ -53,7 +54,8 @@ size_t strlen(const char *str);
 char *ltoa(long num, char *str, int base);
 void reverse(char str[], int length);
 void swap(char *c1, char *c2);
-char* strtok(char* str, const char* delim);
-char* strchr(const char* str, int c);
+char *strtok(char *str, const char *delim);
+char *strchr(const char *str, int c);
 void endless_loop();
-#endif /* UTILS_H */
+
+#endif

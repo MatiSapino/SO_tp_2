@@ -15,10 +15,10 @@
 #define COMMAND_AMOUNT 15
 
 void checkCommands(char *command, char *args[], int argCount); // searches for command
-void commandNotFound(char * command);
-void help(); // prints list of commands
-void time(); // prints current time
-void div0(); // divides by zero and throws an exception
+void commandNotFound(char *command);
+void help();      // prints list of commands
+void time();      // prints current time
+void div0();      // divides by zero and throws an exception
 void invalidOp(); // generates invalid opcode exception
 void clearScreen();
 void zoomIn();
@@ -28,8 +28,8 @@ void play_snake();
 void regState();
 void snake2();
 void memory_manager();
-void print_mem();
-void print_mem_state();
-void test_mm();
+void print_mem(char *args[], int argCount);
+void print_mem_state(char *args[], int argCount);
+void test_mm(char *args[], int argCount);
 
-#endif /*__COMMANDS_H__*/
+#endif

@@ -31,8 +31,6 @@ void drawFruit();
 // calls fill_snake_square() to draw each position of the body of each snake
 void drawSnakes();
 
-
-
 // moves the snake in the updated direction. Stores the tail in global variable in case a fruit
 // is catched
 void move_snake();
@@ -57,4 +55,4 @@ void gameover_titlecard();
 
 void check_input();
 
-#endif /*__SNAKE2_H__*/
+#endif

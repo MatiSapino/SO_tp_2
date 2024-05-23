@@ -1,4 +1,3 @@
-
 #ifndef __SHELL_H__
 #define __SHELL_H__
 
@@ -14,4 +13,4 @@ void showScreen();
 void clearScreenArray();
 void changeStatus();
 
-#endif /*__SHELL_H__*/
+#endif

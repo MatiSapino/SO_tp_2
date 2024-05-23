@@ -6,4 +6,4 @@
 #define P_SS          0
 #define P_EXIT_CODE   0
 
-static int last_pid = 0;
+//static int last_pid = 0;

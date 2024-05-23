@@ -1,6 +1,8 @@
 #ifndef _SCREEN_H_
 #define _SCREEN_H_
 
+#include <std_io.h>
+
 #include <UserSyscalls.h>
 
 #define SCREEN_SIZE 5000

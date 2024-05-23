@@ -103,17 +103,14 @@ void memory_manager(){
     own_printf("%s\n", memory_manager);
 }
 
-void print_mem(){
-    char *args[] = {"2", "1000000", NULL};
-    printmem(2, args);
+void print_mem(char *args[], int argCount){
+    printmem(argCount, args);
 }
 
-void print_mem_state(){
-    printmemstate(0, 0);
+void print_mem_state(char *args[], int argCount){
+    printmemstate(argCount, args);
 }
 
 void test_mm(char *args[], int argCount){
-    //char *arg[] = {"2", "10", NULL};
-    //testmm(2, arg);
     testmm(argCount, args);
 }

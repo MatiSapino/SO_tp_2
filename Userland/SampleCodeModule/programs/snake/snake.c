@@ -32,8 +32,6 @@ void placeFruit(void);
 void fruitCheck(void);
 int custom_rand();
 void goodbye();
-void snake();
-void snake_multiplayer();
 
 void start_snake()
 {

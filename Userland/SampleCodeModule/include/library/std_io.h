@@ -5,6 +5,8 @@
 #include <stdarg.h>
 #include <stdint.h>
 
+#include <UserSyscalls.h>
+
 char getC();
 void putC(char c, int color);
 void putNewLine();

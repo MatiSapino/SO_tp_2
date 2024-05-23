@@ -1,10 +1,12 @@
 #ifndef __COMMANDS_H__
 #define __COMMANDS_H__
 
+#include <string_s.h>
+#include <std_io.h>
+#include <screen.h>
+
 #include <UserSyscalls.h>
-#include <utils.h>
 #include <funcAsm.h>
-#include <shell.h>
 #include <snake.h>
 #include <snake2.h>
 #include <colors.h>
@@ -12,7 +14,7 @@
 #include <printmemstate.h>
 #include <testmm.h>
 
-#define COMMAND_AMOUNT 15
+#define COMMAND_AMOUNT 14
 
 void checkCommands(char *command, char *args[], int argCount); // searches for command
 void commandNotFound(char *command);
@@ -27,7 +29,6 @@ void exitShell();
 void play_snake();
 void regState();
 void snake2();
-void memory_manager();
 void print_mem(char *args[], int argCount);
 void print_mem_state(char *args[], int argCount);
 void test_mm(char *args[], int argCount);

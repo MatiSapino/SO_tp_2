@@ -65,6 +65,7 @@
     "usersyscalls.h": "c",
     "ctype.h": "c",
     "type.h": "c",
-    "limits.h": "c"
+    "limits.h": "c",
+    "screen.h": "c"
   }
 }

@@ -126,6 +126,18 @@ char *strtok(char *str, const char *delim)
     return start;
 }
 
+int parseCommand(char *buffer, char *args[])
+{
+    int i = 0;
+    char *token = strtok(buffer, " ");
+    while (token != NULL && i < 10)
+    {
+        args[i++] = token;
+        token = strtok(NULL, " ");
+    }
+    return i;
+}
+
 void removePreviousSpaces(char *str)
 {
     if (str == NULL)

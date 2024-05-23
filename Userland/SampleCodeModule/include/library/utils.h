@@ -1,8 +1,10 @@
 #ifndef _UTILS_H
 #define _UTILS_H
 
-#include <stdio.h>
+#include <std_io.h>
 #include <stdint.h>
+
+#include <UserSyscalls.h>
 
 uint32_t GetUint();
 uint32_t GetUniform(uint32_t max);

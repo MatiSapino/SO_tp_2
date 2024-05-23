@@ -1,7 +1,5 @@
 #include <testmm.h>
 
-#define MAX_BLOCKS 80
-
 typedef struct MM_rq
 {
     void *address;

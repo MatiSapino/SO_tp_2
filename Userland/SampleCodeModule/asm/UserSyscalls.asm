@@ -24,6 +24,7 @@ GLOBAL call_wait
 GLOBAL call_kill
 GLOBAL call_block
 GLOBAL call_unblock
+GLOBAL call_getpid
 
 section .text
 
@@ -94,3 +95,5 @@ call_block:
     call_to_handler 25
 call_unblock:
     call_to_handler 26
+call_getpid:
+    call_to_handler 27

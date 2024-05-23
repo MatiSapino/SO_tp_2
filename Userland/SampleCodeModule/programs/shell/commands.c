@@ -1,7 +1,7 @@
 #include <commands.h>
 
-static char command_list[COMMAND_AMOUNT][14] = {"HELP", "TIME", "REGSTATE", "DIV0", "INVALOP", "ZOOMOUT", "ZOOMIN", "SNAKE", "CLEAR", "EXIT", "SNAKE2", "MEMORYMANAGER", "PRINTMEM", "MEM", "TESTMM"};
-void (*functionPointers[COMMAND_AMOUNT])(char *args[], int argCount) = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, memory_manager, print_mem, print_mem_state, test_mm};
+static char command_list[COMMAND_AMOUNT][8] = {"HELP", "TIME", "REGSTATE", "DIV0", "INVALOP", "ZOOMOUT", "ZOOMIN", "SNAKE", "CLEAR", "EXIT", "SNAKE2", "PRINTMEM", "MEM", "TESTMM"};
+void (*functionPointers[COMMAND_AMOUNT])(char *args[], int argCount) = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, print_mem, print_mem_state, test_mm};
 
 // searches for the command by going though the array of strings and comparing
 void checkCommands(char *command, char *args[], int argCount)
@@ -78,6 +78,11 @@ void zoomOut()
     showScreen();
 }
 
+void changeStatus(int status)
+{
+    status = 0;
+}
+
 void exitShell()
 {
     putString("Exiting Shell", RED);
@@ -100,13 +105,6 @@ void snake2()
 {
     start_snake2();
     setFontSize(1);
-}
-
-void memory_manager()
-{
-    char memory_manager[50];
-    call_memory_manager(memory_manager);
-    own_printf("%s\n", memory_manager);
 }
 
 void print_mem(char *args[], int argCount)

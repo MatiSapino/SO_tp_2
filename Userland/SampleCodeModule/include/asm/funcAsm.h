@@ -1,5 +1,5 @@
-#ifndef _FUNCASM_H
-#define _FUNCASM_H
+#ifndef _FUNCASM_H_
+#define _FUNCASM_H_
 
 void invalidOpAsm();
 

@@ -13,5 +13,6 @@ char *strtok(char *str, const char *delim);
 void removePreviousSpaces(char *str);
 void removeEndingSpaces(char *str);
 void removeLeadingTrailingSpaces(char *str);
+int parseCommand(char *buffer, char *args[]);
 
 #endif

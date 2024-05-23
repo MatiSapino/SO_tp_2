@@ -3,6 +3,7 @@
 
 #include <utils.h>
 #include <colors.h>
+
 #include <UserSyscalls.h>
 
 // shows the snake titlecard
@@ -45,7 +46,6 @@ void fill_snake_square(int x, int y, int color);
 
 void check_player_crash();
 
-void check_positions();
 void kill_player_1();
 void kill_player_2();
 void singleplayer_startup();

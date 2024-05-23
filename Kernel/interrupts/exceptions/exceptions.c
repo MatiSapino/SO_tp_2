@@ -1,7 +1,7 @@
-#include "include/exceptions.h"
-#include "drivers/include/videoDriver.h"
-#include "registers.h"
-#include "syscalls.h"
+#include <exceptions.h>
+#include <videoDriver.h>
+#include <registers.h>
+#include <syscalls.h>
 
 #define ZERO_EXCEPTION_ID 0
 #define OPCODE_EXCEPTION_ID 6

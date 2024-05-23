@@ -1,11 +1,11 @@
 #include <lib.h>
 #include <naiveConsole.h>
-#include "include/keyboard_driver.h"
-#include "include/videoDriver.h"
+#include <keyboard_driver.h>
+#include <videoDriver.h>
 #include <keyboard_buffer.h>
-#include "defs.h"
-#include "interrupts.h"
-#include "registers.h"
+#include <defs.h>
+#include <interrupts.h>
+#include <registers.h>
 
 int snap = 0;
 static char ScanCodes[256] = {

@@ -1,18 +1,18 @@
 #include <time.h>
 #include <stdint.h>
-#include "include/defs.h"
-#include "naiveConsole.h"
-#include "include/interrupts.h"
-#include "include/exceptions.h"
-#include "registers.h"
-#include "drivers/include/videoDriver.h"
-#include "keyboard_buffer.h"
-#include "include/lib.h"
-#include "time.h"
-#include "drivers/include/keyboard_driver.h"
-#include "syscalls.h"
-#include "drivers/include/sound_driver.h"
-#include "include/memory_manager.h"
+#include <defs.h>
+#include <naiveConsole.h>
+#include <interrupts.h>
+#include <exceptions.h>
+#include <registers.h>
+#include <videoDriver.h>
+#include <keyboard_buffer.h>
+#include <lib.h>
+#include <time.h>
+#include <keyboard_driver.h>
+#include <syscalls.h>
+#include <sound_driver.h>
+#include <memory_manager.h>
 
 
 static void int_20();

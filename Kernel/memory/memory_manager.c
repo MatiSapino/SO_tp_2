@@ -2,8 +2,8 @@
 
 //ASUMO QUE LA MEMORIA LIBRE ARRANCA EN 0x900000 (9MB)
 //PARA SABER ESTO HAY QUE LEER LA GUIA DE BUILDING (ver end_of_binary en el script de linkeo, es .ld)
-#include "memory_manager.h"
-#include "drivers/include/videoDriver.h"
+#include <memory_manager.h>
+#include <videoDriver.h>
 #include <stddef.h>
 
 #define SIZE (1024 * 1024 * 64)     //64MB

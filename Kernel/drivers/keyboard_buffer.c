@@ -1,5 +1,5 @@
-#include "keyboard_buffer.h"
-#include "defs.h"
+#include <keyboard_buffer.h>
+#include <defs.h>
 static struct keyboard_buffer buff = { 0, 0, {0} };
 
 static buff_ptr ptr = &buff;

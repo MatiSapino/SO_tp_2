@@ -1,7 +1,7 @@
 #include <stdint.h>
-#include "include/defs.h"
-#include "include/lib.h"
-#include "include/interrupts.h"
+#include <defs.h>
+#include <lib.h>
+#include <interrupts.h>
 
 void * memset(void * destination, int32_t c, uint64_t length)
 {

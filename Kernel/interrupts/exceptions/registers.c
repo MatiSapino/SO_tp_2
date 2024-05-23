@@ -1,5 +1,5 @@
 #include <registers.h>
-#include "../drivers/include/videoDriver.h"
+#include <videoDriver.h>
 #include <interrupts.h>
 
 

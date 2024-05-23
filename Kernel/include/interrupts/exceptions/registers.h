@@ -2,7 +2,7 @@
 #define _REGISTERS_H
 
 #include <stdint.h>
-#include "interrupts.h"
+#include <interrupts.h>
 
 //Estructura de los registros que se van a guardar en el snapshot y en las interrupciones
 typedef struct registerStrucT{

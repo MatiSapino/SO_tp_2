@@ -21,5 +21,8 @@ obj/%.asm.o : asm/%.asm
 clean:
 	rm -rf *.o
 	rm -rf obj
+	rm -rf asm/*.o *.o *.bin
+	rm -rf library/*.o *.o *.bin
+	rm -rf programs/*.o *.o *.bin
 
 .PHONY: all clean print

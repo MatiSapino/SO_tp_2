@@ -2,10 +2,10 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <idtLoader.h>
-#include "drivers/include/videoDriver.h"
-#include "include/interrupts.h" 
-#include "include/libasm.h"
-#include "include/memory_manager.h"
+#include <videoDriver.h>
+#include <interrupts.h>
+#include <libasm.h>
+#include <memory_manager.h>
 
 extern uint8_t text;
 extern uint8_t rodata;

@@ -1,9 +1,9 @@
-#include "include/syscalls.h"
-#include "drivers/include/videoDriver.h"
-#include "include/defs.h"
-#include "drivers/include/keyboard_driver.h"
-#include "keyboard_buffer.h"
-#include "include/interrupts.h"
+#include <syscalls.h>
+#include <videoDriver.h>
+#include <defs.h>
+#include <keyboard_driver.h>
+#include <keyboard_buffer.h>
+#include <interrupts.h>
 
 void sys_write(char *buf, int len, int color){
     drawWordColor(COLORS[color], buf); 

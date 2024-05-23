@@ -1,8 +1,8 @@
-#include "include/videoDriver.h"
-#include "include/font.h"
-#include "../include/naiveConsole.h"
+#include <videoDriver.h>
+#include <font.h>
+#include <naiveConsole.h>
 #include <lib.h>
-#include "../include/keyboard_buffer.h"
+#include <keyboard_buffer.h>
 
 unsigned int SCREEN_WIDTH = 1024;
 unsigned int SCREEN_HEIGHT = 768;

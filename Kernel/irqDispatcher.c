@@ -120,6 +120,8 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 	case 22:
 		free((void *)rsi);
 		break;
+	case 23:
+		return add_process((void *)rsi, (int)rdx, (char **)rcx);
 
 	default:
 		return 0;

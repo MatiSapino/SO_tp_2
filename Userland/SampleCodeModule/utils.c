@@ -669,3 +669,8 @@ char* strchr(const char* str, int c) {
     }
     return NULL;
 }
+
+void endless_loop() {
+    while (1)
+        ;
+}

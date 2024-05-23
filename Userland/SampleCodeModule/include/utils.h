@@ -5,6 +5,12 @@
 #include <stdarg.h>
 #include <stdint.h>
 
+typedef enum pstatus {
+    WAITING = 0,
+    READY,
+    TERMINATED,
+} pstatus_t;
+
 char getC();
 void putC(char c, int color);
 void putString(char * str, int color);
@@ -45,4 +51,5 @@ void reverse(char str[], int length);
 void swap(char *c1, char *c2);
 char* strtok(char* str, const char* delim);
 char* strchr(const char* str, int c);
+void endless_loop();
 #endif /* UTILS_H */

@@ -26,5 +26,11 @@ void call_get_mem_state(int mem_state[]);
 void * call_malloc(size_t size);
 void call_free(void *ptr);
 
+int call_run(void *main, int argc, char *argv[]);
+int call_wait();
+int call_kill(int pid);
+int call_block(int pid);
+int call_unblock(int pid);
+
 void call_put_square(int x, int y, int size, int color);
 #endif /* USERSYSCALLS_H */

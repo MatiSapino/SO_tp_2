@@ -1,6 +1,10 @@
 #ifndef __SNAKE2_H__
 #define __SNAKE2_H__
 
+#include <utils.h>
+#include <colors.h>
+#include <UserSyscalls.h>
+
 // shows the snake titlecard
 void start_snake2();
 void snake2_title_card();

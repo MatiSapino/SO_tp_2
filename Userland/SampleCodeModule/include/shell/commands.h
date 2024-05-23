@@ -1,8 +1,16 @@
 #ifndef __COMMANDS_H__
 #define __COMMANDS_H__
 
-#include <utils.h>
 #include <UserSyscalls.h>
+#include <utils.h>
+#include <funcAsm.h>
+#include <shell.h>
+#include <snake.h>
+#include <snake2.h>
+#include <colors.h>
+#include <printmem.h>
+#include <printmemstate.h>
+#include <testmm.h>
 
 #define COMMAND_AMOUNT 15
 

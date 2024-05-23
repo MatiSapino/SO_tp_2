@@ -3,6 +3,10 @@
 #define __SHELL_H__
 
 #include <utils.h>
+#include <UserSyscalls.h>
+#include <commands.h>
+#include <buffer.h>
+#include <colors.h>
 
 int start_shell();
 void putLine();

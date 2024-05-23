@@ -1,8 +1,4 @@
 #include <shell.h>
-#include <UserSyscalls.h>
-#include <commands.h>
-#include <buffer.h>
-#include <colors.h>
 
 static char buffer[BUFFER_SIZE] = {0};
 static char screen[SCREEN_SIZE] = {0};
@@ -31,6 +27,12 @@ int parseCommand(char *buffer, char *args[]) {
     return i;
 }
 
+void clearBuffer(char * buff){ // cleans buffer
+    for (int i = 0; i<BUFFER_SIZE;i++){
+        buff[i]=0;
+    }
+}
+
 void read_buffer(){ 
     int i = 0;
     int end_of_buffer = 0;
@@ -57,7 +59,7 @@ void read_buffer(){
                 }
             }
             if(status) putLine();
-            clearBuffer(); 
+            clearBuffer(buffer); 
             return;
         } else if(c == '-'){
             removeCursor();
@@ -90,6 +92,8 @@ void putIntoScreen(char * str){
         str++;
     }
 }
+
+
 
 void showScreen(){
     call_sys_write(screen,0,0);

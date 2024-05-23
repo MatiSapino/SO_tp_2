@@ -1,6 +1,4 @@
-#include <utils.h>
-#include <colors.h>
-#include <UserSyscalls.h>
+#include <snake.h>
 
 int headX, headY, fruitX, fruitY, headX2, headY2;
 int width=30;

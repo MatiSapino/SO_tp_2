@@ -1,9 +1,4 @@
 #include <utils.h>
-#include <UserSyscalls.h>
-#include <buffer.h>
-#include <colors.h>
-#include <limits.h>
-
 
 
 char getC(){

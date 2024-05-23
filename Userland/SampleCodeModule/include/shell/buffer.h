@@ -5,7 +5,6 @@
 #define BUFFER_SIZE 128
 #define SCREEN_SIZE 5000
 
-void clearBuffer();
-void putIntoScreen(char * str); 
+void clearBuffer(char * buff);
 
 #endif /* __BUFFER_H__ */

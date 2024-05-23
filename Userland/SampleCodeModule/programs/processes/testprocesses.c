@@ -27,7 +27,7 @@ int test_proc(int argc, char *argv[]) {
             p_rqs[rq].pid = call_run(endless_loop, 1, argvAux);
 
             if (p_rqs[rq].pid == -1) {
-                printf("test_processes: ERROR creating process\n");
+                own_printf("test_processes: ERROR creating process\n");
                 return -1;
             } else {
                 p_rqs[rq].state = READY;
@@ -47,7 +47,7 @@ int test_proc(int argc, char *argv[]) {
                         if (p_rqs[rq].state == READY ||
                             p_rqs[rq].state == WAITING) {
                             if (call_kill(p_rqs[rq].pid) == -1) {
-                                printf(
+                                own_printf(
                                     "test_processes: ERROR killing process\n");
                                 return -1;
                             }
@@ -60,7 +60,7 @@ int test_proc(int argc, char *argv[]) {
                     case 1:
                         if (p_rqs[rq].state == READY) {
                             if (call_block(p_rqs[rq].pid) == -1) {
-                                printf(
+                                own_printf(
                                     "test_processes: ERROR blocking process\n");
                                 return -1;
                             }
@@ -74,7 +74,7 @@ int test_proc(int argc, char *argv[]) {
             for (rq = 0; rq < max_processes; rq++)
                 if (p_rqs[rq].state == WAITING && GetUniform(100) % 2) {
                     if (call_unblock(p_rqs[rq].pid) == -1) {
-                        printf("test_processes: ERROR unblocking process\n");
+                        own_printf("test_processes: ERROR unblocking process\n");
                         return -1;
                     }
                     p_rqs[rq].state = READY;

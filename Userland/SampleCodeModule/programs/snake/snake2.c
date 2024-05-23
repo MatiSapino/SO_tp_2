@@ -1,6 +1,3 @@
-#include <utils.h>
-#include <colors.h>
-#include <UserSyscalls.h>
 #include <snake2.h>
 
 void deleteTail();

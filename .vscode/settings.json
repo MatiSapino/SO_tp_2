@@ -61,6 +61,7 @@
     "stdint.h": "c",
     "printmem.h": "c",
     "shell.h": "c",
-    "commands.h": "c"
+    "commands.h": "c",
+    "usersyscalls.h": "c"
   }
 }

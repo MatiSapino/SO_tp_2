@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdint.h>
+#include <UserSyscalls.h>
+#include <buffer.h>
+#include <colors.h>
+#include <limits.h>
 
 typedef enum pstatus {
     WAITING = 0,

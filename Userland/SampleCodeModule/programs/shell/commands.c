@@ -1,14 +1,4 @@
 #include <commands.h>
-#include <UserSyscalls.h>
-#include <utils.h>
-#include <funcAsm.h>
-#include <shell.h>
-#include <snake.h>
-#include <snake2.h>
-#include <colors.h>
-#include <printmem.h>
-#include <printmemstate.h>
-#include <testmm.h>
 
 static char command_list[COMMAND_AMOUNT][14] = {"HELP", "TIME", "REGSTATE", "DIV0", "INVALOP", "ZOOMOUT", "ZOOMIN", "SNAKE", "CLEAR","EXIT", "SNAKE2", "MEMORYMANAGER", "PRINTMEM", "MEM", "TESTMM"};
 void (*functionPointers[COMMAND_AMOUNT])(char *args[], int argCount) = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, memory_manager, print_mem, print_mem_state, test_mm};

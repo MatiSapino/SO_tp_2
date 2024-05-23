@@ -1,4 +1,4 @@
-#include "include/buffer.h"
+#include <buffer.h>
 
 void clearBuffer(char * buff){ // cleans buffer
     for (int i = 0; i<BUFFER_SIZE;i++){

@@ -1,8 +1,8 @@
 #ifndef __COMMANDS_H__
 #define __COMMANDS_H__
 
-#include "utils.h"
-#include "UserSyscalls.h"
+#include <utils.h>
+#include <UserSyscalls.h>
 
 #define COMMAND_AMOUNT 15
 

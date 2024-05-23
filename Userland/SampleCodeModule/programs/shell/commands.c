@@ -1,8 +1,8 @@
-#include "commands.h"
-#include "UserSyscalls.h"
-#include "utils.h"
-#include "funcAsm.h"
-#include "include/shell.h"
+#include <commands.h>
+#include <UserSyscalls.h>
+#include <utils.h>
+#include <funcAsm.h>
+#include <shell.h>
 #include <snake.h>
 #include <snake2.h>
 #include <colors.h>

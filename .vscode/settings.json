@@ -59,6 +59,8 @@
   "files.associations": {
     "videodriver.h": "c",
     "stdint.h": "c",
-    "printmem.h": "c"
+    "printmem.h": "c",
+    "shell.h": "c",
+    "commands.h": "c"
   }
 }

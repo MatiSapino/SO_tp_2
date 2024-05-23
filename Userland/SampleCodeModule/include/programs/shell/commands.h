@@ -16,21 +16,21 @@
 
 #define COMMAND_AMOUNT 14
 
-void checkCommands(char *command, char *args[], int argCount, int status); // searches for command
+void checkCommands(char *command, char *args[], int argCount, int status);
 void commandNotFound(char *command);
-void help();      // prints list of commands
-void time();      // prints current time
-void div0();      // divides by zero and throws an exception
-void invalidOp(); // generates invalid opcode exception
-void clearScreen();
-void zoomIn();
-void zoomOut();
-void exitShell();
-void play_snake();
-void regState();
-void snake2();
-void print_mem(char *args[], int argCount);
-void print_mem_state(char *args[], int argCount);
-void test_mm(char *args[], int argCount);
+void help(char *args[], int argCount, int status)
+void time(char *args[], int argCount, int status)
+void div0(char *args[], int argCount, int status)
+void invalidOp(char *args[], int argCount, int status)
+void clearScreen(char *args[], int argCount, int status)
+void zoomIn(char *args[], int argCount, int status)
+void zoomOut(char *args[], int argCount, int status)
+void exitShell(char *args[], int argCount, int status);
+void play_snake(char *args[], int argCount, int status);
+void regState(char *args[], int argCount, int status);
+void snake2(char *args[], int argCount, int status);
+void print_mem(char *args[], int argCount, int status);
+void print_mem_state(char *args[], int argCount, int status);
+void test_mm(char *args[], int argCount, int status);
 
 #endif

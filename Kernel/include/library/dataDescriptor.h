@@ -2,7 +2,12 @@
 #define _DATA_DESCRIPTOR_H_
 
 #include <stdbool.h>
-#include <pipe/pipe.h>
+#include <defs.h>
+#include <process.h>
+// #include <pipe/pipe.h>
+// #include <pipe/pipe.h>
+// #include <pmm.h>
+// #include <scheduler.h>
 
 typedef struct dataDescriptor * dataDescriptor_t;
 typedef enum  {STD_T, PIPE_T} DATA_TYPE;

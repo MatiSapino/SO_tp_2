@@ -1,9 +1,4 @@
-// This is a personal academic project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <lib/dataDescriptor.h>
-#include <pipe/pipe.h>
-#include <pmm.h>
-#include <scheduler.h>
+#include <dataDescriptor.h>
 
 typedef struct dataDescriptor {
     DATA_TYPE type;
@@ -61,7 +56,7 @@ void close_dataDescriptor(dataDescriptor_t dataD) {
     if (dataD->type == PIPE_T)
         close_pipe(dataD->pipe, dataD->mode == WRITE_MODE);
 
-    kfree(dataD);
+    free(dataD);
 }
 
 int dup2(unsigned int oldfd, unsigned int newfd) {

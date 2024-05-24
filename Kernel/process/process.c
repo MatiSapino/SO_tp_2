@@ -5,7 +5,7 @@ static int last_pid = 0;
 static void start(function_t function, int argc, char *argv[])
 {
     int status = function(argc, argv);
-    sys_exit(status);
+    //sys_exit(status);
 }
 
 static int search_by_pid(void *process, void *pid)
@@ -66,7 +66,7 @@ process_t *new_process(function_t main, int argc, char *argv[])
 
     process->channel = NULL;
     process->parent = NULL;
-    process->children = new_linked_list((int (*)(void *, void *))search_by_pid);
+    //process->children = new_linked_list((int (*)(void *, void *))search_by_pid);
 
     process->context =
         get_init_context(process, main, process->argc, process->argv);
@@ -84,16 +84,16 @@ process_t *new_process(function_t main, int argc, char *argv[])
 
 void free_process(process_t *process)
 {
-    free_list(process->children);
+    //free_list(process->children);
 
     // free arguments
     if (process->argc)
     {
         for (size_t i = 0; i < process->argc; i++)
-            kfree(process->argv[i]);
+            free(process->argv[i]);
 
-        kfree(process->argv);
+        free(process->argv);
     }
 
-    kfree(process);
+    free(process);
 }

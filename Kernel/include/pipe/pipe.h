@@ -2,7 +2,7 @@
 #define _PIPE_H_
 
 #include <stdint.h>
-#include <dataDescriptor.h>
+#include <string_s.h>
 
 #define PIPE_SIZE (1024)
 

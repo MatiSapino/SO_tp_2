@@ -55,8 +55,8 @@ void close_dataDescriptor(dataDescriptor_t dataD)
     if (dataD == NULL)
         return;
 
-    if (dataD->type == PIPE_T)
-        close_pipe(dataD->pipe, dataD->mode == WRITE_MODE);
+    // if (dataD->type == PIPE_T)
+    //     close_pipe(dataD->pipe, dataD->mode == WRITE_MODE);
 
     free(dataD);
 }

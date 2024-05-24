@@ -78,6 +78,8 @@
     "initializer_list": "c",
     "utility": "c",
     "memory_manager.h": "c",
-    "datadescriptor.h": "c"
+    "datadescriptor.h": "c",
+    "stdbool.h": "c",
+    "stddef.h": "c"
   }
 }

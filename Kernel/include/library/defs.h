@@ -20,7 +20,7 @@
 #define ACS_CODE        (ACS_PRESENT | ACS_CSEG | ACS_READ)
 #define ACS_DATA        (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
 #define ACS_STACK       (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
-#define NULL 0
+// #define NULL 0
 #define STDIN 0
 #define STDOUT 1
 #define STDERR 2

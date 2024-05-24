@@ -139,7 +139,7 @@ void keyboard_handler()
 {
     uint16_t key = getKey(); // Obtiene el valor de la tecla presionada
 
-    if (key == NULL) // Si no se presionó ninguna tecla, retorna
+    if (key == 0) // Si no se presionó ninguna tecla, retorna
         return;
 
     if (key == 0x3A)

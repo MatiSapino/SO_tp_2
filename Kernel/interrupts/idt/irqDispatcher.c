@@ -103,7 +103,7 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 		free((void *)rsi);
 		break;
 	case 22:
-		return add_process((void *)rsi, (int)rdx, (char **)rcx);
+		return 0;// return add_process((void *)rsi, (int)rdx, (char **)rcx);
 		
 	default:
 		return 0;

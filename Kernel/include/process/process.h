@@ -2,8 +2,8 @@
 #define _PROCESS_H_
 
 #include <memory_manager.h>
-#include <defs.h>
 #include <dataDescriptor.h>
+#include <string_s.h>
 
 #define P_INIT_EFLAGS 0x202
 #define P_INIT_CS 0x8

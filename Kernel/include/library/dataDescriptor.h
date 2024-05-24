@@ -2,8 +2,6 @@
 #define _DATA_DESCRIPTOR_H_
 
 #include <stdbool.h>
-#include <defs.h>
-#include <process.h>
 #include <memory_manager.h>
 #include <pipe.h>
 

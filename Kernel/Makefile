@@ -3,8 +3,10 @@ include Makefile.inc
 KERNEL=kernel.bin
 SOURCES=$(shell find . -name "*.c")
 SOURCES_ASM=$(wildcard asm/*.asm)
+SOURCES_SHARED=$(wildcard ../Lib/*.c)
 OBJECTS=$(SOURCES:.c=.o)
 OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
+OBJECTS_SHARED=$(SOURCES_SHARED:.c=.o)
 LOADERSRC=loader.asm
 # Uncomment to use buddy memory allocator
 # MEMFLAGS=-D BUDDY
@@ -15,12 +17,12 @@ STATICLIBS=
 
 all: $(KERNEL)
 
-$(KERNEL): $(LOADEROBJECT) $(OBJECTS) $(STATICLIBS) $(OBJECTS_ASM)
-	$(LD) $(LDFLAGS) -T kernel.ld -o $(KERNEL) $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(STATICLIBS)
-	$(LD) $(LDFLAGS) -T kernel.ld --oformat=elf64-x86-64 -o kernel.elf $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(STATICLIBS) 
+$(KERNEL): $(LOADEROBJECT) $(OBJECTS) $(STATICLIBS) $(OBJECTS_ASM) $(OBJECTS_SHARED)
+	$(LD) $(LDFLAGS) -T kernel.ld -o $(KERNEL) $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(STATICLIBS) $(OBJECTS_SHARED)
+	$(LD) $(LDFLAGS) -T kernel.ld --oformat=elf64-x86-64 -o kernel.elf $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(STATICLIBS) $(OBJECTS_SHARED)
 
 %.o: %.c
-	$(GCC) $(GCCFLAGS) $(MEMFLAGS) -I./include -I./include/asm -I./include/drivers -I./include/interrupts -I./include/interrupts/exceptions -I./include/interrupts/idt -I./include/interrupts/syscalls -I./include/interrupts/time -I./include/library -I./include/memory -I./include/pipe -I./include/process -c $< -o $@
+	$(GCC) $(GCCFLAGS) $(MEMFLAGS) -I./include -I./include/asm -I./include/drivers -I./include/interrupts -I./include/interrupts/exceptions -I./include/interrupts/idt -I./include/interrupts/syscalls -I./include/interrupts/time -I./include/library -I./include/memory -I./include/pipe -I./include/process -I../Lib/include -c $< -o $@
 
 %.o : %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@

@@ -5,7 +5,7 @@
 #include <defs.h>
 #include <process.h>
 #include <memory_manager.h>
-// #include <pipe/pipe.h>
+#include <pipe.h>
 
 
 typedef struct dataDescriptor * dataDescriptor_t;

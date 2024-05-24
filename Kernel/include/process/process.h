@@ -64,7 +64,7 @@ typedef struct process
     dataDescriptor_t dataDescriptors[128];
     size_t dataD_index;
     void *channel;
-    list_ptr children;
+    //list_ptr children;
     int exit_status;
     int priority;
     char **argv;

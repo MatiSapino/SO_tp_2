@@ -4,14 +4,19 @@
 #include <stdbool.h>
 #include <defs.h>
 #include <process.h>
+#include <memory_manager.h>
 // #include <pipe/pipe.h>
-// #include <pipe/pipe.h>
-// #include <pmm.h>
-// #include <scheduler.h>
+
 
 typedef struct dataDescriptor * dataDescriptor_t;
 typedef enum  {STD_T, PIPE_T} DATA_TYPE;
 typedef enum  {READ_MODE, WRITE_MODE} mode_t;
+
+typedef struct dataDescriptor {
+    DATA_TYPE type;
+    mode_t mode;
+    pipe_t pipe;
+} dataDescriptor;
 
 /**
  * @retval  NULL if the specified type or mode is wrong
@@ -37,6 +42,6 @@ mode_t getMode_dataDescriptor(dataDescriptor_t dataD);
 
 void close_dataDescriptor(dataDescriptor_t dataD);
 
-int dup2(unsigned int oldfd , unsigned int newfd);
+//int dup2(unsigned int oldfd , unsigned int newfd);
 
 #endif

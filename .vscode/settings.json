@@ -77,6 +77,7 @@
     "string_view": "c",
     "initializer_list": "c",
     "utility": "c",
-    "memory_manager.h": "c"
+    "memory_manager.h": "c",
+    "datadescriptor.h": "c"
   }
 }

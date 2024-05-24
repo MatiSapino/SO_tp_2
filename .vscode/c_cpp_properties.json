@@ -22,6 +22,7 @@
                 "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Kernel/include/interrupts/time",
                 "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Kernel/include/library",
                 "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Kernel/include/memory",
+                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Kernel/include/pipe",
                 "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Kernel/include/process"
             ],
             "defines": [],

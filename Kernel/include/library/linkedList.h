@@ -1,5 +1,5 @@
-#ifndef _LINKED_LIST_H_
-#define _LINKED_LIST_H_
+#ifndef _LINKEDLIST_H_
+#define _LINKEDLIST_H_
 
 #include <memory_manager.h>
 

@@ -19,12 +19,13 @@ GLOBAL call_get_mem
 GLOBAL call_get_mem_state
 GLOBAL call_malloc
 GLOBAL call_free
-GLOBAL call_run
-GLOBAL call_wait
-GLOBAL call_kill
-GLOBAL call_block
-GLOBAL call_unblock
-GLOBAL call_getpid
+GLOBAL call_create_pipe
+GLOBAL call_open_pipe
+GLOBAL call_info_pipe
+GLOBAL call_info_all_pipes
+GLOBAL call_dup2
+GLOBAL call_close
+GLOBAL call_exit
 
 section .text
 
@@ -85,15 +86,17 @@ call_malloc:
     call_to_handler 20
 call_free:
     call_to_handler 21
-call_run:
+call_create_pipe:
     call_to_handler 22
-call_wait:
+call_open_pipe:
     call_to_handler 23
-call_kill:
+call_info_pipe: 
     call_to_handler 24
-call_block:
+call_info_all_pipes:
     call_to_handler 25
-call_unblock:
+call_dup2:
     call_to_handler 26
-call_getpid:
+call_close:
     call_to_handler 27
+call_exit:
+    call_to_handler 28

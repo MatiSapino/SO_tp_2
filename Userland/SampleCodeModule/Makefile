@@ -1,14 +1,14 @@
 include ../Makefile.inc
 
 MODULE=0000-sampleCodeModule.bin
-SOURCES=$(wildcard [^_]*.c library/*.c programs/mem/*.c programs/processes/*.c programs/shell/*.c programs/snake/*.c)
+SOURCES=$(wildcard [^_]*.c library/*.c programs/*/*.c)
 LIBRARIES=$(wildcard libraries/*.c)
 
 SOURCES_ASM=$(wildcard asm/*.asm)
 SOURCES_SHARED=$(wildcard ../../Lib/*.c)
 OBJECTS_ASM=$(SOURCES_ASM:asm/%.asm=obj/%.asm.o)
 
-INCLUDE_PATHS = -I ./include -I ./include/asm -I ./include/library -I ./include/programs/mem -I ./include/programs/processes -I ./include/programs/shell -I ./include/programs/snake -I ../../Lib/include
+INCLUDE_PATHS = -I ./include -I ./include/asm -I ./include/library -I ./include/programs/ipc -I ./include/programs/mem -I ./include/programs/pipe -I ./include/programs/processes -I ./include/programs/shell -I ./include/programs/snake -I ../../Lib/include
 
 all: $(MODULE)
 

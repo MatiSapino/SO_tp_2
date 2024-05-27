@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <infoPipe.h>
 
 void call_sys_read(char *buf, int size, int fd);
 void call_sys_write(char *buf, int size, int fd);
@@ -30,11 +31,14 @@ void call_get_mem_state(int mem_state[]);
 void *call_malloc(size_t size);
 void call_free(void *ptr);
 
-int call_run(void *main, int argc, char *argv[]);
-int call_wait();
-int call_kill(int pid);
-int call_block(int pid);
-int call_unblock(int pid);
-int call_getpid();
+int call_create_pipe(char *name, int fd[2]);
+int call_open_pipe(char *name, int fd[2]);
+int call_info_pipe(char *name, pipe_info_t *info);
+int call_info_all_pipes(pipe_info_t *info[], unsigned int size);
+int call_dup2(unsigned int oldfd, unsigned int newfd);
+
+void call_close(unsigned int fd);
+
+int call_exit(int error_code);
 
 #endif

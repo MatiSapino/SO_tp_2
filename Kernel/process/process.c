@@ -5,7 +5,7 @@ static int last_pid = 0;
 static void start(function_t function, int argc, char *argv[])
 {
     int status = function(argc, argv);
-    //sys_exit(status);
+    // sys_exit(status);
 }
 
 static int search_by_pid(void *process, void *pid)

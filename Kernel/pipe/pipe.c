@@ -8,7 +8,7 @@ typedef struct pipe {
     unsigned int nread;
     int readopen;
     int writeopen;
-    //list_ptr blocked_pid;
+    list_ptr blocked_pid;
 } pipe;
 
 typedef struct pipe_info {
@@ -21,7 +21,7 @@ typedef struct pipe_info {
     int blocked_count;
 } pipe_info;
 
-//list_ptr pipe_list;
+list_ptr pipe_list;
 
 static int comparison_function(void *pipe, void *name) {
     pipe_t pipe_test = (pipe_t)pipe;
@@ -66,19 +66,19 @@ static void set_data_descriptors(pipe_t pipe, int pipe_dataD[2]) {
     // process->dataDescriptors[process->dataD_index++] = writeEnd;
 }
 
-// int init_pipes() {
-//     pipe_list = new_linked_list(comparison_function);
-//     return 0;
-// }
+int init_pipes() {
+    pipe_list = new_linked_list(comparison_function);
+    return 0;
+}
 
 int create_pipe(char *name, int pipe_dataD[2]) {
 
-    // if (pipe_list == NULL)
-    //     init_pipes();
+    if (pipe_list == NULL)
+        init_pipes();
 
-    // if (find(pipe_list, name, NULL) != NULL) {
-    //     return -1;
-    // }
+    if (find(pipe_list, name, NULL) != NULL) {
+        return -1;
+    }
 
     pipe_t newPipe = malloc(sizeof(pipe));
     if (newPipe == NULL)
@@ -89,30 +89,30 @@ int create_pipe(char *name, int pipe_dataD[2]) {
     newPipe->nwrite = 0;
     newPipe->readopen = 0;
     newPipe->writeopen = 0;
-    //newPipe->blocked_pid = new_linked_list(process_pipe_comparison_function);
+    newPipe->blocked_pid = new_linked_list(process_pipe_comparison_function);
 
-    //add(pipe_list, newPipe);
+    add(pipe_list, newPipe);
 
     set_data_descriptors(newPipe, pipe_dataD);
 
     return 0;
 }
 
-// int open_pipe(char *name, int pipe_dataD[2]) {
+int open_pipe(char *name, int pipe_dataD[2]) {
 
-//     if (pipe_list == NULL)
-//         return -1;
+    if (pipe_list == NULL)
+        return -1;
 
-//     pipe_t pipe = find(pipe_list, name, NULL);
+    pipe_t pipe = find(pipe_list, name, NULL);
 
-//     if (pipe == NULL) {
-//         return -1;
-//     }
+    if (pipe == NULL) {
+        return -1;
+    }
 
-//     set_data_descriptors(pipe, pipe_dataD);
+    set_data_descriptors(pipe, pipe_dataD);
 
-//     return 0;
-// }
+    return 0;
+}
 
 // int pipewrite(pipe_t pipe, const char *buffer, int count) {
 
@@ -191,57 +191,57 @@ int create_pipe(char *name, int pipe_dataD[2]) {
 //     return;
 // }
 
-// static int copy_pids(list_ptr blocked_pid, int blocked_pid_cpy[]) {
+static int copy_pids(list_ptr blocked_pid, int blocked_pid_cpy[]) {
 
-//     to_begin(blocked_pid);
+    to_begin(blocked_pid);
 
-//     int count = 0;
+    int count = 0;
 
-//     while (hasNext(blocked_pid)) {
-//         int pid = *(int *)next(blocked_pid);
-//         blocked_pid_cpy[count++] = pid;
-//     }
+    while (hasNext(blocked_pid)) {
+        int pid = *(int *)next(blocked_pid);
+        blocked_pid_cpy[count++] = pid;
+    }
 
-//     return count;
-// }
+    return count;
+}
 
-// static void copy_info(pipe_t pipe, pipe_info_t *info) {
+static void copy_info(pipe_t pipe, pipe_info_t *info) {
 
-//     info->name = pipe->name;
-//     info->nread = pipe->nread;
-//     info->nwrite = pipe->nwrite;
-//     info->readopen = pipe->readopen;
-//     info->writeopen = pipe->writeopen;
+    info->name = pipe->name;
+    info->nread = pipe->nread;
+    info->nwrite = pipe->nwrite;
+    info->readopen = pipe->readopen;
+    info->writeopen = pipe->writeopen;
 
-//     info->blocked_count = copy_pids(pipe->blocked_pid, info->blocked_pid);
-// }
+    info->blocked_count = copy_pids(pipe->blocked_pid, info->blocked_pid);
+}
 
-// int info_pipe(char *name, pipe_info_t *info) {
+int info_pipe(char *name, pipe_info_t *info) {
 
-//     pipe_t pipe = find(pipe_list, name, NULL);
-//     if (pipe == NULL)
-//         return -1;
+    pipe_t pipe = find(pipe_list, name, NULL);
+    if (pipe == NULL)
+        return -1;
 
-//     copy_info(pipe, info);
+    copy_info(pipe, info);
 
-//     return 0;
-// }
+    return 0;
+}
 
-// int info_all_pipes(pipe_info_t *info_arr[], unsigned int size) {
+int info_all_pipes(pipe_info_t *info_arr[], unsigned int size) {
 
-//     int count = 0;
+    int count = 0;
 
-//     if (pipe_list == NULL)
-//         return 0;
+    if (pipe_list == NULL)
+        return 0;
 
-//     to_begin(pipe_list);
+    to_begin(pipe_list);
 
-//     while (hasNext(pipe_list) && count < size) {
-//         copy_info((pipe_t)next(pipe_list), info_arr[count++]);
-//     }
+    while (hasNext(pipe_list) && count < size) {
+        copy_info((pipe_t)next(pipe_list), info_arr[count++]);
+    }
 
-//     return count;
-// }
+    return count;
+}
 
 void add_writer(pipe_t pipe) {
     pipe->nwrite++;

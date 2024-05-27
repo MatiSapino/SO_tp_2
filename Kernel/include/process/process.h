@@ -4,6 +4,7 @@
 #include <memory_manager.h>
 #include <dataDescriptor.h>
 #include <string_s.h>
+#include <linkedList.h>
 
 #define P_INIT_EFLAGS 0x202
 #define P_INIT_CS 0x8
@@ -64,7 +65,7 @@ typedef struct process
     dataDescriptor_t dataDescriptors[128];
     size_t dataD_index;
     void *channel;
-    //list_ptr children;
+    list_ptr children;
     int exit_status;
     int priority;
     char **argv;

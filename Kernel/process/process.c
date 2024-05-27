@@ -66,7 +66,7 @@ process_t *new_process(function_t main, int argc, char *argv[])
 
     process->channel = NULL;
     process->parent = NULL;
-    //process->children = new_linked_list((int (*)(void *, void *))search_by_pid);
+    process->children = new_linked_list((int (*)(void *, void *))search_by_pid);
 
     process->context =
         get_init_context(process, main, process->argc, process->argv);
@@ -84,7 +84,7 @@ process_t *new_process(function_t main, int argc, char *argv[])
 
 void free_process(process_t *process)
 {
-    //free_list(process->children);
+    free_list(process->children);
 
     // free arguments
     if (process->argc)

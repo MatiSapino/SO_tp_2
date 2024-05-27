@@ -3,6 +3,7 @@
 #include <naiveConsole.h>
 #include <idtLoader.h>
 #include <memory_manager.h>
+#include <pipe.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -85,6 +86,7 @@ int main()
 {
 	init_mm();
 	load_idt();
+	init_pipes();
 	((EntryPoint)sampleCodeModuleAddress)();
 	while (1)
 		;

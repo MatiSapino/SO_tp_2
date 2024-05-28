@@ -1,7 +1,8 @@
 #include <pipe.h>
 #include <dataDescriptor.h>
 
-typedef struct pipe {
+typedef struct pipe
+{
     char *name;
     char data[PIPE_SIZE];
     unsigned int nwrite;
@@ -11,7 +12,8 @@ typedef struct pipe {
     list_ptr blocked_pid;
 } pipe;
 
-typedef struct pipe_info {
+typedef struct pipe_info
+{
     char *name;
     unsigned int nwrite;
     unsigned int nread;
@@ -23,14 +25,16 @@ typedef struct pipe_info {
 
 list_ptr pipe_list;
 
-static int comparison_function(void *pipe, void *name) {
+static int comparison_function(void *pipe, void *name)
+{
     pipe_t pipe_test = (pipe_t)pipe;
     char *name_test = (char *)name;
 
     return !strCompare(pipe_test->name, name_test);
 }
 
-static int process_pipe_comparison_function(void * pid, void * other_pid){
+static int process_pipe_comparison_function(void *pid, void *other_pid)
+{
     return (*(int *)pid) == (*(int *)other_pid);
 }
 
@@ -45,7 +49,8 @@ static int process_pipe_comparison_function(void * pid, void * other_pid){
 //     sleep(channel);
 // }
 
-static void set_data_descriptors(pipe_t pipe, int pipe_dataD[2]) {
+static void set_data_descriptors(pipe_t pipe, int pipe_dataD[2])
+{
 
     dataDescriptor_t readEnd = create_dataDescriptor(PIPE_T, READ_MODE);
     setPipe_dataDescriptor(readEnd, pipe);
@@ -66,17 +71,20 @@ static void set_data_descriptors(pipe_t pipe, int pipe_dataD[2]) {
     // process->dataDescriptors[process->dataD_index++] = writeEnd;
 }
 
-int init_pipes() {
+int init_pipes()
+{
     pipe_list = new_linked_list(comparison_function);
     return 0;
 }
 
-int create_pipe(char *name, int pipe_dataD[2]) {
+int create_pipe(char *name, int pipe_dataD[2])
+{
 
     if (pipe_list == NULL)
         init_pipes();
 
-    if (find(pipe_list, name, NULL) != NULL) {
+    if (find(pipe_list, name, NULL) != NULL)
+    {
         return -1;
     }
 
@@ -98,14 +106,16 @@ int create_pipe(char *name, int pipe_dataD[2]) {
     return 0;
 }
 
-int open_pipe(char *name, int pipe_dataD[2]) {
+int open_pipe(char *name, int pipe_dataD[2])
+{
 
     if (pipe_list == NULL)
         return -1;
 
     pipe_t pipe = find(pipe_list, name, NULL);
 
-    if (pipe == NULL) {
+    if (pipe == NULL)
+    {
         return -1;
     }
 
@@ -191,13 +201,15 @@ int open_pipe(char *name, int pipe_dataD[2]) {
 //     return;
 // }
 
-static int copy_pids(list_ptr blocked_pid, int blocked_pid_cpy[]) {
+static int copy_pids(list_ptr blocked_pid, int blocked_pid_cpy[])
+{
 
     to_begin(blocked_pid);
 
     int count = 0;
 
-    while (hasNext(blocked_pid)) {
+    while (hasNext(blocked_pid))
+    {
         int pid = *(int *)next(blocked_pid);
         blocked_pid_cpy[count++] = pid;
     }
@@ -205,7 +217,8 @@ static int copy_pids(list_ptr blocked_pid, int blocked_pid_cpy[]) {
     return count;
 }
 
-static void copy_info(pipe_t pipe, pipe_info_t *info) {
+static void copy_info(pipe_t pipe, pipe_info_t *info)
+{
 
     info->name = pipe->name;
     info->nread = pipe->nread;
@@ -216,7 +229,8 @@ static void copy_info(pipe_t pipe, pipe_info_t *info) {
     info->blocked_count = copy_pids(pipe->blocked_pid, info->blocked_pid);
 }
 
-int info_pipe(char *name, pipe_info_t *info) {
+int info_pipe(char *name, pipe_info_t *info)
+{
 
     pipe_t pipe = find(pipe_list, name, NULL);
     if (pipe == NULL)
@@ -227,7 +241,8 @@ int info_pipe(char *name, pipe_info_t *info) {
     return 0;
 }
 
-int info_all_pipes(pipe_info_t *info_arr[], unsigned int size) {
+int info_all_pipes(pipe_info_t *info_arr[], unsigned int size)
+{
 
     int count = 0;
 
@@ -236,17 +251,20 @@ int info_all_pipes(pipe_info_t *info_arr[], unsigned int size) {
 
     to_begin(pipe_list);
 
-    while (hasNext(pipe_list) && count < size) {
+    while (hasNext(pipe_list) && count < size)
+    {
         copy_info((pipe_t)next(pipe_list), info_arr[count++]);
     }
 
     return count;
 }
 
-void add_writer(pipe_t pipe) {
+void add_writer(pipe_t pipe)
+{
     pipe->nwrite++;
 }
 
-void add_reader(pipe_t pipe) {
+void add_reader(pipe_t pipe)
+{
     pipe->nread++;
 }

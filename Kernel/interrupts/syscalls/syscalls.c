@@ -25,3 +25,17 @@ void sys_read(char *buf, int len, int filedescriptor)
         getBufferPosition(&pos);
     }
 }
+
+void sys_close(unsigned int fd)
+{
+    // process_t *process = get_current_process();
+    // if (fd >= process->dataD_index)
+    //     return;
+    // close_dataDescriptor(process->dataDescriptors[fd]);
+    // process->dataDescriptors[fd] = NULL;
+}
+
+void sys_exit(int status)
+{
+    // exit_process(status);
+}

@@ -4,6 +4,7 @@
 #include <idtLoader.h>
 #include <memory_manager.h>
 #include <pipe.h>
+#include "./include/semaphore.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -87,8 +88,9 @@ int main()
 	init_mm();
 	load_idt();
 	init_pipes();
+	initailize_sems();
+	// initialize scheduler
 	((EntryPoint)sampleCodeModuleAddress)();
-	while (1)
-		;
+	while (1);
 	return 0;
 }

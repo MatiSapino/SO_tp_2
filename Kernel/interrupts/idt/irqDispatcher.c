@@ -104,7 +104,30 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 		break;
 	case 22:
 		return 0;
-		
+	case 23:
+		return 0;
+	case 24:
+		return 0;
+	case 25:
+		return 0;
+	case 26:
+		return 0;
+	case 27:
+		return 0;
+	case 28:
+		return 0;
+	case 29:
+		// call_sem_up
+		return my_sem_up((char*)rsi);
+	case 30:
+		// call_sem_down
+		return my_sem_down((char*)rsi);
+	case 31:
+		// call_sem_open
+		return my_sem_open((char*)rsi, rdx);
+	case 32:
+		// call_sem_close
+		return my_sem_close((char*)rsi);
 	default:
 		return 0;
 	}

@@ -6,9 +6,8 @@
 
 #define MEMORY_MANAGER_SIZE 1024
 #define SIZE (1024 * 1024 * 64) // 64MB
-#define BASE_ADDR 0x900000
+#define BASE_ADDR 0x600000
 #define ADDRESS_LIMIT 0xFFFFFFFF
-#define ALIGNMENT 8
 #define GET_SIZE(header) (header->size & ~0x1)
 #define ALIGN(size) (((size) + ALIGNMENT - 1) & ~ALIGNMENT)
 

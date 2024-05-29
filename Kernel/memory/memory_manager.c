@@ -22,7 +22,7 @@ void init_mm()
     current_header->alloced = 1;
 }
 
-void *malloc(size_t size)
+void *mem_alloc(size_t size)
 {
     header_t *current_header = start;
 

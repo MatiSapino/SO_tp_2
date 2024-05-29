@@ -2,37 +2,31 @@
 
 static int last_pid = 0;
 
-static void start(function_t function, int argc, char *argv[])
-{
+static void start(function_t function, int argc, char *argv[]) {
     int status = function(argc, argv);
     // sys_exit(status);
 }
 
-static int search_by_pid(void *process, void *pid)
-{
-    return ((process_t *)process)->pid == *((pid_t *)pid);
+static int search_by_pid(void *process, void *pid) {
+    return ((process_ptr)process)->pid == *((pid_t *)pid);
 }
 
-static char **get_argv_copy(int argc, char *argv[])
-{
-    if (argc == 0 || argv == NULL)
-        return NULL;
+static char **get_argv_copy(int argc, char *argv[]) {
+    if (argc == 0 || argv == NULL) return NULL;
 
-    char **argv_copy = malloc(argc * sizeof(char *));
-    for (size_t i = 0; i < argc; i++)
-    {
-        argv_copy[i] = malloc(strlen(argv[i]) + 1);
+    char **argv_copy = mem_alloc(argc * sizeof(char *));
+    for (size_t i = 0; i < argc; i++) {
+        argv_copy[i] = mem_alloc(strlen(argv[i]) + 1);
         strcpy(argv_copy[i], argv[i]);
     }
 
     return argv_copy;
 }
 
-static context_t *get_init_context(process_t *process, function_t main,
-                                   int argc, char *argv[])
-{
-    context_t *context =
-        (context_t *)((uint64_t)process + K_PROCESS_STACK_SIZE -
+static context_t *get_init_context(process_ptr process, function_t main,
+                                   int argc, char *argv[]) {
+    context_ptr context =
+        (context_ptr)((uint64_t)process + K_PROCESS_STACK_SIZE -
                       sizeof(context_t));
 
     context->rdi = (uint64_t)main;
@@ -49,9 +43,8 @@ static context_t *get_init_context(process_t *process, function_t main,
     return context;
 }
 
-process_t *new_process(function_t main, int argc, char *argv[])
-{
-    process_t *process = (process_t *)malloc(sizeof(process_t));
+process_ptr new_process(function_t main, int argc, char *argv[]) {
+    process_ptr process = (process_ptr )mem_alloc(sizeof(process_t));
     if (process == NULL)
         return NULL;
 
@@ -63,7 +56,7 @@ process_t *new_process(function_t main, int argc, char *argv[])
 
     process->status = READY;
     process->exit_status = -1;
-
+  
     process->channel = NULL;
     process->parent = NULL;
     process->children = new_linked_list((int (*)(void *, void *))search_by_pid);
@@ -82,7 +75,7 @@ process_t *new_process(function_t main, int argc, char *argv[])
     return process;
 }
 
-void free_process(process_t *process)
+void free_process(process_ptr process)
 {
     free_list(process->children);
 

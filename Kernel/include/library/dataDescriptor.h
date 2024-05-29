@@ -13,32 +13,32 @@ typedef enum  {READ_MODE, WRITE_MODE} mode_t;
 typedef struct dataDescriptor {
     DATA_TYPE type;
     mode_t mode;
-    pipe_t pipe;
-} dataDescriptor;
+    pipe_info_ptr pipe_info;
+} dataDescriptor_t, * dataDescriptor_ptr;
 
 /**
  * @retval  NULL if the specified type or mode is wrong
  */
-dataDescriptor_t create_dataDescriptor(DATA_TYPE type , mode_t mode);
+dataDescriptor_ptr create_dataDescriptor(DATA_TYPE type , mode_t mode);
 
 /** 
- * @retval 0 on success. -1 if the dataD is not of PIPE_T type
+ * @retval 0 on success. -1 if the dataD is not of pipe_info_ptr type
  */
-int setPipe_dataDescriptor(dataDescriptor_t dataD ,pipe_t pipe);
+int setPipe_dataDescriptor(dataDescriptor_ptr dataD ,pipe_info_ptr pipe);
 
 /** 
  * @retval NULL if an error ocurred
  */
-pipe_t getPipe_dataDescriptor(dataDescriptor_t dataD);
+pipe_info_ptr getPipe_dataDescriptor(dataDescriptor_ptr dataD);
 
 /** 
  * @retval -1 if an error ocurred
  */
-DATA_TYPE getDataType_dataDescriptor(dataDescriptor_t dataD);
+DATA_TYPE getDataType_dataDescriptor(dataDescriptor_ptr dataD);
 
-mode_t getMode_dataDescriptor(dataDescriptor_t dataD);
+mode_t getMode_dataDescriptor(dataDescriptor_ptr dataD);
 
-void close_dataDescriptor(dataDescriptor_t dataD);
+void close_dataDescriptor(dataDescriptor_ptr dataD);
 
 //int dup2(unsigned int oldfd , unsigned int newfd);
 

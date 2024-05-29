@@ -15,7 +15,7 @@
 void init_mm();
 uint16_t get_mem(uint8_t *address, uint8_t *buffer, uint16_t count);
 void get_mem_state(int mem_state[]);
-void *malloc(size_t size);
+void *mem_alloc(size_t size);
 void free(void *ptr);
 
 #endif /* MEMORY_MANAGER_H */

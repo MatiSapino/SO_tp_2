@@ -10,6 +10,6 @@ typedef struct pipe_info
     int writeopen;
     int blocked_pid[64];
     int blocked_count;
-} pipe_info_t;
+} pipe_info_t, *pipe_info_ptr;
 
 #endif

@@ -31,4 +31,6 @@ void yield();
 int8_t change_fd(uint16_t pid, uint8_t std, int16_t new_fd);
 int16_t get_current_p_fd(uint8_t std);
 void kill_foreground_p();
+int search_by_pid(void *process, void *pid);
+
 #endif

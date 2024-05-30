@@ -41,7 +41,7 @@ static void pids_to_str(int pids[], char dest[], int size)
     dest[i++] = '\0';
 }
 
-static void print_line(pipe_info_t *info)
+static void print_line(pipe_t *info)
 {
 
     char aux[80] = {0};
@@ -122,7 +122,7 @@ static void init_columns_size()
 void info_pipe(char *name)
 {
 
-    pipe_info_t *pipe_info = (pipe_info_t *)call_malloc(sizeof(pipe_info_t));
+    pipe_t *pipe_info = (pipe_t *)call_malloc(sizeof(pipe_t));
     call_info_pipe(name, pipe_info);
 
     init_columns_size();
@@ -135,10 +135,10 @@ void info_pipe(char *name)
 int info_all_pipes(int argc, char *argv[])
 {
 
-    pipe_info_t *arr[MAX_PIPES] = {0};
+    pipe_t *arr[MAX_PIPES] = {0};
     for (int i = 0; i < MAX_PIPES; i++)
     {
-        arr[i] = (pipe_info_t *)call_malloc(sizeof(pipe_info_t));
+        arr[i] = (pipe_t *)call_malloc(sizeof(pipe_t));
     }
     int amount = call_info_all_pipes(arr, MAX_PIPES);
 

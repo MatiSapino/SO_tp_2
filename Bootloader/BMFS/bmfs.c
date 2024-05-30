@@ -219,7 +219,7 @@ int findfile(char *filename, struct BMFSEntry *fileentry, int *entrynumber)
 		}
 		else										// Valid entry
 		{
-			if (str_cmp(filename, entry.FileName) == 0)
+			if (strcmp(filename, entry.FileName) == 0)
 			{
 				memcpy(fileentry, pentry, 64);
 				*entrynumber = tint;
@@ -421,7 +421,7 @@ int initialize(char *diskname, char *size, char *mbr, char *boot, char *kernel)
 
 	// Allocate buffer to use for filling the disk image with zeros.
 	if (ret == 0) {
-		buffer = (char *) mem_alloc(bufferSize);
+		buffer = (char *) malloc(bufferSize);
 		if (buffer == NULL) {
 			printf("Error: Failed to allocate buffer\n");
 			ret = 1;

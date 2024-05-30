@@ -19,7 +19,7 @@ scheduler_ptr create_scheduler() {
 	for (int i = 0; i < MAX_PROCESSES_AMOUNT; i++)
 		scheduler->processes[i] = NULL;
 	for (int i = 0; i < PRIORITY_LEVELS + 1; i++)
-		scheduler->levels[i] = new_linked_list((int (*)(void *, void *))search_by_pid);
+		// scheduler->levels[i] = new_linked_list((int (*)(void *, void *))search_by_pid);
 	scheduler->next_available_pid = 0;
 	scheduler->kill_foreground_p = 0;
 	return scheduler;
@@ -56,7 +56,7 @@ int32_t set_priority(uint16_t pid, uint8_t new_priority) {
 	return new_priority;
 }
 
-int8_t set_status(uint16_t pid, uint8_t newStatus) {
+int8_t set_pstatus(uint16_t pid, uint8_t newStatus) {
 	scheduler_ptr scheduler = get_scheduler();
 	node_ptr node = scheduler->processes[pid];
 	if (node == NULL || pid == IDLE_PID)

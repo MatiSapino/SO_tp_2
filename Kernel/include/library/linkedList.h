@@ -10,11 +10,14 @@
 // typedef struct node_t *node_ptr;
 // typedef struct list_t * list_ptr;
 
+typedef struct node *node_ptr;
+
 typedef struct node {
     void *data;
     node_ptr next;
     node_ptr prev;
-} node_t, *node_ptr;
+} node_t;
+
 
 typedef struct list {
     node_ptr start;

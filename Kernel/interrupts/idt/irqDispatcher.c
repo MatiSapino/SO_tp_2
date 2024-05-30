@@ -122,6 +122,16 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 	case 28:
 		sys_exit((int)rsi);
 		break;
+	case 29:
+		return sem_open((char *)rsi, (int)rdx);
+	case 30:
+		return sem_wait((sem_ptr)rsi);
+	case 31:
+		return sem_post((sem_ptr)rsi);
+	case 32:
+		return sem_close((sem_ptr)rsi);
+	case 33:
+		return get_semaphores((copy_sem_t **)rsi);
 
 	default:
 		return 0;

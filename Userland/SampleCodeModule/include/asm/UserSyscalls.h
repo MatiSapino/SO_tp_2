@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include <infoPipe.h>
-#include <semaphore.h>
 
 void call_sys_read(char *buf, int size, int fd);
 void call_sys_write(char *buf, int size, int fd);
@@ -27,25 +25,8 @@ void call_beep(int freq);
 void call_put_char_in_set_position(char character, int color, int x, int y);
 void call_put_square(int x, int y, int size, int color);
 
-int call_get_mem(uint8_t *address, uint8_t *buffer, size_t count);
-void call_get_mem_state(int mem_state[]);
-void *call_malloc(size_t size);
-void call_free(void *ptr);
-
-int call_create_pipe(char *name, int fd[2]);
-int call_open_pipe(char *name, int fd[2]);
-int call_info_pipe(char *name, pipe_info_t *info);
-int call_info_all_pipes(pipe_info_t *info[], unsigned int size);
-int call_dup2(unsigned int oldfd, unsigned int newfd);
-
 void call_close(unsigned int fd);
 
 int call_exit(int error_code);
-
-sem_ptr call_sem_open(char * name, int value);
-int call_sem_wait(sem_ptr sem);
-int call_sem_post(sem_ptr sem);
-int call_sem_close(sem_ptr sem);
-int call_get_semaphores(copy_sem_t * sems[]);
 
 #endif

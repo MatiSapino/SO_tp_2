@@ -3,7 +3,7 @@
 
 #include <std_io.h>
 
-#include <UserSyscalls.h>
+#include <mem.h>
 
 int printmemstate(int argc, char *argv[]);
 

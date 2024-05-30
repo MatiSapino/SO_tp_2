@@ -4,7 +4,7 @@
 #include <std_io.h>
 #include <std_lib.h>
 
-#include <UserSyscalls.h>
+#include <mem.h>
 
 #define PRINT_SIZE 32
 

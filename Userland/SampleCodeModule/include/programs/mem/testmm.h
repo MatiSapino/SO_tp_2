@@ -5,7 +5,7 @@
 #include <utils.h>
 #include <std_lib.h>
 
-#include <UserSyscalls.h>
+#include <mem.h>
 
 #define MAX_BLOCKS 80
 

@@ -4,8 +4,8 @@
 #include <utils.h>
 #include <std_io.h>
 
-#include <UserSyscalls.h>
+#include <process.h>
 
-//int test_proc(int argc, char *argv[]);
+int test_proc(int argc, char *argv[]);
 
 #endif

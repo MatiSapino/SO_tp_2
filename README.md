@@ -1,31 +1,34 @@
-SO_tp_2
+# KerberOS
 
-//crear el contenedor (2.0)
-docker run -d -v ${PWD}:/root --privileged  -ti --name RowDaBoat-x64barebones-d4e1c147f975 agodio/itba-so:2.0
+64-bit operative system with multitasking capabilities built on top of [x64BareBones](https://bitbucket.org/RowDaBoat/x64barebones/wiki/Home).
 
-//compilo el projecto
-./build.sh
+# Building
 
-//ejecuto el projecto
-sudo ./run.sh
+1. To be able to build this project, the following tools are needed:
 
-//elimino el contenedor (2.0)
-docker rm -f RowDaBoat-x64barebones-d4e1c147f975
+    `build-essential` package, which includes [GCC](https://gcc.gnu.org/) and [Make](https://www.gnu.org/software/make/manual/make.html). 
+    ```
+    sudo apt-get install build-essential
+    ```
 
-//crear el contenedor (1.0)
-docker run -d -v ${PWD}:/root --privileged  -ti --name RowDaBoat-x64barebones-d4e1c147f975 agodio/itba-so:1.0
+    [NASM](https://www.nasm.us/) for compiling assembly code.
+    ```
+    sudo apt-get install nasm
+    ``` 
 
-//compilo el projecto
-./build.sh
+    [QEMU](https://www.qemu.org/) for running the OS image. It also offers a comfortable way to do system-wide debugging. 
+    ```
+    sudo apt-get install qemu-kvm
+    ``` 
 
-//ejecuto el projecto
-sudo ./run.sh
-
-//inicializo el contenedor (1.0)
-docker start RowDaBoat-x64barebones-d4e1c147f975
-
-//compilo el projecto
-./build.sh
-
-//ejecuto el projecto
-sudo ./run.sh
+2. Build the Toolchain
+    and Kernerl From the project root directory, run:
+    ```
+    ./build.sh
+    ```
+    
+# Booting   
+To boot the OS, type the following command inside project root directory:
+   ```
+   ./run.sh
+   ```

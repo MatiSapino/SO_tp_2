@@ -21,17 +21,17 @@
     sudo apt-get install qemu
     ``` 
 
-2. Create a docker image with the same name of the working directory (Only do this once):
+2. Create a Docker image inside the project's root directory. (Only do this once):
     ```
     docker run -v "${PWD}:/root" --privileged -ti --name ${PWD##*/} agodio/itba-so:2.0 
     ```
 
-3. Exit the container bash (Only do this once):
+3. Exit the container (Only do this once):
     ```
     exit
     ```
-    
-4. Build the Toolchain and Kernel From the project root directory, run:
+
+4. Build the Toolchain and Kernel from the project root directory:
     ```
     ./build.sh
     ```

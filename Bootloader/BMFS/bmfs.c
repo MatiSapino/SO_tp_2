@@ -7,6 +7,8 @@
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>
+#include <memory_manager.h>
+#include <string_s.h>
 
 /* Global defines */
 struct BMFSEntry
@@ -217,7 +219,7 @@ int findfile(char *filename, struct BMFSEntry *fileentry, int *entrynumber)
 		}
 		else										// Valid entry
 		{
-			if (strcmp(filename, entry.FileName) == 0)
+			if (str_cmp(filename, entry.FileName) == 0)
 			{
 				memcpy(fileentry, pentry, 64);
 				*entrynumber = tint;
@@ -409,22 +411,18 @@ int initialize(char *diskname, char *size, char *mbr, char *boot, char *kernel)
 	}
 
 	// Open the kernel file for reading.
-	if (ret == 0 && kernel != NULL)
-	{
+	if (ret == 0 && kernel != NULL) {
 		kernelFile = fopen(kernel, "rb");
-		if (kernelFile == NULL )
-		{
+		if (kernelFile == NULL ) {
 			printf("Error: Unable to open kernel file '%s'\n", kernel);
 			ret = 1;
 		}
 	}
 
 	// Allocate buffer to use for filling the disk image with zeros.
-	if (ret == 0)
-	{
-		buffer = (char *) malloc(bufferSize);
-		if (buffer == NULL)
-		{
+	if (ret == 0) {
+		buffer = (char *) mem_alloc(bufferSize);
+		if (buffer == NULL) {
 			printf("Error: Failed to allocate buffer\n");
 			ret = 1;
 		}
@@ -433,19 +431,16 @@ int initialize(char *diskname, char *size, char *mbr, char *boot, char *kernel)
 	// Open the disk image file for writing.  This will truncate the disk file
 	// if it already exists, so we should do this only after we're ready to
 	// actually write to the file.
-	if (ret == 0)
-	{
+	if (ret == 0) {
 		disk = fopen(diskname, "wb");
-		if (disk == NULL)
-		{
+		if (disk == NULL) {
 			printf("Error: Unable to open disk '%s'\n", diskname);
 			ret = 1;
 		}
 	}
 
 	// Fill the disk image with zeros.
-	if (ret == 0)
-	{
+	if (ret == 0) {
 		double percent;
 		memset(buffer, 0, bufferSize);
 		writeSize = 0;
@@ -456,71 +451,57 @@ int initialize(char *diskname, char *size, char *mbr, char *boot, char *kernel)
 			percent *= 100;
 			printf("Formatting disk: %llu of %llu bytes (%.0f%%)...\r", writeSize, diskSize, percent);
 			chunkSize = bufferSize;
-			if (chunkSize > diskSize - writeSize)
-			{
+			if (chunkSize > diskSize - writeSize) {
 				chunkSize = diskSize - writeSize;
 			}
-			if (fwrite(buffer, chunkSize, 1, disk) != 1)
-			{
+			if (fwrite(buffer, chunkSize, 1, disk) != 1) {
 				printf("Error: Failed to write disk '%s'\n", diskname);
 				ret = 1;
 				break;
 			}
 			writeSize += chunkSize;
 		}
-		if (ret == 0)
-		{
+		if (ret == 0) {
 			printf("Formatting disk: %llu of %llu bytes (100%%)%9s\n", writeSize, diskSize, "");
 		}
 	}
 
 	// Format the disk.
-	if (ret == 0)
-	{
+	if (ret == 0) {
 		rewind(disk);
 		format();
 	}
 
 	// Write the master boot record if it was specified by the caller.
-	if (ret == 0 && mbrFile !=NULL)
-	{
+	if (ret == 0 && mbrFile !=NULL) {
 		printf("Writing master boot record.\n");
 		fseek(disk, 0, SEEK_SET);
-		if (fread(buffer, 512, 1, mbrFile) == 1)
-		{
-			if (fwrite(buffer, 512, 1, disk) != 1)
-			{
+		if (fread(buffer, 512, 1, mbrFile) == 1) {
+			if (fwrite(buffer, 512, 1, disk) != 1) {
 				printf("Error: Failed to write disk '%s'\n", diskname);
 				ret = 1;
 			}
 		}
-		else
-		{
+		else {
 			printf("Error: Failed to read file '%s'\n", mbr);
 			ret = 1;
 		}
 	}
 
 	// Write the boot loader if it was specified by the caller.
-	if (ret == 0 && bootFile !=NULL)
-	{
+	if (ret == 0 && bootFile !=NULL) {
 		printf("Writing %s file.\n", bootFileType);
 		fseek(disk, 8192, SEEK_SET);
-		for (;;)
-		{
+		for (;;){
 			chunkSize = fread( buffer, 1, bufferSize, bootFile);
-			if (chunkSize > 0)
-			{
-				if (fwrite(buffer, chunkSize, 1, disk) != 1)
-				{
+			if (chunkSize > 0) {
+				if (fwrite(buffer, chunkSize, 1, disk) != 1) {
 					printf("Error: Failed to write disk '%s'\n", diskname);
 					ret = 1;
 				}
 			}
-			else
-			{
-				if (ferror(disk))
-				{
+			else {
+				if (ferror(disk)) {
 					printf("Error: Failed to read file '%s'\n", boot);
 					ret = 1;
 				}
@@ -531,24 +512,18 @@ int initialize(char *diskname, char *size, char *mbr, char *boot, char *kernel)
 
 	// Write the kernel if it was specified by the caller. The kernel must
 	// immediately follow the boot loader on disk (i.e. no seek needed.)
-	if (ret == 0 && kernelFile !=NULL)
-	{
+	if (ret == 0 && kernelFile !=NULL) {
 		printf("Writing kernel.\n");
-		for (;;)
-		{
+		for (;;) {
 			chunkSize = fread( buffer, 1, bufferSize, kernelFile);
-			if (chunkSize > 0)
-			{
-				if (fwrite(buffer, chunkSize, 1, disk) != 1)
-				{
+			if (chunkSize > 0) {
+				if (fwrite(buffer, chunkSize, 1, disk) != 1) {
 					printf("Error: Failed to write disk '%s'\n", diskname);
 					ret = 1;
 				}
 			}
-			else
-			{
-				if (ferror(disk))
-				{
+			else {
+				if (ferror(disk)) {
 					printf("Error: Failed to read file '%s'\n", kernel);
 					ret = 1;
 				}
@@ -558,32 +533,26 @@ int initialize(char *diskname, char *size, char *mbr, char *boot, char *kernel)
 	}
 
 	// Close any files that were opened.
-	if (mbrFile != NULL)
-	{
+	if (mbrFile != NULL) {
 		fclose(mbrFile);
 	}
-	if (bootFile != NULL)
-	{
+	if (bootFile != NULL) {
 		fclose(bootFile);
 	}
-	if (kernelFile != NULL)
-	{
+	if (kernelFile != NULL) {
 		fclose(kernelFile);
 	}
-	if (disk != NULL)
-	{
+	if (disk != NULL) {
 		fclose(disk);
 		disk = NULL;
 	}
 
 	// Free the buffer if it was allocated.
-	if (buffer != NULL)
-	{
+	if (buffer != NULL) {
 		free(buffer);
 	}
 
-	if (ret == 0)
-	{
+	if (ret == 0) {
 		printf("Disk initialization complete.\n");
 	}
 
@@ -592,8 +561,7 @@ int initialize(char *diskname, char *size, char *mbr, char *boot, char *kernel)
 
 
 // helper function for qsort, sorts by StartingBlock field
-static int StartingBlockCmp(const void *pa, const void *pb)
-{
+static int StartingBlockCmp(const void *pa, const void *pb) {
 	struct BMFSEntry *ea = (struct BMFSEntry *)pa;
 	struct BMFSEntry *eb = (struct BMFSEntry *)pb;
 	// empty records go to the end

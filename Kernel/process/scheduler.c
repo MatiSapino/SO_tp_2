@@ -119,7 +119,7 @@ void *schedule(void *prevStackPointer) {
 	scheduler->currentPid = get_next_pid(scheduler);
 	currentProcess = scheduler->processes[scheduler->currentPid]->data;
 
-	if (scheduler->killFgProcess && currentProcess->fileDescriptors[STDIN] == STDIN) {
+	if (scheduler->killFgProcess && currentProcess->data_descriptors[STDIN] == STDIN) {
 		scheduler->killFgProcess = 0;
 		if (kill_current_process(-1) != -1)
 			forceTimerTick();
@@ -134,7 +134,7 @@ int16_t createProcess(function_t code, char **args, char *name, uint8_t priority
 	if (scheduler->qtyProcesses >= MAX_PROCESSES) // TODO: Agregar panic?
 		return -1;
 	process_ptr process = (process_ptr) mem_alloc(sizeof(process_t));
-	initProcess(process, scheduler->nextUnusedPid, scheduler->currentPid, code, args, name, priority, fileDescriptors, unkillable);
+	p_init(process, scheduler->nextUnusedPid, scheduler->currentPid, code, args, name, priority, fileDescriptors);
 
 	node_ptr processNode;
 	if (process->pid != IDLE_PID)
@@ -170,7 +170,7 @@ int32_t kill_process(uint16_t pid, int32_t ret_value) {
 	if (pnode_to_kill == NULL)
 		return -1;
 	process_ptr process_to_kill = (process_ptr) pnode_to_kill->data;
-	if (process_to_kill->status == ZOMBIE || process_to_kill->unkillable)
+	if (process_to_kill->status == ZOMBIE)
 		return -1;
 
 	closeFileDescriptors(process_to_kill);
@@ -181,17 +181,17 @@ int32_t kill_process(uint16_t pid, int32_t ret_value) {
 
 	process_to_kill->status = ZOMBIE;
 
-	to_begin(process_to_kill->zombieChildren);
-	while (has_next(process_to_kill->zombieChildren)) {
-		destroyZombie(scheduler, (process_ptr) next(process_to_kill->zombieChildren));
+	to_begin(process_to_kill->zombies);
+	while (has_next(process_to_kill->zombies)) {
+		destroyZombie(scheduler, (process_ptr) next(process_to_kill->zombies));
 	}
 
-	node_ptr parentNode = scheduler->processes[process_to_kill->parentPid];
+	node_ptr parentNode = scheduler->processes[process_to_kill->parent_pid];
 	if (parentNode != NULL && ((process_ptr) parentNode->data)->status != ZOMBIE) {
 		process_ptr parent = (process_ptr) parentNode->data;
-		append_node(parent->zombieChildren, pnode_to_kill);
+		append_node(parent->zombies, pnode_to_kill);
 		if (processIsWaiting(parent, process_to_kill->pid))
-			setStatus(process_to_kill->parentPid, READY);
+			set_pstatus(process_to_kill->parent_pid, READY);
 	}
 	else {
 		destroyZombie(scheduler, process_to_kill);
@@ -214,14 +214,14 @@ psnapshotList_ptr getProcessSnapshot() {
 
 	loadSnapshot(&psArray[processIndex++], (process_ptr) scheduler->processes[IDLE_PID]->data);
 	for (int lvl = PRIORITY_LEVELS; lvl >= 0; lvl--) { // Se cuentan tambien los bloqueados
-		begin(scheduler->levels[lvl]);
-		while (hasNext(scheduler->levels[lvl])) {
+		to_begin(scheduler->levels[lvl]);
+		while (has_next(scheduler->levels[lvl])) {
 			process_ptr nextProcess = (process_ptr) next(scheduler->levels[lvl]);
 			loadSnapshot(&psArray[processIndex], nextProcess);
 			processIndex++;
 			if (nextProcess->status != ZOMBIE) {
 				getZombiesSnapshots(processIndex, psArray, nextProcess);
-				processIndex += getLength(nextProcess->zombieChildren);
+				processIndex += get_length(nextProcess->zombies);
 			}
 		}
 	}
@@ -236,16 +236,15 @@ int32_t get_zombie_ret_value(uint16_t pid) {
 	if (zombieNode == NULL)
 		return -1;
 	process_ptr zombieProcess = (process_ptr) zombieNode->data;
-	if (zombieProcess->parentPid != scheduler->currentPid)
+	if (zombieProcess->parent_pid != scheduler->currentPid)
 		return -1;
 
 	process_ptr parent = (process_ptr) scheduler->processes[scheduler->currentPid]->data;
-	parent->waitingForPid = pid;
 	if (zombieProcess->status != ZOMBIE) {
-		setStatus(parent->pid, BLOCKED);
+		set_pstatus(parent->pid, BLOCKED);
 		yield();
 	}
-	remove_node(parent->zombieChildren, zombieNode);
+	remove_node(parent->zombies, zombieNode);
 	destroyZombie(scheduler, zombieProcess);
 	return zombieProcess->ret_value;
 }

@@ -25,7 +25,7 @@ char *strcpy(char *dest, const char *src)
     return dest;
 }
 
-int strCompare(char *str1, char *str2)
+int str_cmp(char *str1, char *str2)
 {
     while (*str1 && *str2)
     {

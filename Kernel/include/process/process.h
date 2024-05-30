@@ -10,6 +10,7 @@
 #define P_INIT_CS 0x8
 #define P_SS 0
 #define P_EXIT_CODE 0
+#define PROCESS_COMUNICATION_AMOUNT 128
 
 #define LOWEST 1
 #define MEDIUM 5
@@ -25,7 +26,7 @@ typedef enum pstatus {
     DEAD 
 } pstatus_t;
 
-typedef int pid_t;
+typedef uint16_t pid_t;
 
 typedef struct context {
     uint64_t r15;
@@ -54,19 +55,22 @@ typedef struct context {
 } context_t, *context_ptr;
 
 typedef struct process {
-    uint8_t k_stack[K_PROCESS_STACK_SIZE];
-    context_t *context;
+    char *name;
     pid_t pid;
+    pid_t parent_pid;
+    context_ptr context;
     pstatus_t status;
-    process_ptr parent;
-    dataDescriptor_ptr dataDescriptors[128];
-    size_t dataD_index;
+    data_descriptor_ptr data_descriptors[PROCESS_COMUNICATION_AMOUNT];
+    size_t data_d_index;
     void *channel;
     list_ptr children;
+    list_ptr zombies;
+    int ret_value;
     int exit_status;
     int priority;
     char **argv;
     int argc;
+    void *stack_base;
     void *stack_position;
 } process_t, *process_ptr;
 
@@ -88,7 +92,7 @@ typedef struct psnapshotList {
 
 typedef int (*function_t)(int, char *[]);
 
-process_ptr new_process(function_t main, int argc, char *argv[]);
+void p_init(process_ptr process, uint16_t pid, uint16_t parent_pid, function_t code, int argc, char *argv[], char *name, uint8_t priority, int16_t fds[]);
 
 void free_process(process_t *process);
 

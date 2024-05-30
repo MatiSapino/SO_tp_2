@@ -1,9 +1,9 @@
-
 GLOBAL _cli
 GLOBAL _sti
 GLOBAL picMasterMask
 GLOBAL picSlaveMask
 GLOBAL haltcpu
+GLOBAL init_stack_frame
 GLOBAL _hlt
 
 GLOBAL _irq00Handler
@@ -168,6 +168,24 @@ _cli:
 
 _sti:
 	sti
+	ret
+
+init_stack_frame:
+	mov r8, rsp 	
+	mov r9, rbp	
+	mov rsp, rdx 
+	mov rbp, rdx
+	push 0x0
+	push rdx
+	push 0x202
+	push 0x8
+	push rdi
+	mov rdi, rsi 	
+	mov rsi, rcx
+	pushState
+	mov rax, rsp
+	mov rsp, r8
+	mov rbp, r9
 	ret
 
 picMasterMask:

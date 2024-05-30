@@ -1,4 +1,5 @@
 #include <commands.h>
+#
 
 static char command_list[COMMAND_AMOUNT][8] = {"HELP", "TIME", "REGSTATE", "DIV0", "INVALOP", "ZOOMOUT", "ZOOMIN", "SNAKE", "CLEAR", "EXIT", "SNAKE2", "PRINTMEM", "MEM", "TESTMM"};
 void (*functionPointers[COMMAND_AMOUNT])(char *args[], int argCount) = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, print_mem, print_mem_state, test_mm};
@@ -9,7 +10,7 @@ void checkCommands(char *command, char *args[], int argCount)
     removeLeadingTrailingSpaces(command); // deletes spaces at the beginning and end of the command
     for (int i = 0; i < COMMAND_AMOUNT; i++)
     {
-        if (strCompare(command_list[i], command) == 0)
+        if (str_cmp(command_list[i], command) == 0)
         {
             functionPointers[i](args, argCount);
             return;

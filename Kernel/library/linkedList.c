@@ -10,6 +10,23 @@ list_ptr new_linked_list(int (*comp_funct)(void *, void *)) {
     return my_list;
 }
 
+void *find(list_t *list, void *data, int (*comp_funct)(void *, void *)) {
+    int (*funct)(void *, void *);
+    if (comp_funct == NULL) {
+        funct = list->comp_funct;
+    }
+    else {
+        funct = comp_funct;
+    }
+    node_ptr node = list->start;
+    while (node != NULL) {
+        if (funct(node->data, data))
+            return node->data;
+        node = node->next;
+    }
+    return NULL;
+}
+
 void *remove_node(list_ptr list, node_ptr node) {
 	if (list == NULL || node == NULL)
 		return NULL;

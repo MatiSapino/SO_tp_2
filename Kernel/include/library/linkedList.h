@@ -69,4 +69,6 @@ node_ptr prepend_node(list_ptr list, node_ptr node);
 
 node_ptr append_node(list_ptr list, node_ptr node);
 
+void *find(list_t *list, void *data, int (*comp_funct)(void *, void *));
+
 #endif

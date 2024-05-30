@@ -1,76 +1,69 @@
 #include <dataDescriptor.h>
+#include <memory_manager.h>
 
-dataDescriptor_t create_dataDescriptor(DATA_TYPE type, mode_t mode)
-{
+data_descriptor_ptr create_data_descriptor(DATA_TYPE type, mode_t mode) {
 
     if (!((mode == READ_MODE || mode == WRITE_MODE) &&
           (type == PIPE_T || type == STD_T)))
         return NULL;
 
-    dataDescriptor_t newDataD = malloc(sizeof(dataDescriptor));
+    data_descriptor_ptr new_data_d = mem_alloc(sizeof(data_descriptor_t));
 
-    if (newDataD != NULL)
-    {
-        newDataD->type = type;
-        newDataD->mode = mode;
-        newDataD->pipe = NULL;
+    if (new_data_d != NULL) {
+        new_data_d->type = type;
+        new_data_d->mode = mode;
+        new_data_d->pipe = NULL;
     }
 
-    return newDataD;
+    return new_data_d;
 }
 
-DATA_TYPE getDataType_dataDescriptor(dataDescriptor_t dataD)
-{
-    if (dataD == NULL)
-        return -1;
+DATA_TYPE get_data_type(data_descriptor_ptr data_d) {
+    if (data_d == NULL) return -1;
 
-    return dataD->type;
+    return data_d->type;
 }
 
-mode_t getMode_dataDescriptor(dataDescriptor_t dataD)
-{
-    return dataD->mode;
+mode_t get_mode(data_descriptor_ptr data_d) {
+    return data_d->mode;
 }
 
-pipe_t getPipe_dataDescriptor(dataDescriptor_t dataD)
-{
-    if (dataD == NULL || dataD->type != PIPE_T)
+pipe_ptr get_pipe(data_descriptor_ptr data_d) {
+    if (data_d == NULL || data_d->type != PIPE_T)
         return NULL;
 
-    return dataD->pipe;
+    return data_d->pipe;
 }
 
-int setPipe_dataDescriptor(dataDescriptor_t dataD, pipe_t pipe)
-{
-    if (dataD != NULL && dataD->type == PIPE_T)
+int set_pipe(data_descriptor_ptr data_d, pipe_ptr pipe) {
+    if (data_d != NULL && data_d->type == PIPE_T)
     {
-        dataD->pipe = pipe;
+        data_d->pipe = pipe;
         return 0;
     }
     return -1;
 }
 
-void close_dataDescriptor(dataDescriptor_t dataD)
-{
-    if (dataD == NULL)
+void close(data_descriptor_ptr data_d) {
+    if (data_d == NULL)
         return;
 
-    // if (dataD->type == PIPE_T)
-    //     close_pipe(dataD->pipe, dataD->mode == WRITE_MODE);
+    // if (data_d->type == PIPE_T)
+    //     close_pipe(data_d->pipe, data_d->mode == WRITE_MODE);
 
-    free(dataD);
+    free(data_d);
 }
 
 // int dup2(unsigned int oldfd, unsigned int newfd)
 // {
 //     process_t *process = get_current_process();
 
-//     if (newfd >= process->dataD_index || oldfd >= process->dataD_index)
+//     if (newfd >= process->data_d_index || oldfd >= process->data_d_index)
 //         return -1;
 
-//     dataDescriptor_t aux = process->dataDescriptors[oldfd];
-//     process->dataDescriptors[oldfd] = process->dataDescriptors[newfd];
-//     process->dataDescriptors[newfd] = aux;
+//     data_descriptor_ptr aux = process->data_descriptors[oldfd];
+//     process->data_descriptors[oldfd] = process->data_descriptors[newfd];
+//     process->data_descriptors[newfd] = aux;
 
 //     return 0;
 // }

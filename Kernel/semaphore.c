@@ -89,7 +89,7 @@ void initailize_sems(){
 
 uint64_t locate_sem(char *sem_name){
     for(int i = 0; i < MAX_SEMAPHORES; i++){
-        if(semaphore_array[i].status == OCCUPIED && strCompare(semaphore_array[i].sem.name, sem_name) == 0){
+        if(semaphore_array[i].status == OCCUPIED && str_cmp(semaphore_array[i].sem.name, sem_name) == 0){
             return i;
         }
     }

@@ -31,7 +31,7 @@ typedef struct list_t
 
 list_t *new_circular_linked_list(int (*comp_funct)(void *, void *))
 {
-    list_t *new_list = malloc(sizeof(list_t));
+    list_t *new_list = mem_alloc(sizeof(list_t));
     new_list->start = NULL;
     new_list->end = NULL;
     new_list->current = NULL;
@@ -48,7 +48,7 @@ list_t *new_circular_linked_list(int (*comp_funct)(void *, void *))
 
 static node_list_t *create_node(void *data)
 {
-    node_list_t *new_node = (node_list_t *)malloc(sizeof(node_list_t));
+    node_list_t *new_node = (node_list_t *)mem_alloc(sizeof(node_list_t));
     new_node->data = data;
     new_node->next = NULL;
     return new_node;
@@ -179,7 +179,7 @@ void cl_free_list(circular_list_t list)
 
 iterator_t *new_circular_list_iterator(list_t *l)
 {
-    iterator_t *new_iterator = malloc(sizeof(iterator_t));
+    iterator_t *new_iterator = mem_alloc(sizeof(iterator_t));
     new_iterator->start = l->start;
     new_iterator->current = l->start;
     new_iterator->end = l->end;

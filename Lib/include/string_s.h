@@ -5,7 +5,7 @@
 
 char *strchr(const char *str, int c);
 char *strcpy(char *dest, const char *src);
-int strCompare(char *str1, char *str2);
+int str_cmp(char *str1, char *str2);
 void swap(char *c1, char *c2);
 void reverse(char str[], int length);
 size_t strlen(const char *str);

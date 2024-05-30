@@ -9,16 +9,14 @@
 #define MAX_PRIORITY 4
 #define MIN_PRIORITY 0
 #define BLOCKED_INDEX PRIORITY_LEVELS
-#define MAX_PROCESSES (1 << 12)
 #define IDLE_PID 0
-#define QUANTUM_COEF 2
 
 extern void force_tick();
 
 
 scheduler_ptr create_scheduler() {
 	scheduler_ptr scheduler = (scheduler_ptr) SCHEDULER_ADDRESS;
-	for (int i = 0; i < MAX_PROCESSES; i++)
+	for (int i = 0; i < MAX_PROCESSES_AMOUNT; i++)
 		scheduler->processes[i] = NULL;
 	for (int i = 0; i < PRIORITY_LEVELS + 1; i++)
 		scheduler->levels[i] = new_linked_list((int (*)(void *, void *))search_by_pid);
@@ -134,7 +132,7 @@ void *schedule(void *prevStackPointer) {
 
 int16_t createProcess(function_t code, int argc, char **argv, char *name, uint8_t priority, int16_t fds[], uint8_t is_init) {
 	scheduler_ptr scheduler = get_scheduler();
-	if (scheduler->process_amount >= MAX_PROCESSES) // TODO: Agregar panic?
+	if (scheduler->process_amount >= MAX_PROCESSES_AMOUNT) // TODO: Agregar panic?
 		return -1;
 	process_ptr process = (process_ptr) mem_alloc(sizeof(process_t));
 	set_p_params(process, scheduler->next_available_pid, scheduler->pid, code, argc, argv, name, priority, is_init, fds);
@@ -149,7 +147,7 @@ int16_t createProcess(function_t code, int argc, char **argv, char *name, uint8_
 	scheduler->processes[process->pid] = processNode;
 
 	while (scheduler->processes[scheduler->next_available_pid] != NULL)
-		scheduler->next_available_pid = (scheduler->next_available_pid + 1) % MAX_PROCESSES;
+		scheduler->next_available_pid = (scheduler->next_available_pid + 1) % MAX_PROCESSES_AMOUNT;
 	scheduler->process_amount++;
 	return process->pid;
 }

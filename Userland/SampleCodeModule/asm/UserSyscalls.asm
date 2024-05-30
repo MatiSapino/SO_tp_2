@@ -26,6 +26,11 @@ GLOBAL call_info_all_pipes
 GLOBAL call_dup2
 GLOBAL call_close
 GLOBAL call_exit
+GLOBAL call_sem_open
+GLOBAL call_sem_wait
+GLOBAL call_sem_post
+GLOBAL call_sem_close
+GLOBAL call_get_semaphores
 
 section .text
 
@@ -100,3 +105,13 @@ call_close:
     call_to_handler 27
 call_exit:
     call_to_handler 28
+call_sem_open:
+    call_to_handler 29
+call_sem_wait:
+    call_to_handler 30
+call_sem_post:
+    call_to_handler 31
+call_sem_close:
+    call_to_handler 32
+call_get_semaphores:
+    call_to_handler 33

@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <infoPipe.h>
+#include <semaphore.h>
 
 void call_sys_read(char *buf, int size, int fd);
 void call_sys_write(char *buf, int size, int fd);
@@ -40,5 +41,11 @@ int call_dup2(unsigned int oldfd, unsigned int newfd);
 void call_close(unsigned int fd);
 
 int call_exit(int error_code);
+
+sem_ptr call_sem_open(char * name, int value);
+int call_sem_wait(sem_ptr sem);
+int call_sem_post(sem_ptr sem);
+int call_sem_close(sem_ptr sem);
+int call_get_semaphores(copy_sem_t * sems[]);
 
 #endif

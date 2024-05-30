@@ -60,18 +60,18 @@ typedef struct process {
     pid_t parent_pid;
     context_ptr context;
     pstatus_t status;
-    data_descriptor_ptr data_descriptors[PROCESS_COMUNICATION_AMOUNT];
-    size_t data_d_index;
-    void *channel;
-    list_ptr children;
     list_ptr zombies;
     int ret_value;
-    int exit_status;
     int priority;
+    int fread;
+    int fwrite;
+    int ferror;
     char **argv;
     int argc;
     void *stack_base;
     void *stack_position;
+    int is_init;
+    int waiting_for_pid;
 } process_t, *process_ptr;
 
 typedef struct psnapshot {
@@ -85,17 +85,20 @@ typedef struct psnapshot {
 	uint8_t foreground;
 } psnapshot_t, *psnapshot_ptr;
 
-typedef struct psnapshotList {
-	uint16_t length;
-	psnapshot_t *snapshotList;
-} psnapshotList_t, *psnapshotList_ptr;
-
 typedef int (*function_t)(int, char *[]);
 
-void p_init(process_ptr process, uint16_t pid, uint16_t parent_pid, function_t code, int argc, char *argv[], char *name, uint8_t priority, int16_t fds[]);
+void set_p_params(process_ptr process, uint16_t pid, uint16_t parent_pid, function_t code, int argc, char *argv[], char *name, uint8_t priority,int is_init, int16_t fds[]);
 
 void free_process(process_t *process);
 
 static int search_by_pid(void *process, void *pid);
 
-#endif
+void close_fds(process_ptr process);
+
+psnapshot_ptr load_snapshot(psnapshot_ptr snapshot, process_ptr process);
+
+int load_zombies_snapshot(int process_index, psnapshot_t psnapshot_array[], process_ptr next_p_in_schedule);
+
+int is_waiting(process_ptr process, uint16_t waiting_pid);
+
+#endif 

@@ -6,11 +6,12 @@ GLOBAL get_weekDay
 GLOBAL get_monthDay
 GLOBAL get_month
 GLOBAL get_year
+GLOBAL force_tick
 GLOBAL getKey
 GLOBAL inb
 GLOBAL outb
 GLOBAL kbflag
-GLOBAL load_settings
+GLOBAL load_settings 
 section .text
 
 %macro enter_func 0
@@ -136,4 +137,8 @@ outb:
 	mov rsp, rbp
 	pop rbp
 	ret
+
+force_tick:
+    int 0x20
+    ret
            

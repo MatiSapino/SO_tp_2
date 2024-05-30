@@ -29,8 +29,8 @@ static int process_pipe_comparison_function(void * pid, void * other_pid){
 
 static void set_data_descriptors(pipe_ptr pipe) {
 
-    data_descriptor_ptr readEnd = create_data_descriptor(PIPE_T, READ_MODE);
-    set_pipe(readEnd, pipe);
+    data_descriptor_ptr read_end = create_data_descriptor(PIPE_T, READ_MODE);
+    set_pipe(read_end, pipe);
     pipe->readopen = 1;
 
     data_descriptor_ptr writeEnd = create_data_descriptor(PIPE_T, WRITE_MODE);

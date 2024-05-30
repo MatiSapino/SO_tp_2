@@ -1,5 +1,6 @@
 #include <defs.h>
 #include <lib.h>
+#include <libasm.h>
 #include <linkedList.h>
 #include <process.h>
 #include <memory_manager.h>
@@ -12,6 +13,8 @@
 #define IDLE_PID 0
 #define QUANTUM_COEF 2
 
+extern void force_tick();
+
 
 scheduler_ptr create_scheduler() {
 	scheduler_ptr scheduler = (scheduler_ptr) SCHEDULER_ADDRESS;
@@ -19,8 +22,8 @@ scheduler_ptr create_scheduler() {
 		scheduler->processes[i] = NULL;
 	for (int i = 0; i < PRIORITY_LEVELS + 1; i++)
 		scheduler->levels[i] = new_linked_list((int (*)(void *, void *))search_by_pid);
-	scheduler->nextUnusedPid = 0;
-	scheduler->killFgProcess = 0;
+	scheduler->next_available_pid = 0;
+	scheduler->kill_foreground_p = 0;
 	return scheduler;
 }
 
@@ -32,7 +35,7 @@ static uint16_t get_next_pid(scheduler_ptr scheduler) {
 	process_ptr process = NULL;
 	for (int lvl = PRIORITY_LEVELS - 1; lvl >= 0 && process == NULL; lvl--)
 		if (!is_empty(scheduler->levels[lvl]))
-			process = (process_t *) (get_first(scheduler->levels[lvl]))->data;
+			process = (process_ptr) (get_first(scheduler->levels[lvl]))->data;
 
 	if (process == NULL)
 		return IDLE_PID;
@@ -79,7 +82,7 @@ int8_t set_status(uint16_t pid, uint8_t newStatus) {
 		// append_node(scheduler->levels[process->priority], node);
 		process->priority = MAX_PRIORITY;
 		prepend_node(scheduler->levels[process->priority], node);
-		scheduler->remainingQuantum = 0;
+		scheduler->quantums_left = 0;
 	}
 	return newStatus;
 }
@@ -96,12 +99,12 @@ void *schedule(void *prevStackPointer) {
 	static int firstTime = 1;
 	scheduler_ptr scheduler = get_scheduler();
 
-	scheduler->remainingQuantum--;
-	if (!scheduler->qtyProcesses || scheduler->remainingQuantum > 0)
+	scheduler->quantums_left--;
+	if (!scheduler->process_amount || scheduler->quantums_left > 0)
 		return prevStackPointer;
 
 	process_ptr currentProcess;
-	node_ptr currentProcessNode = scheduler->processes[scheduler->currentPid];
+	node_ptr currentProcessNode = scheduler->processes[scheduler->pid];
 
 	if (currentProcessNode != NULL) {
 		currentProcess = (process_ptr) currentProcessNode->data;
@@ -116,25 +119,25 @@ void *schedule(void *prevStackPointer) {
 		set_priority(currentProcess->pid, newPriority);
 	}
 
-	scheduler->currentPid = get_next_pid(scheduler);
-	currentProcess = scheduler->processes[scheduler->currentPid]->data;
+	scheduler->pid = get_next_pid(scheduler);
+	currentProcess = scheduler->processes[scheduler->pid]->data;
 
-	if (scheduler->killFgProcess && currentProcess->data_descriptors[STDIN] == STDIN) {
-		scheduler->killFgProcess = 0;
+	if (scheduler->kill_foreground_p && currentProcess->fread == STDIN) {
+		scheduler->kill_foreground_p = 0;
 		if (kill_current_process(-1) != -1)
-			forceTimerTick();
+			force_tick();
 	}
-	scheduler->remainingQuantum = (MAX_PRIORITY - currentProcess->priority);
+	scheduler->quantums_left = (MAX_PRIORITY - currentProcess->priority);
 	currentProcess->status = RUNNING;
 	return currentProcess->stack_position;
 }
 
-int16_t createProcess(function_t code, char **args, char *name, uint8_t priority, int16_t fileDescriptors[], uint8_t unkillable) {
+int16_t createProcess(function_t code, int argc, char **argv, char *name, uint8_t priority, int16_t fds[], uint8_t is_init) {
 	scheduler_ptr scheduler = get_scheduler();
-	if (scheduler->qtyProcesses >= MAX_PROCESSES) // TODO: Agregar panic?
+	if (scheduler->process_amount >= MAX_PROCESSES) // TODO: Agregar panic?
 		return -1;
 	process_ptr process = (process_ptr) mem_alloc(sizeof(process_t));
-	p_init(process, scheduler->nextUnusedPid, scheduler->currentPid, code, args, name, priority, fileDescriptors);
+	set_p_params(process, scheduler->next_available_pid, scheduler->pid, code, argc, argv, name, priority, is_init, fds);
 
 	node_ptr processNode;
 	if (process->pid != IDLE_PID)
@@ -145,15 +148,15 @@ int16_t createProcess(function_t code, char **args, char *name, uint8_t priority
 	}
 	scheduler->processes[process->pid] = processNode;
 
-	while (scheduler->processes[scheduler->nextUnusedPid] != NULL)
-		scheduler->nextUnusedPid = (scheduler->nextUnusedPid + 1) % MAX_PROCESSES;
-	scheduler->qtyProcesses++;
+	while (scheduler->processes[scheduler->next_available_pid] != NULL)
+		scheduler->next_available_pid = (scheduler->next_available_pid + 1) % MAX_PROCESSES;
+	scheduler->process_amount++;
 	return process->pid;
 }
 
 static void destroyZombie(scheduler_ptr scheduler, process_ptr zombie) {
 	node_ptr zombieNode = scheduler->processes[zombie->pid];
-	scheduler->qtyProcesses--;
+	scheduler->process_amount--;
 	scheduler->processes[zombie->pid] = NULL;
 	free_process(zombie);
 	free(zombieNode);
@@ -161,7 +164,7 @@ static void destroyZombie(scheduler_ptr scheduler, process_ptr zombie) {
 
 int32_t kill_current_process(int32_t ret_value) {
 	scheduler_ptr scheduler = get_scheduler();
-	return kill_process(scheduler->currentPid, ret_value);
+	return kill_process(scheduler->pid, ret_value);
 }
 
 int32_t kill_process(uint16_t pid, int32_t ret_value) {
@@ -170,10 +173,10 @@ int32_t kill_process(uint16_t pid, int32_t ret_value) {
 	if (pnode_to_kill == NULL)
 		return -1;
 	process_ptr process_to_kill = (process_ptr) pnode_to_kill->data;
-	if (process_to_kill->status == ZOMBIE)
+	if (process_to_kill->status == ZOMBIE || process_to_kill->is_init)
 		return -1;
 
-	closeFileDescriptors(process_to_kill);
+	close_fds(process_to_kill);
 
 	uint8_t priorityIndex = process_to_kill->status != BLOCKED ? process_to_kill->priority : BLOCKED_INDEX;
 	remove_node(scheduler->levels[priorityIndex], pnode_to_kill);
@@ -190,44 +193,41 @@ int32_t kill_process(uint16_t pid, int32_t ret_value) {
 	if (parentNode != NULL && ((process_ptr) parentNode->data)->status != ZOMBIE) {
 		process_ptr parent = (process_ptr) parentNode->data;
 		append_node(parent->zombies, pnode_to_kill);
-		if (processIsWaiting(parent, process_to_kill->pid))
+		if (is_waiting(parent, process_to_kill->pid))
 			set_pstatus(process_to_kill->parent_pid, READY);
 	}
 	else {
 		destroyZombie(scheduler, process_to_kill);
 	}
-	if (pid == scheduler->currentPid)
+	if (pid == scheduler->pid)
 		yield();
 	return 0;
 }
 
 uint16_t getpid() {
 	scheduler_ptr scheduler = get_scheduler();
-	return scheduler->currentPid;
+	return scheduler->pid;
 }
 
-psnapshotList_ptr getProcessSnapshot() {
+psnapshot_ptr * get_psnapshot() {
 	scheduler_ptr scheduler = get_scheduler();
-	psnapshotList_ptr snapshotsArray = mem_alloc(sizeof(psnapshotList_t));
-	psnapshot_ptr psArray = mem_alloc(scheduler->qtyProcesses * sizeof(psnapshot_t));
-	int processIndex = 0;
+	psnapshot_ptr * psnapshot_array = mem_alloc(scheduler->process_amount * sizeof(psnapshot_t));
+	int process_index = 0;
 
-	loadSnapshot(&psArray[processIndex++], (process_ptr) scheduler->processes[IDLE_PID]->data);
+	load_snapshot(psnapshot_array[process_index++], (process_ptr) scheduler->processes[IDLE_PID]->data);
 	for (int lvl = PRIORITY_LEVELS; lvl >= 0; lvl--) { // Se cuentan tambien los bloqueados
 		to_begin(scheduler->levels[lvl]);
 		while (has_next(scheduler->levels[lvl])) {
-			process_ptr nextProcess = (process_ptr) next(scheduler->levels[lvl]);
-			loadSnapshot(&psArray[processIndex], nextProcess);
-			processIndex++;
-			if (nextProcess->status != ZOMBIE) {
-				getZombiesSnapshots(processIndex, psArray, nextProcess);
-				processIndex += get_length(nextProcess->zombies);
+			process_ptr next_p_in_schedule = (process_ptr) next(scheduler->levels[lvl]);
+			load_snapshot(psnapshot_array[process_index], next_p_in_schedule);
+			process_index++;
+			if (next_p_in_schedule->status != ZOMBIE) {
+				load_zombies_snapshot(process_index, *psnapshot_array, next_p_in_schedule);
+				process_index += get_length(next_p_in_schedule->zombies);
 			}
-		}
+		} 
 	}
-	snapshotsArray->length = scheduler->qtyProcesses;
-	snapshotsArray->snapshotList = psArray;
-	return snapshotsArray;
+	return psnapshot_array;
 }
 
 int32_t get_zombie_ret_value(uint16_t pid) {
@@ -236,10 +236,10 @@ int32_t get_zombie_ret_value(uint16_t pid) {
 	if (zombieNode == NULL)
 		return -1;
 	process_ptr zombieProcess = (process_ptr) zombieNode->data;
-	if (zombieProcess->parent_pid != scheduler->currentPid)
+	if (zombieProcess->parent_pid != scheduler->pid)
 		return -1;
 
-	process_ptr parent = (process_ptr) scheduler->processes[scheduler->currentPid]->data;
+	process_ptr parent = (process_ptr) scheduler->processes[scheduler->pid]->data;
 	if (zombieProcess->status != ZOMBIE) {
 		set_pstatus(parent->pid, BLOCKED);
 		yield();
@@ -257,27 +257,34 @@ int32_t p_still_alive(uint16_t pid) {
 
 void yield() {
 	scheduler_ptr scheduler = get_scheduler();
-	scheduler->remainingQuantum = 0;
-	forceTimerTick();
+	scheduler->quantums_left = 0;
+	force_tick();
 }
 
-int8_t change_fd(uint16_t pid, uint8_t position, int16_t new_fd) {
+int8_t change_fd(uint16_t pid, uint8_t std, int16_t new_fd) {
 	scheduler_ptr scheduler = get_scheduler();
 	node_ptr processNode = scheduler->processes[pid];
 	if (pid == IDLE_PID || processNode == NULL)
 		return -1;
 	process_ptr process = (process_ptr) processNode->data;
-	process->fileDescriptors[position] = new_fd;
+    if (std == STDIN) process->fread = new_fd;
+    if (std == STDOUT) process->fwrite = new_fd;
+    if (std == STDERR) process->ferror = new_fd;
+    
+
 	return 0;
 }
 
-int16_t get_current_pfd(uint8_t fd_i) {
+int16_t get_current_p_fd(uint8_t std) {
 	scheduler_ptr scheduler = get_scheduler();
-	process_ptr process = scheduler->processes[scheduler->currentPid]->data;
-	return process->fileDescriptors[fd_i];
+	process_ptr process = scheduler->processes[scheduler->pid]->data;
+    if (std == STDIN) return process->fread;
+    if (std == STDOUT) return process->fwrite;
+    if (std == STDERR) return process->ferror;
+
 }
 
 void kill_foreground_p() {
 	scheduler_ptr scheduler = get_scheduler();
-	scheduler->killFgProcess = 1;
+	scheduler->kill_foreground_p = 1;
 }

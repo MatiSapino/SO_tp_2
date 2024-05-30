@@ -24,7 +24,7 @@ static char **get_argv_copy(int argc, char *argv[]) {
     return argv_copy;
 }
 
-static context_t *get_init_context(process_ptr process, function_t main, int argc, char *argv[]) {
+static context_ptr get_init_context(process_ptr process, function_t main, int argc, char *argv[]) {
     context_ptr context =
         (context_ptr)((uint64_t)process + K_PROCESS_STACK_SIZE -
                       sizeof(context_t));
@@ -74,39 +74,31 @@ static context_t *get_init_context(process_ptr process, function_t main, int arg
 //     return process;
 // }
 
-void p_init(process_ptr process, uint16_t pid, uint16_t parent_pid,
+void set_p_params(process_ptr process, uint16_t pid, uint16_t parent_pid,
 				 function_t main, int argc, char *argv[], char *name,
-				 uint8_t priority, int16_t fds[]) {
+				 uint8_t priority, int is_init, int16_t fds[]) {
 	
     process->pid = pid;
 	process->parent_pid = parent_pid;
     process->argv = get_argv_copy(argc, argv);
 	process->name = mem_alloc(strlen(name) + 1);
-    process->channel = NULL;
 	strcpy(process->name, name);
     process->context = get_init_context(process, main, process->argc, process->argv);
 	process->priority = priority;
-    process->exit_status = -1;
 	void *stack_end = (void *) ((uint64_t) process->stack_base + K_PROCESS_STACK_SIZE);
 	process->stack_position = init_stack_frame(&start, main, stack_end, (void *) process->argv);
 	process->status = READY;
-    process->children = new_linked_list((int (*)(void *, void *))search_by_pid);
     process->zombies = new_linked_list((int (*)(void *, void *))search_by_pid);
+    process->is_init = is_init;
 
-     /* Creates stdin in dataDescriptor 0*/
-    process->data_descriptors[STDIN] = create_data_descriptor(STD_T, READ_MODE);
-
-    /* Creates stdout in dataDescriptor 1*/
-    process->data_descriptors[STDOUT] = create_data_descriptor(STD_T, WRITE_MODE);
-
-    /* Creates stderr in dataDescriptor 2*/
-    process->data_descriptors[STDERR] = create_data_descriptor(STD_T, WRITE_MODE);
-
-    process->data_d_index = 2;
+    process->fread = fds[STDIN];
+    process->fwrite = fds[STDOUT];
+    process->ferror = fds[STDERR];
 }
 
 void free_process(process_ptr process) {
-    free_list(process->children);
+    free_list(process->zombies);
+    free(process->name);
 
     // free arguments
     if (process->argc) {
@@ -118,3 +110,36 @@ void free_process(process_ptr process) {
 
     free(process);
 }
+
+void close_fds(process_ptr process){
+    // close fds in pipe.c
+    // close_pipe_for_p(process->pid, process->fread)
+    // close_pipe_for_p(process->pid, process->fwrite)
+    // close_pipe_for_p(process->pid, process->ferror)
+}
+
+psnapshot_ptr load_snapshot(psnapshot_ptr snapshot, process_ptr process) {
+	snapshot->name = mem_alloc(strlen(process->name) + 1);
+	strcpy(snapshot->name, process->name);
+	snapshot->pid = process->pid;
+	snapshot->parentPid = process->parent_pid;
+	snapshot->stackBase = process->stack_base;
+	snapshot->stackPos = process->stack_position;
+	snapshot->priority = process->priority;
+	snapshot->status = process->status;
+	snapshot->foreground = process->fread == STDIN;
+	return snapshot;
+}
+
+int is_waiting(process_ptr process, uint16_t waiting_pid) {
+	return process->waiting_for_pid == waiting_pid && process->status == BLOCKED;
+}
+
+int load_zombies_snapshot(int process_index, psnapshot_t psnapshot_array[], process_ptr next_p_in_schedule) {
+	list_ptr zombies = next_p_in_schedule->zombies;
+	to_begin(zombies);
+	while (has_next(zombies))
+		load_snapshot(&psnapshot_array[process_index++], (process_ptr) next(zombies));
+	return process_index;
+}
+

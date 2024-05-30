@@ -16,5 +16,6 @@ int get_month();
 int get_year();
 void sleep(uint32_t seconds);
 void sleepms(int mseconds);
+void force_tick();
 int kbflag();
 #endif /* LIB_H */

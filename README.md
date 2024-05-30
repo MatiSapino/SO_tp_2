@@ -18,7 +18,7 @@
 
     [QEMU](https://www.qemu.org/) for running the OS image. It also offers a comfortable way to do system-wide debugging. 
     ```
-    sudo apt-get install qemu-kvm
+    sudo apt-get install qemu
     ``` 
 
 2. Build the Toolchain

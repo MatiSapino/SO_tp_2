@@ -27,7 +27,7 @@
                 "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Kernel/include/pipe",
                 "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Kernel/include/process",
                 "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Kernel/include/test",
-                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Lib/include",
+                "/home/matias/Documents/ITBA/SO/SO_tp_2/RowDaBoat-x64barebones-d4e1c147f975/Lib/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

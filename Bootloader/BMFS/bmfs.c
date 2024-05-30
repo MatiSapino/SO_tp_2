@@ -7,8 +7,8 @@
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>
-#include <memory_manager.h>
-#include <string_s.h>
+#include "../../Lib/include/string_s.h"
+#include "../../Kernel/include/memory/memory_manager.h"
 
 /* Global defines */
 struct BMFSEntry

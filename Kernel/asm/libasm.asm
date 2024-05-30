@@ -11,6 +11,8 @@ GLOBAL inb
 GLOBAL outb
 GLOBAL kbflag
 GLOBAL load_settings
+GLOBAL xadd
+GLOBAL xchg
 section .text
 
 %macro enter_func 0
@@ -136,4 +138,13 @@ outb:
 	mov rsp, rbp
 	pop rbp
 	ret
-           
+
+xadd:
+	mov rax, rsi
+	lock xadd [rdi], eax
+	ret
+
+xchg:
+	mov rax, rsi
+	xchg [rdi], eax
+	ret

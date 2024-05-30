@@ -22,7 +22,7 @@ $(KERNEL): $(LOADEROBJECT) $(OBJECTS) $(STATICLIBS) $(OBJECTS_ASM) $(OBJECTS_SHA
 	$(LD) $(LDFLAGS) -T kernel.ld --oformat=elf64-x86-64 -o kernel.elf $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(STATICLIBS) $(OBJECTS_SHARED)
 
 %.o: %.c
-	$(GCC) $(GCCFLAGS) $(MEMFLAGS) -I./include -I./include/asm -I./include/drivers -I./include/interrupts -I./include/interrupts/exceptions -I./include/interrupts/idt -I./include/interrupts/syscalls -I./include/interrupts/time -I./include/library -I./include/memory -I./include/pipe -I./include/process -I./include/test -I../Lib/include -c $< -o $@
+	$(GCC) $(GCCFLAGS) $(MEMFLAGS) -I./include -I./include/asm -I./include/drivers -I./include/interrupts -I./include/interrupts/exceptions -I./include/interrupts/idt -I./include/interrupts/syscalls -I./include/interrupts/time -I./include/library -I./include/memory -I./include/pipe -I./include/process -I./include/semaphore -I./include/test -I../Lib/include -c $< -o $@
 
 %.o : %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
@@ -31,6 +31,6 @@ $(LOADEROBJECT):
 	$(ASM) $(ASMFLAGS) $(LOADERSRC) -o $(LOADEROBJECT)
 
 clean:
-	rm -rf asm/*.o drivers/*.o interrupts/*/*.o library/*.o memory/*.o pipe/*.o process/*.o test/*.o ../../Lib/*.o *.o *.bin *.elf
+	rm -rf asm/*.o drivers/*.o interrupts/*/*.o library/*.o memory/*.o pipe/*.o process/*.o semaphore/*.o test/*.o ../../Lib/*.o *.o *.bin *.elf
 
 .PHONY: all clean

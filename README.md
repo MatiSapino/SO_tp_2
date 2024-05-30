@@ -1,4 +1,4 @@
-# KerberOS
+# x64BareBones
 
 64-bit operative system with multitasking capabilities built on top of [x64BareBones](https://bitbucket.org/RowDaBoat/x64barebones/wiki/Home).
 

@@ -29,9 +29,8 @@
 3. Exit the container bash (Only do this once):
     ```
     exit
-    ``
-
-
+    ```
+    
 4. Build the Toolchain and Kernel From the project root directory, run:
     ```
     ./build.sh

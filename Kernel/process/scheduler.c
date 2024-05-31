@@ -12,6 +12,7 @@
 #define IDLE_PID 0
 
 extern void force_tick();
+static int search_by_pid(void *process, void *pid);
 
 
 scheduler_ptr create_scheduler() {
@@ -19,10 +20,15 @@ scheduler_ptr create_scheduler() {
 	for (int i = 0; i < MAX_PROCESSES_AMOUNT; i++)
 		scheduler->processes[i] = NULL;
 	for (int i = 0; i < PRIORITY_LEVELS + 1; i++)
-		// scheduler->levels[i] = new_linked_list((int (*)(void *, void *))search_by_pid(scheduler->processes[i], scheduler->pid));
+		scheduler->levels[i] = new_linked_list((int (*)(void *, void *))search_by_pid(scheduler->processes[i], scheduler->pid));
 	scheduler->next_available_pid = 0;
 	scheduler->kill_foreground_p = 0;
 	return scheduler;
+}
+
+// esta agregada devuelta esta funcion porque por razones misticas no lo encuentra
+static int search_by_pid(void *process, void *pid) {
+    return ((process_ptr)process)->pid == *((pid_t *)pid);
 }
 
 scheduler_ptr get_scheduler() {

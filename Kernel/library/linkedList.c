@@ -1,5 +1,6 @@
 #include <linkedList.h>
 #include <memory_manager.h>
+#include <process.h>
 
 list_ptr new_linked_list(int (*comp_funct)(void *, void *)) {
     list_ptr my_list = (list_ptr) mem_alloc(sizeof(list_t));

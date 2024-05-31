@@ -19,7 +19,7 @@ scheduler_ptr create_scheduler() {
 	for (int i = 0; i < MAX_PROCESSES_AMOUNT; i++)
 		scheduler->processes[i] = NULL;
 	for (int i = 0; i < PRIORITY_LEVELS + 1; i++)
-		// scheduler->levels[i] = new_linked_list((int (*)(void *, void *))search_by_pid);
+		// scheduler->levels[i] = new_linked_list((int (*)(void *, void *))search_by_pid(scheduler->processes[i], scheduler->pid));
 	scheduler->next_available_pid = 0;
 	scheduler->kill_foreground_p = 0;
 	return scheduler;

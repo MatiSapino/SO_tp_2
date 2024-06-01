@@ -4,6 +4,11 @@
 #include <screen.h>
 #include <colors.h>
 #include <commands.h>
+#include <string_s.h>
+#include <semaphore.h>
+
+#include <UserSyscalls.h>
+#include <process.h>
 
 #define BUFFER_SIZE 128
 

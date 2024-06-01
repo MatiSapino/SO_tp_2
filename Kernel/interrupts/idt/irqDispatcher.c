@@ -156,6 +156,9 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 		break;
 	case 43:
 		return sys_getpid();
+	case 44:
+		set_foreground_process((int)rsi);
+		break;
 
 
 	default:

@@ -47,6 +47,8 @@ GLOBAL call_get_proc_status
 GLOBAL call_set_priority
 GLOBAL call_getpid
 
+GLOBAL call_setfg
+
 section .text
 
 %macro call_to_handler 1
@@ -155,3 +157,5 @@ call_set_priority:
     call_to_handler 42
 call_getpid:
     call_to_handler 43
+call_setfg:
+    call_to_handler 44

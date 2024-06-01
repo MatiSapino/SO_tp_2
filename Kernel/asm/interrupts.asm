@@ -19,6 +19,8 @@ GLOBAL _exception0Handler
 GLOBAL _exception6Handler
 GLOBAL saveState
 
+GLOBAL _force_scheduler
+
 EXTERN retUserland
 EXTERN printRegisters
 EXTERN irqDispatcher
@@ -247,9 +249,14 @@ _exception0Handler:
 _exception6Handler:
 	exceptionHandler 6
 	jmp haltcpu
+
 haltcpu:
 	cli
 	hlt
+	ret
+
+_force_scheduler:
+	int 20h
 	ret
 
 

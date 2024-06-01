@@ -167,7 +167,7 @@ int open_pipe(char *name, int pipe_dataD[2])
 //     return i;
 // }
 
-// void close_pipe(pipe_t pipe, int writable) {
+void close_pipe(pipe_t pipe, int writable) {
 
 //     if (pipe_list == NULL || pipe == NULL)
 //         return;
@@ -199,7 +199,7 @@ int open_pipe(char *name, int pipe_dataD[2])
 //     }
 
 //     return;
-// }
+}
 
 static int copy_pids(list_ptr blocked_pid, int blocked_pid_cpy[])
 {

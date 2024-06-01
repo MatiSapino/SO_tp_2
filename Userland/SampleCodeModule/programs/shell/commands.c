@@ -1,7 +1,7 @@
 #include <commands.h>
 
-static char command_list[COMMAND_AMOUNT][20] = {"HELP", "TIME", "REGSTATE", "DIV0", "INVALOP", "ZOOMOUT", "ZOOMIN", "SNAKE", "CLEAR", "EXIT", "SNAKE2", "PRINTMEM", "MEM", "TESTMM", "Phylo", "TESTPROCESSES", "TESTPRIO", "TESTSYNC"};
-void (*functionPointers[COMMAND_AMOUNT])(char *args[], int argCount) = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, print_mem, print_mem_state, test_mm_command, phylo, test_processes_command, test_prio_command, test_sync_command};
+static char command_list[COMMAND_AMOUNT][20] = {"HELP", "TIME", "REGSTATE", "DIV0", "INVALOP", "ZOOMOUT", "ZOOMIN", "SNAKE", "CLEAR", "EXIT", "SNAKE2", "PRINTMEM", "MEM", "TESTMM", "Phylo", "TESTPROCESSES", "TESTPRIO", "TESTSYNC", "TESTPIPES"};
+void (*functionPointers[COMMAND_AMOUNT])(char *args[], int argCount) = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, print_mem, print_mem_state, test_mm_command, phylo, test_processes_command, test_prio_command, test_sync_command, test_pipes_command};
 
 // searches for the command by going though the array of strings and comparing
 void checkCommands(char *command, char *args[], int argCount)
@@ -114,7 +114,7 @@ void print_mem_state(char *args[], int argCount)
 
 void test_mm_command(char *args[], int argCount)
 {
-    testmm(argCount, args);
+    testmm(argCount, args);                         // este es el test de Mati que anda bien :)
 }
 
 void phylo(){
@@ -133,6 +133,10 @@ void test_processes_command(char *args[], int argCount){
 
 void test_sync_command(char *args[], int argCount){
     test_sync(argCount, args);
+}
+
+void test_pipes_command(){
+    test_pipes();
 }
 
 

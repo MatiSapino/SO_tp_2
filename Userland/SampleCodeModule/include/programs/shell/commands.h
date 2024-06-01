@@ -19,7 +19,7 @@
 
 
 #define EOF 1
-#define COMMAND_AMOUNT 18
+#define COMMAND_AMOUNT 19
 
 void checkCommands(char *command, char *args[], int argCount); // searches for command
 void commandNotFound(char *command);
@@ -41,6 +41,7 @@ void phylo();
 void test_prio_command();
 void test_processes_command(char *args[], int argCount);
 void test_sync_command(char *args[], int argCount);
+void test_pipes_command();
 
 
 #endif

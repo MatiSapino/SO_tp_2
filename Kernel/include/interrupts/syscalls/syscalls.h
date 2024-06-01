@@ -11,5 +11,6 @@
 
 void sys_write(char *buf, int len, int filedescriptor);
 void sys_read(char *buf, int len, int filedescriptor);
+void sys_write_fileDescriptor(char *buf, int filedescriptor);
 
 #endif // _KEYBOARD_H_

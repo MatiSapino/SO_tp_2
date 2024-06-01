@@ -30,6 +30,16 @@ GLOBAL call_sem_post
 GLOBAL call_sem_wait
 GLOBAL call_sem_open
 GLOBAL call_sem_close
+GLOBAL call_get_pid
+GLOBAL call_wait_pid
+GLOBAL call_close_pipe
+GLOBAL call_create_process
+GLOBAL call_block
+GLOBAL call_nice
+GLOBAL call_force_kill
+GLOBAL call_force_timer
+GLOBAL call_pipe_create_anonymous
+GLOBAL call_sys_write_fd
 
 section .text
 
@@ -112,3 +122,23 @@ call_sem_open:
     call_to_handler 31
 call_sem_close:
     call_to_handler 32
+call_get_pid:
+    call_to_handler 33
+call_wait_pid:
+    call_to_handler 34
+call_close_pipe:
+    call_to_handler 35
+call_create_process: 
+    call_to_handler 36
+call_block:
+    call_to_handler 37
+call_nice:
+    call_to_handler 38
+call_force_kill:
+    call_to_handler 39
+call_force_timer:
+    call_to_handler 40
+call_pipe_create_anonymous:
+    call_to_handler 41
+call_sys_write_fd:
+    call_to_handler 42

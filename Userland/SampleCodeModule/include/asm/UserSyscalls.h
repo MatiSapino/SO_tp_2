@@ -40,5 +40,18 @@ int call_dup2(unsigned int oldfd, unsigned int newfd);
 void call_close(unsigned int fd);
 
 int call_exit(int error_code);
+uint64_t call_sem_open(uint64_t start_value, char * id);
+uint64_t call_sem_wait(char * id);
+uint64_t call_sem_post(char * id);
+uint16_t call_get_pid();
+void call_wait_pid(uint16_t pid);
+int8_t call_close_pipe(uint16_t id, uint8_t mode);
+int  call_create_process(const char * name, uint8_t foreground, size_t heap_and_stack[2], void * entry_point, void * argv, int fd[2]);
+int call_force_kill(int pid);
+void call_nice(int pid, int priority);
+int call_block(int pid);
+void call_force_timer();
+int call_pipe_create_anonymous();
+void call_sys_write_fd(char *buf, int size, int fd);
 
 #endif

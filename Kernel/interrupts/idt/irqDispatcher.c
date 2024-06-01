@@ -128,6 +128,26 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 	case 32:
 		// call_sem_close
 		return my_sem_close((char*)rsi);
+	case 33:
+		// return my_get_pid(); faltaria el getpid() propio
+	case 34:
+		// crate_process();
+	case 35:
+		// call_close_pipe();
+	case 36:
+		// call_create_process();
+	case 37: 
+		// call_block 
+	case 38:
+		// call_nice
+	case 39:
+		// call_force_kill();
+	case 40:
+		// 
+	case 41:
+		// 
+	case 42:
+		sys_write_fileDescriptor((char*)rsi, rdx);
 	default:
 		return 0;
 	}

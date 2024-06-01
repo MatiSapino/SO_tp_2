@@ -1,93 +1,87 @@
-
-// This is a personal academic project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <process.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <syscalls.h>
+#define TOTAL_PAIR_PROCESSES 10
+#include <UserSyscalls.h>
+#include <utils.h>
 #include <test_util.h>
+char * sem_id[]={"sem_1", "sem_2"};
 
-#define SEM_ID 69
-#define TOTAL_PAIR_PROCESSES 2
+char *argv_dec[] = {"Decreaser", NULL, "-1", NULL, "sem_1"};
+char *argv_inc[] = {"Increaser", NULL, "1", NULL, "sem_1"};
 
-int64_t global; // shared memory
-
-void slowInc(int64_t *p, int64_t inc) {
-	int64_t aux = *p;
-	yield(); // This makes the race condition highly probable
-	aux += inc;
-	*p = aux;
+void my_yield(){
+  call_force_timer();
+}
+void * get_test_sync(){
+  return &test_sync;
+}
+int64_t global = 0; void  slow_inc(int64_t *p, int64_t inc){
+  uint64_t aux = *p;
+  my_yield();   aux += inc;
+  *p = aux;
 }
 
-uint64_t my_process_inc(uint64_t argc, char *argv[]) {
-	uint64_t n;
-	int8_t inc;
-	int8_t use_sem;
+ void my_process_inc(char *argv[]){
+  int64_t n = satoi(argv[1]);
+  int8_t inc = satoi(argv[2]);
+  int8_t use_sem = satoi(argv[3]);
 
-	if (argc != 4)
-		return -1;
+  int my_sem = 1;
 
-	if ((n = satoi(argv[1])) <= 0)
-		return -1;
-	if ((inc = satoi(argv[2])) == 0)
-		return -1;
-	if ((use_sem = satoi(argv[3])) < 0)
-		return -1;
 
-	if (use_sem) {
-		if (semOpen(SEM_ID) == -1) {
-			printf("test_sync: ERROR opening semaphore\n");
-			return -1;
-		}
-	}
+     n = 5;
 
-	uint64_t i;
-	for (i = 0; i < n; i++) {
-		if (use_sem)
-			semWait(SEM_ID);
-		slowInc(&global, inc);
-		if (use_sem)
-			semPost(SEM_ID);
-	}
-	return 0;
+  if (use_sem){
+    if ((my_sem = call_sem_open(0, argv[4])) == -1){
+      own_printf("test_sync: ERROR opening semaphore\n");
+      return;
+    }
+  }
+
+  uint64_t i;
+  for (i = 0; i < n; i++){
+    if (use_sem){
+      call_sem_wait(argv[4]);
+    }
+     slow_inc(&global, inc);
+    if (use_sem){
+      call_sem_post(argv[4]);
+    }
+  }
+  return;
 }
+uint64_t test_sync(int argc, char *argv[]){ 						// verificar porque no uso argc 
 
-uint64_t test_sync(uint64_t argc, char *argv[]) { //{n, use_sem, 0}
-	uint64_t pids[2 * TOTAL_PAIR_PROCESSES];
+  uint64_t pids[2 * TOTAL_PAIR_PROCESSES];
 
-	if (argc != 3)
-		return -1;
 
-	// Agregado para que sea compatible con nuestra implementacion
-	int8_t useSem = satoi(argv[2]);
-	if (useSem) {
-		if (semInit(SEM_ID, 1) == -1) {
-			printf("test_sync: ERROR creating semaphore\n");
-			return -1;
-		}
-	}
+  argv_dec[1]=argv[0];
+  argv_dec[3]=argv[1];
 
-	char *argvDec[] = {"my_process_dec", argv[1], "-1", argv[2], NULL};
-	char *argvInc[] = {"my_process_inc", argv[1], "1", argv[2], NULL};
+  argv_inc[1]=argv[0];
+  argv_inc[3]=argv[1];
 
-	global = 0;
 
-	uint64_t i;
-	for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
-		pids[i] = createProcess(&my_process_inc, argvInc, "my_process_inc", 4);
-		pids[i + TOTAL_PAIR_PROCESSES] = createProcess(&my_process_inc, argvDec, "my_process_dec", 4);
-	}
+  global=0;
 
-	for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
-		waitpid(pids[i]);
-		waitpid(pids[i + TOTAL_PAIR_PROCESSES]);
-	}
+  size_t process_heap_size = 4096;   size_t process_stack_size = 4096; 
+  size_t heap_and_stack[2] = {process_heap_size, process_stack_size};
+  uint64_t i;
+  int fd[2]={0, 0};
+  for (i = 0; i < TOTAL_PAIR_PROCESSES; i++){
+    pids[i] = call_create_process( "Decreaser", 0, heap_and_stack, (void *)my_process_inc, argv_dec, fd);
+    pids[i + TOTAL_PAIR_PROCESSES] = call_create_process( "Increaser", 0, heap_and_stack, (void *)my_process_inc, argv_inc, fd);
+    own_printf("Created Decreaser with PID: %d\n", (int)pids[i]);
+    own_printf("Created Increaser with PID: %d\n", (int)pids[i + TOTAL_PAIR_PROCESSES]);
+  }
 
-	printf("Final value: %d\n", global);
-
-	if (useSem)
-		semClose(SEM_ID);
-
-	return 0;
+own_printf("Starting test...\n");
+ for (i = 0; i < TOTAL_PAIR_PROCESSES; i++){
+   call_wait_pid(pids[i]);
+   call_wait_pid(pids[i + TOTAL_PAIR_PROCESSES]);
+  own_printf("Pid %d finishing...\n", pids[i]);
+  own_printf("Pid %d finishing...\n", pids[i + TOTAL_PAIR_PROCESSES]);
+ }
+ own_printf("\nExpected value: 0\n Final value:%d\n\n", (int)global);
+  
+  return 0;
 }

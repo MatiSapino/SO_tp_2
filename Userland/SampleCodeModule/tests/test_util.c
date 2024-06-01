@@ -1,79 +1,76 @@
+#include <test_util.h>
+#include <utils.h>
+int filed[2] = {0, 0};
+size_t heap_stack[2] = {0x0000000000001000, 0x0000000000001000};
+char *argv_aux[2];
+void * get_tests(){
+    return &tests;
+}
 
-// This is a personal academic project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <stdint.h>
-#include <stdio.h>
-#include <syscalls.h>
+void tests(){
+    own_printf("Available tests:\n");
+    own_printf("  A - Test memory manager\n");
+    own_printf("  B - Test priority\n");
+    own_printf("  C - Test processes\n");
+    own_printf("  D - Test synchronization\n");
+    own_printf("  E - Test without synchronization\n");
+    own_printf("  F - Test Pipe IPC\n");
+    own_printf("  Any other key to quit\n");
+    char c;
+    int test_num = 0;
+    c = getC();
+    if (c >= 'A' && c <= 'F'){
+      test_num = c - 'A' + 1;
+      
+    }
+    else{
+      own_printf("Quiting...\n");
+      return;
+    }
 
-// Random
+
+    argv_aux[0] = "3";
+    argv_aux[1]= "1";
+int filed1[2] = {0, 0};
+    switch (test_num){
+        case 1:
+            call_create_process("test_mm", 1, heap_stack, get_testmm(), NULL, filed1);
+            break;
+        case 2:
+            call_create_process("test_prio", 1, heap_stack, get_test_prio(), NULL, filed1);
+            break;
+        case 3:
+            call_create_process("test_processes", 1, heap_stack, get_test_processes(), NULL, filed1);
+            break;
+        case 4:
+            call_create_process("test_sync", 1, heap_stack, get_test_sync(), argv_aux, filed1);
+            break;
+        case 5:
+            argv_aux[1] = "0";
+            call_create_process("test_sync", 1, heap_stack, get_test_sync(), argv_aux, filed1);
+            break;
+        case 6:
+            call_create_process("test_pipes", 1, heap_stack, get_test_pipes(), argv_aux, filed1);
+            break;
+    }
+}
 static uint32_t m_z = 362436069;
 static uint32_t m_w = 521288629;
 
-uint32_t GetUint() {
-	m_z = 36969 * (m_z & 65535) + (m_z >> 16);
-	m_w = 18000 * (m_w & 65535) + (m_w >> 16);
-	return (m_z << 16) + m_w;
+uint32_t get_uint(){
+  m_z = 36969 * (m_z & 65535) + (m_z >> 16);
+  m_w = 18000 * (m_w & 65535) + (m_w >> 16);
+  return (m_z << 16) + m_w;
 }
 
-uint32_t GetUniform(uint32_t max) {
-	uint32_t u = GetUint();
-	return (u + 1.0) * 2.328306435454494e-10 * max;
+uint32_t get_uniform(uint32_t max){
+  uint32_t u = get_uint();
+  return (u + 1.0) * 2.328306435454494e-10 * max;
 }
 
-// Memory
-uint8_t memcheck(void *start, uint8_t value, uint32_t size) {
-	uint8_t *p = (uint8_t *) start;
-	uint32_t i;
 
-	for (i = 0; i < size; i++, p++)
-		if (*p != value)
-			return 0;
 
-	return 1;
-}
 
-// Parameters
-int64_t satoi(char *str) {
-	uint64_t i = 0;
-	int64_t res = 0;
-	int8_t sign = 1;
 
-	if (!str)
-		return 0;
 
-	if (str[i] == '-') {
-		i++;
-		sign = -1;
-	}
-
-	for (; str[i] != '\0'; ++i) {
-		if (str[i] < '0' || str[i] > '9')
-			return 0;
-		res = res * 10 + str[i] - '0';
-	}
-
-	return res * sign;
-}
-
-// Dummies
-void bussy_wait(uint64_t n) {
-	uint64_t i;
-	for (i = 0; i < n; i++)
-		;
-}
-
-void endless_loop() {
-	while (1)
-		;
-}
-
-void endless_loop_print(int argc, char **argv) {
-	int64_t pid = getpid();
-
-	uint64_t wait = satoi(argv[1]);
-	while (1) {
-		printf("%d ", pid);
-		// psPrint();
-		bussy_wait(wait);
-	}
-}
+// }

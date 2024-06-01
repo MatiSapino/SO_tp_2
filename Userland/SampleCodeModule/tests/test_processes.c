@@ -1,91 +1,92 @@
-
-// This is a personal academic project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <process.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <syscalls.h>
 #include <test_util.h>
-
-enum State { PROCESS_RUNNING,
-			 PROCESS_BLOCKED,
-			 PROCESS_KILLED };
-
+#include <stdint.h>
+#include <UserSyscalls.h>
+#define SIZE 0x0000000000010000
+enum State { RUNNING, BLOCKED, KILLED };
+int filede[2] = {0, 0};
+size_t heap_stackd[2] = {0x0000000000001000, 0x0000000000001000};
 typedef struct P_rq {
-	int32_t pid;
-	enum State state;
+  int32_t pid;
+  enum State state;
 } p_rq;
 
-int64_t test_processes(int argc, char *argv[]) {
-	uint8_t rq;
-	uint8_t alive = 0;
-	uint8_t action;
-	uint64_t max_processes;
-	// char *argvAux[] = {0};
 
-	if (argc != 2)
-		return -1;
 
-	if ((max_processes = satoi(argv[1])) <= 0)
-		return -1;
+int64_t test_processes(){
+  uint8_t rq;
+  uint8_t alive = 0;
+  uint8_t action;
+   uint64_t max_processes;
 
-	p_rq p_rqs[max_processes];
-	while (1) {
-		printf("x");
-		// Create max_processes processes
-		for (rq = 0; rq < max_processes; rq++) {
-			char *args[] = {"endless_loop", NULL};
-			p_rqs[rq].pid = createProcess(&endless_loop, args, "endless_loop", 0);
+    max_processes = 5;
 
-			if (p_rqs[rq].pid == -1) {
-				printf("test_processes: ERROR creating process\n");
-				return -1;
-			}
-			else {
-				p_rqs[rq].state = PROCESS_RUNNING;
-				alive++;
-			}
-		}
+  p_rq p_rqs[max_processes];
 
-		// Randomly kills, blocks or unblocks processes until every one has been killed
-		while (alive > 0) {
-			for (rq = 0; rq < max_processes; rq++) {
-				action = GetUniform(100) % 2;
+  own_printf("Max processes per loop: %d\n", (int)max_processes);
 
-				switch (action) {
-					case 0:
-						if (p_rqs[rq].state == PROCESS_RUNNING || p_rqs[rq].state == PROCESS_BLOCKED) {
-							if (killProcess(p_rqs[rq].pid) == -1) {
-								printf("test_processes: ERROR killing process\n");
-								return -1;
-							}
-							p_rqs[rq].state = PROCESS_KILLED;
-							waitpid(p_rqs[rq].pid);
-							alive--;
-						}
-						break;
+  while (1){
 
-					case 1:
-						if (p_rqs[rq].state == PROCESS_RUNNING) {
-							if (block(p_rqs[rq].pid) == -1) {
-								printf("test_processes: ERROR blocking process\n");
-								return -1;
-							}
-							p_rqs[rq].state = PROCESS_BLOCKED;
-						}
-						break;
-				}
-			}
+        for (rq = 0; rq < max_processes; rq++){
+          p_rqs[rq].pid = call_create_process("endless_loop",  0, heap_stackd, endless_loop, NULL, filede);
 
-			// Randomly unblocks processes
-			for (rq = 0; rq < max_processes; rq++)
-				if (p_rqs[rq].state == PROCESS_BLOCKED && GetUniform(100) % 2) {
-					if (unblock(p_rqs[rq].pid) == -1) {
-						printf("test_processes: ERROR unblocking process\n");
-						return -1;
-					}
-					p_rqs[rq].state = PROCESS_RUNNING;
-				}
-		}
-	}
+      own_printf("Created PID: %d\n", (int)p_rqs[rq].pid);
+
+      if (p_rqs[rq].pid == -1){
+        own_printf("test_processes: ERROR creating process\n");
+        return -1;
+      } else {
+        p_rqs[rq].state = RUNNING;
+        alive++;
+      }
+    }
+
+            while (alive > 0){
+
+      for (rq = 0; rq < max_processes; rq++){
+        action = get_uniform(100) % 2;
+
+        switch (action){
+        case 0:
+          if (p_rqs[rq].state == RUNNING || p_rqs[rq].state == BLOCKED){
+            if (call_force_kill(p_rqs[rq].pid) == -1){
+              own_printf("test_processes: ERROR killing process\n");
+              return -1;
+            }
+            own_printf("Killed PID: %d\n", (int)p_rqs[rq].pid);
+            p_rqs[rq].state = KILLED;
+            alive--;
+          }
+          break;
+
+        case 1:
+          if (p_rqs[rq].state == RUNNING){
+            if (call_block(p_rqs[rq].pid) == -1){
+              own_printf("test_processes: ERROR blocking process\n");
+              return -1;
+            }
+            own_printf("Blocked PID: %d\n", (int)p_rqs[rq].pid);
+            p_rqs[rq].state = BLOCKED;
+          }
+          break;
+        }
+      }
+
+            for (rq = 0; rq < max_processes; rq++)
+        if (p_rqs[rq].state == BLOCKED && get_uniform(100) % 2){
+          if (call_block(p_rqs[rq].pid) == -1){
+            own_printf("test_processes: ERROR unblocking process\n");
+            return -1;
+          }
+          own_printf("Unblocked PID: %d\n", (int)p_rqs[rq].pid);
+          p_rqs[rq].state = RUNNING;
+        }
+    }
+  }
+
+  own_printf("\nTest ended. Processes were not printed because\n");
+  own_printf("they were created at background.\n");
+  return 0;
+}
+void * get_test_processes(){
+  return &test_processes;
 }

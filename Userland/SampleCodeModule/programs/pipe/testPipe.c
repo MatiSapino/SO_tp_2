@@ -40,7 +40,7 @@ void process_right()
     call_exit(0);
 }
 
-int test_pipes(int argc, char *argv[])
+int test_pipes2(int argc, char *argv[])
 {
     // sem_shell = _sem_open("shell_sem", 1);
     // _run(process_left, 0, NULL);
@@ -51,3 +51,4 @@ int test_pipes(int argc, char *argv[])
 
     return 0;
 }
+

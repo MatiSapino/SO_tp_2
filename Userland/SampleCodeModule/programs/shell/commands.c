@@ -1,7 +1,7 @@
 #include <commands.h>
 
 static char command_list[COMMAND_AMOUNT][20] = {"HELP", "TIME", "REGSTATE", "DIV0", "INVALOP", "ZOOMOUT", "ZOOMIN", "SNAKE", "CLEAR", "EXIT", "SNAKE2", "PRINTMEM", "MEM", "TESTMM", "Phylo", "TESTPROCESSES", "TESTPRIO", "TESTSYNC"};
-void (*functionPointers[COMMAND_AMOUNT])(char *args[], int argCount) = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, print_mem, print_mem_state, test_mm, phylo, test_processes_command, test_prio_command, test_sync_command};
+void (*functionPointers[COMMAND_AMOUNT])(char *args[], int argCount) = {help, time, regState, div0, invalidOp, zoomOut, zoomIn, play_snake, clearScreen, exitShell, snake2, print_mem, print_mem_state, test_mm_command, phylo, test_processes_command, test_prio_command, test_sync_command};
 
 // searches for the command by going though the array of strings and comparing
 void checkCommands(char *command, char *args[], int argCount)
@@ -112,7 +112,7 @@ void print_mem_state(char *args[], int argCount)
     printmemstate(argCount, args);
 }
 
-void test_mm(char *args[], int argCount)
+void test_mm_command(char *args[], int argCount)
 {
     testmm(argCount, args);
 }
@@ -126,12 +126,13 @@ void test_prio_command(){
     test_prio();
 }
 
-void test_processes_command(int argc, char *argv[]){
-    test_processes(argc, argv);
+void test_processes_command(char *args[], int argCount){
+    test_processes(args, argCount);
 
 }
 
-void test_sync_command(uint64_t argc, char *argv[]){
-    test_sync(argc, argv);
+void test_sync_command(char *args[], int argCount){
+    test_sync(argCount, args);
 }
+
 

@@ -1,57 +1,65 @@
-// This is a personal academic project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include "test_util.h"
-#include <process.h>
+#include <test_util.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <syscalls.h>
+#include <UserSyscalls.h>
 
-#define MINOR_WAIT "500000000"
-#define WAIT 1000000000
 
-#define TOTAL_PROCESSES 3
-#define LOWEST 0
+#define MINOR_WAIT 1000000  
+#define WAIT  10000000       
+
+#define TOTAL_PROCESSES 5
+#define LOWEST 1
 #define MEDIUM 2
-#define HIGHEST 4
+#define HIGHEST 3
+int fileds[2] = {0, 0};
+size_t heap_stacks[2] = {0x0000000000001000, 0x0000000000001000};
 
-int64_t prio[TOTAL_PROCESSES] = {LOWEST, MEDIUM, HIGHEST};
+int64_t prio[TOTAL_PROCESSES] = {LOWEST, MEDIUM, HIGHEST, MEDIUM, LOWEST};
+void endless_loop_print(){
+  int pid = call_get_pid();
 
-void test_prio() {
-	int64_t pids[TOTAL_PROCESSES];
-	char *argv[] = {"endless_loop_print", MINOR_WAIT, 0};
-	uint64_t i;
+  int wait = 100000000;
 
-	for (i = 0; i < TOTAL_PROCESSES; i++)
-		pids[i] = createProcess(&endless_loop_print, argv, "endless_loop_print", 0);
+  while (1){
+    own_printf("%d ", pid);
+    bussy_wait(wait);
+  }
+}
+void * get_test_prio(){
+  return &test_prio;
+}
 
-	bussy_wait(WAIT);
-	clear();
-	printf("\nCHANGING PRIORITIES...\n");
+void test_prio(){
+  int64_t pids[TOTAL_PROCESSES];
+  uint64_t i;
 
-	for (i = 0; i < TOTAL_PROCESSES; i++)
-		nice(pids[i], prio[i]);
+  for (i = 0; i < TOTAL_PROCESSES; i++)
+    pids[i] = call_create_process("print_loop", 0, heap_stacks, endless_loop_print, NULL, fileds);
 
-	bussy_wait(WAIT);
-	clear();
-	printf("\nBLOCKING...\n");
+  bussy_wait(WAIT);
+  own_printf("\nCHANGING PRIORITIES...\n");
+  for (i = 0; i < TOTAL_PROCESSES; i++)
+    call_nice(pids[i], prio[i]);
 
-	for (i = 0; i < TOTAL_PROCESSES; i++)
-		block(pids[i]);
+  bussy_wait(WAIT);
+  own_printf("\nBLOCKING...\n");
 
-	printf("CHANGING PRIORITIES WHILE BLOCKED...\n");
+  for (i = 0; i < TOTAL_PROCESSES; i++)
+    call_block(pids[i]);
 
-	for (i = 0; i < TOTAL_PROCESSES; i++)
-		nice(pids[i], MEDIUM);
+  own_printf("CHANGING PRIORITIES WHILE BLOCKED...\n");
 
-	printf("UNBLOCKING...\n");
+  for (i = 0; i < TOTAL_PROCESSES; i++)
+    call_nice(pids[i], MEDIUM);
+  own_printf("UNBLOCKING...\n");
 
-	for (i = 0; i < TOTAL_PROCESSES; i++)
-		unblock(pids[i]);
+  for (i = 0; i < TOTAL_PROCESSES; i++)
+    call_block(pids[i]);
+  bussy_wait(WAIT);
+  own_printf("\nKILLING...\n");
 
-	bussy_wait(WAIT);
-	clear();
-	printf("\nKILLING...\n");
+  for (i = 0; i < TOTAL_PROCESSES; i++)
+    call_force_kill(pids[i]);
 
-	for (i = 0; i < TOTAL_PROCESSES; i++)
-		killProcess(pids[i]);
+  own_printf("\nTest ended. Processes were not printed because\n");
+  own_printf("they were created at background.\n");
 }

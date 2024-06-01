@@ -18,6 +18,7 @@ int right(int i){
 int start_philos_dining(){
     num_philosophers = 0;   
     // aca abrir el semaforo
+    return 1;
 
 
 

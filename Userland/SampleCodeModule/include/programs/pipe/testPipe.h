@@ -6,6 +6,6 @@
 #include <std_io.h>
 #include <ipc.h>
 
-int test_pipes(int argc, char *argv[]);
+int test_pipes2(int argc, char *argv[]);
 
 #endif

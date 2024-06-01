@@ -1,6 +1,6 @@
 #include <ipc.h>
 
-int filter(int argc, char *argv[])
+void filter()                      // obs, no usa ni argc ni argv
 {
     int16_t c;
     int i = 0;
@@ -25,8 +25,6 @@ int filter(int argc, char *argv[])
         buffer[i] = '\0';
         own_printf("%s", buffer);
     }
-
-    return 0;
 }
 
 int cat(int argc, char *argv[])
@@ -83,4 +81,17 @@ int wc(int argc, char *argv[])
     own_printf("TOTAL LINES: %d\n", count);
 
     return 0;
+}
+
+void * get_wc(){
+    return &wc;
+}
+
+int is_vowel(char c){
+  return (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
+          c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U');
+}
+
+void * get_filter(){
+    return &filter;
 }

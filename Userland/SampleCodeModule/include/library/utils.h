@@ -4,7 +4,7 @@
 #include <std_io.h>
 #include <stdint.h>
 
-#include <UserSyscalls.h>
+#include <process.h>
 
 uint32_t GetUint();
 uint32_t GetUniform(uint32_t max);

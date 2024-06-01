@@ -41,10 +41,10 @@ void process_right()
 int test_pipes(int argc, char *argv[])
 {
     sem_shell = call_sem_open("shell_sem", 1);
-    // _run(process_left, 0, NULL);
-    // _run(process_right, 0, NULL);
-    // _wait();
-    // _wait();
+    call_run(process_left, 0, NULL);
+    call_run(process_right, 0, NULL);
+    call_wait();
+    call_wait();
     call_sem_close(sem_shell);
 
     return 0;

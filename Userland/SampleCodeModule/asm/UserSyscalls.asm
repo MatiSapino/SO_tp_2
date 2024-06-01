@@ -15,22 +15,37 @@ GLOBAL call_set_font_size
 GLOBAL call_put_char_in_set_position
 GLOBAL call_beep
 GLOBAL call_put_square
+
 GLOBAL call_get_mem
 GLOBAL call_get_mem_state
 GLOBAL call_malloc
 GLOBAL call_free
+
 GLOBAL call_create_pipe
 GLOBAL call_open_pipe
 GLOBAL call_info_pipe
 GLOBAL call_info_all_pipes
 GLOBAL call_dup2
+
 GLOBAL call_close
 GLOBAL call_exit
+
 GLOBAL call_sem_open
 GLOBAL call_sem_wait
 GLOBAL call_sem_post
 GLOBAL call_sem_close
 GLOBAL call_get_semaphores
+
+GLOBAL call_get_process_table
+GLOBAL call_run
+GLOBAL call_kill
+GLOBAL call_wait
+GLOBAL call_block
+GLOBAL call_unblock
+GLOBAL call_waitpid
+GLOBAL call_get_proc_status
+GLOBAL call_set_priority
+GLOBAL call_getpid
 
 section .text
 
@@ -83,6 +98,7 @@ call_beep:
     call_to_handler 16
 call_put_square:
     call_to_handler 17
+
 call_get_mem:
     call_to_handler 18
 call_get_mem_state:
@@ -91,6 +107,7 @@ call_malloc:
     call_to_handler 20
 call_free:
     call_to_handler 21
+
 call_create_pipe:
     call_to_handler 22
 call_open_pipe:
@@ -101,10 +118,12 @@ call_info_all_pipes:
     call_to_handler 25
 call_dup2:
     call_to_handler 26
+
 call_close:
     call_to_handler 27
 call_exit:
     call_to_handler 28
+
 call_sem_open:
     call_to_handler 29
 call_sem_wait:
@@ -115,3 +134,24 @@ call_sem_close:
     call_to_handler 32
 call_get_semaphores:
     call_to_handler 33
+
+call_get_process_table:
+    call_to_handler 34
+call_run:
+    call_to_handler 35
+call_kill:
+    call_to_handler 36
+call_wait:
+    call_to_handler 37
+call_block:
+    call_to_handler 38
+call_unblock:
+    call_to_handler 39
+call_waitpid:
+    call_to_handler 40
+call_get_proc_status:
+    call_to_handler 41
+call_set_priority:
+    call_to_handler 42
+call_getpid:
+    call_to_handler 43

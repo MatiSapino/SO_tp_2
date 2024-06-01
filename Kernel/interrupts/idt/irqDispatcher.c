@@ -132,6 +132,31 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 		return sem_close((sem_ptr)rsi);
 	case 33:
 		return get_semaphores((copy_sem_t **)rsi);
+	case 34:
+		return get_process_table((process_table_t *)rsi);
+	case 35:
+		return add_process((void *)rsi, (int)rdx, (char **)rcx);
+	case 36:
+		return kill_process((int)rsi);
+	case 37:
+		return wait_process(-1, NULL);
+	case 38:
+		return sys_block((int)rsi);
+		break;
+	case 39:
+		return sys_unblock((int)rsi);
+		break;
+	case 40:
+		return wait_process((int)rsi, (int *)rdx);
+	case 41:
+		return sys_get_proc_status((int)rsi);
+		break;
+	case 42:
+		return sys_set_priority((int)rsi, (int)rdx);
+		break;
+	case 43:
+		return sys_getpid();
+
 
 	default:
 		return 0;

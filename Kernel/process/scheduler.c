@@ -66,11 +66,11 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
             }
         }
 
-        sleep((uint64_t)current_process);
+        sleep_process((uint64_t)current_process);
     }
 }
 
-void sleep(uint64_t channel) {
+void sleep_process(uint64_t channel) {
     current_process->channel = channel;
     current_process->status = WAITING;
     _force_scheduler();

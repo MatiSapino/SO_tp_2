@@ -46,7 +46,7 @@ static int process_pipe_comparison_function(void *pid, void *other_pid)
 // static void sleep_helper(uint64_t channel,list_ptr blocked_list){
 //     process_t * process = get_current_process();
 //     add(blocked_list,&process->pid);
-//     sleep(channel);
+//     sleep_process(channel);
 // }
 
 static void set_data_descriptors(pipe_t pipe, int pipe_dataD[2])

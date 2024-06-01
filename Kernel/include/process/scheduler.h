@@ -99,7 +99,7 @@ process_t *get_foreground_process();
 
 void set_foreground_process(int pid);
 
-void sleep(uint64_t channel);
+void sleep_process(uint64_t channel);
 
 // Returns pid of awakened process
 int wakeup(uint64_t channel);

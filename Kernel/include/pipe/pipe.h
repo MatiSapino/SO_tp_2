@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string_s.h>
 #include <linkedList.h>
+#include <globals.h>
 
 #define PIPE_SIZE (1024)
 

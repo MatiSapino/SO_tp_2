@@ -123,7 +123,7 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 		sys_exit((int)rsi);
 		break;
 	case 29:
-		return sem_open((char *)rsi, (int)rdx);
+		return (uintptr_t)sem_open((char *)rsi, (int)rdx);
 	case 30:
 		return sem_wait((sem_ptr)rsi);
 	case 31:

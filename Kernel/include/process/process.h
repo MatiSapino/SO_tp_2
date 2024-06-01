@@ -5,6 +5,7 @@
 #include <dataDescriptor.h>
 #include <string_s.h>
 #include <linkedList.h>
+#include <globals.h>
 
 #define P_INIT_EFLAGS 0x202
 #define P_INIT_CS 0x8
@@ -16,13 +17,6 @@
 #define HIGHEST 10
 
 #define K_PROCESS_STACK_SIZE (1024 * 4)
-
-typedef enum pstatus
-{
-    WAITING = 0,
-    READY,
-    TERMINATED,
-} pstatus_t;
 
 typedef int pid_t;
 

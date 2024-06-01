@@ -19,13 +19,13 @@ typedef struct sem
     list_ptr blocked_processes;
 } sem_t;
 
-typedef struct copy_sem
-{
-    char name[40];
-    int value;
-    int lock;
-    int blocked_processes[];
-} copy_sem_t;
+// typedef struct copy_sem
+// {
+//     char name[40];
+//     int value;
+//     int lock;
+//     int blocked_processes[];
+// } copy_sem_t;
 
 typedef struct sem *sem_ptr;
 typedef struct copy_sem copy_sem_t;

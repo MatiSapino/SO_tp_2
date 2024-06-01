@@ -12,16 +12,16 @@ typedef struct pipe
     list_ptr blocked_pid;
 } pipe;
 
-typedef struct pipe_info
-{
-    char *name;
-    unsigned int nwrite;
-    unsigned int nread;
-    int readopen;
-    int writeopen;
-    int blocked_pid[64];
-    int blocked_count;
-} pipe_info;
+// typedef struct pipe_info
+// {
+//     char *name;
+//     unsigned int nwrite;
+//     unsigned int nread;
+//     int readopen;
+//     int writeopen;
+//     int blocked_pid[64];
+//     int blocked_count;
+// } pipe_info;
 
 list_ptr pipe_list;
 

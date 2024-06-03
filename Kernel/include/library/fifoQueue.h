@@ -1,20 +1,6 @@
 #ifndef _FIFOQUEUE_H_
 #define _FIFOQUEUE_H_
 
-#include <memory_manager.h>
-
-typedef struct node
-{
-    void *data;
-    struct node *next;
-} node_t;
-
-typedef struct fifo_queue
-{
-    node_t *front;
-    node_t *rear;
-} fifo_queue;
-
 typedef struct fifo_queue * fifo_queue_ptr;
 typedef struct node  * node_ptr;
 

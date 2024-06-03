@@ -1,4 +1,9 @@
 #include <circularLinkedList.h>
+#include <std_lib.h>
+
+#define ERROR -1
+#define SUCCESS 0
+#define MAX_ITERATORS 2
 
 static int visited = 0;
 

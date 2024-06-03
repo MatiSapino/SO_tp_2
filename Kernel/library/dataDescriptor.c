@@ -1,4 +1,12 @@
 #include <dataDescriptor.h>
+#include <memory_manager.h>
+#include <scheduler.h>
+
+typedef struct dataDescriptor {
+    DATA_TYPE type;
+    mode_t mode;
+    pipe_t pipe;
+} dataDescriptor;
 
 dataDescriptor_t create_dataDescriptor(DATA_TYPE type, mode_t mode)
 {

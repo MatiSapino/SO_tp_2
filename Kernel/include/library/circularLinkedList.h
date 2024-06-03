@@ -1,13 +1,6 @@
 #ifndef _CIRCULARLINKEDLIST_H_
 #define _CIRCULARLINKEDLIST_H_
 
-#include <stdlib.h>
-#include <memory_manager.h>
-
-#define ERROR -1
-#define SUCCESS 0
-#define MAX_ITERATORS 2
-
 typedef struct list_t *circular_list_t;
 typedef struct iterator_t *circular_list_iterator_t;
 

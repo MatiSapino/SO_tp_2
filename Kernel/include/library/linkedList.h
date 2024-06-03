@@ -1,11 +1,6 @@
 #ifndef _LINKEDLIST_H_
 #define _LINKEDLIST_H_
 
-#include <memory_manager.h>
-
-#define ERROR -1
-#define SUCCESS 0
-
 typedef struct node_list_t *node_list_ptr;
 typedef struct list_t *list_ptr;
 

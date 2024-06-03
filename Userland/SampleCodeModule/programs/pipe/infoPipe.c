@@ -1,5 +1,7 @@
 #include <infoPipe.h>
 
+#define MAX_PIPES 32
+
 int columns[7];
 
 static void print_tabs(int amount)

@@ -1,7 +1,33 @@
 #include <semaphore.h>
+#include <scheduler.h>
+#include <memory_manager.h>
+#include <linkedList.h>
+#include <lib.h>
+
+#define ERROR -1
+#define SUCCESS 0
+
+typedef struct sem
+{
+    char name[40];
+    int value;
+    int lock;
+    list_ptr blocked_processes;
+} sem_t;
+
+typedef struct copy_sem
+{
+    char name[40];
+    int value;
+    int lock;
+    int blocked_processes[];
+} copy_sem_t;
 
 static list_ptr sem_list;
 static int sem_count;
+
+extern int xadd(int *var_ptr, int value);
+extern int xchg(int *var_ptr, int value);
 
 static int comparison_function(void *semaphore, void *name)
 {
@@ -66,7 +92,7 @@ int sem_wait(sem_ptr sem)
         process_t *current_process = get_current_process();
         add(sem->blocked_processes, &current_process->pid);
         release(&sem->lock);
-        sleep((uint64_t)sem);
+        sleep_process((uint64_t)sem);
     }
     release(&sem->lock);
     return SUCCESS;

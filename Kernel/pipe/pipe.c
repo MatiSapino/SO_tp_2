@@ -1,5 +1,11 @@
 #include <pipe.h>
-#include <dataDescriptor.h>
+#include <linkedList.h>
+#include <memory_manager.h>
+#include <scheduler.h>
+#include <defs.h>
+#include <lib.h>
+
+#define PIPE_SIZE (1024)
 
 typedef struct pipe
 {
@@ -12,16 +18,16 @@ typedef struct pipe
     list_ptr blocked_pid;
 } pipe;
 
-// typedef struct pipe_info
-// {
-//     char *name;
-//     unsigned int nwrite;
-//     unsigned int nread;
-//     int readopen;
-//     int writeopen;
-//     int blocked_pid[64];
-//     int blocked_count;
-// } pipe_info;
+typedef struct pipe_info
+{
+    char *name;
+    unsigned int nwrite;
+    unsigned int nread;
+    int readopen;
+    int writeopen;
+    int blocked_pid[64];
+    int blocked_count;
+} pipe_info;
 
 list_ptr pipe_list;
 
@@ -188,13 +194,13 @@ void close_pipe(pipe_t pipe, int writable) {
         pipe->nwrite > 0) {
         remove(pipe_list, pipe->name);
         free_list(pipe->blocked_pid);
-        kfree(pipe);
+        free(pipe);
     }
 
     to_begin(pipe_list);
 
     if (!hasNext(pipe_list)) {
-        kfree(pipe_list);
+        free(pipe_list);
         pipe_list = NULL;
     }
 

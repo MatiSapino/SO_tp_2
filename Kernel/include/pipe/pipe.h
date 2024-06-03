@@ -1,12 +1,7 @@
 #ifndef _PIPE_H_
 #define _PIPE_H_
 
-#include <stdint.h>
-#include <string_s.h>
-#include <linkedList.h>
-#include <globals.h>
-
-#define PIPE_SIZE (1024)
+#include <std_lib.h>
 
 typedef struct pipe *pipe_t;
 typedef struct pipe_info pipe_info_t;

@@ -7,12 +7,17 @@
 #include <process.h>
 #include <scheduler.h>
 
+#define ERROR   -1
+#define SUCCESS 0
+
 #define STDIN 0
 #define STDOUT 1
 #define STDERR 2
 
 void sys_write(char *buf, int len, int filedescriptor);
 void sys_read(char *buf, int len, int filedescriptor);
+
+uint16_t sys_get_mem(uint8_t *address, uint8_t *buffer, uint16_t count);
 
 void sys_close(unsigned int fd);
 void sys_exit(int error_code);

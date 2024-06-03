@@ -1,4 +1,9 @@
 #include <scheduler.h>
+#include <time.h>
+#include <circularLinkedList.h>
+#include <idtLoader.h>
+#include <linkedList.h>
+#include <memory_manager.h>
 
 #define PID_ERR        -1
 #define MAX_TERM_COUNT 2

@@ -2,7 +2,6 @@
 #define _DATA_DESCRIPTOR_H_
 
 #include <stdbool.h>
-#include <memory_manager.h>
 #include <pipe.h>
 
 typedef struct dataDescriptor *dataDescriptor_t;
@@ -16,13 +15,6 @@ typedef enum
     READ_MODE,
     WRITE_MODE
 } mode_t;
-
-typedef struct dataDescriptor
-{
-    DATA_TYPE type;
-    mode_t mode;
-    pipe_t pipe;
-} dataDescriptor;
 
 /**
  * @retval  NULL if the specified type or mode is wrong

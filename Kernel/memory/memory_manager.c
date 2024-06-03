@@ -1,4 +1,8 @@
 #include <memory_manager.h>
+#include <stdbool.h>
+
+#define SIZE (1024 * 1024 * 64) // 64MB
+#define BASE_ADDR 0x600000
 
 size_t occupied_mem = 0;
 
@@ -174,6 +178,9 @@ void free(void *ptr) {
 
 #define ALIGNMENT 8
 
+#define GET_SIZE(header) (header->size & ~0x1)
+#define ALIGN(size) (((size) + ALIGNMENT - 1) & ~ALIGNMENT)
+
 typedef union header
 {
     uint64_t size;
@@ -248,19 +255,4 @@ void get_mem_state(int mm_state[])
     mm_state[0] = SIZE;
     mm_state[1] = occupied_mem;
     mm_state[2] = SIZE - occupied_mem;
-}
-
-uint16_t get_mem(uint8_t *address, uint8_t *buffer, uint16_t count)
-{
-    int i;
-    for (i = 0; i < count; i++)
-    {
-        if ((uint64_t)address > ADDRESS_LIMIT)
-        {
-            return i;
-        }
-        buffer[i] = (*address);
-        address++;
-    }
-    return i;
 }

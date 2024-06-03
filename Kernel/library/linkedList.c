@@ -1,4 +1,8 @@
 #include <linkedList.h>
+#include <memory_manager.h>
+
+#define ERROR -1
+#define SUCCESS 0
 
 typedef struct node_list_t
 {

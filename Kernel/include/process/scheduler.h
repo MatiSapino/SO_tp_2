@@ -1,15 +1,9 @@
 #ifndef _SCHEDULER_H_
 #define _SCHEDULER_H_
 
+#include <process.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <circularLinkedList.h>
-#include <process.h>
-#include <linkedList.h>
-#include <string_s.h>
-// #include <idtLoader.h>
-// #include <memory_manager.h>
-// #include <time.h>
 
 #define MAX_PROC_COUNT         256
 #define MAX_NAME_LENGTH        10

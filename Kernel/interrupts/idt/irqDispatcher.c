@@ -97,7 +97,7 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 		drawSquareInSetPosition(rsi, rdx, rcx, r8);
 		break;
 	case 18:
-		return get_mem((uint8_t *)rsi, (uint8_t *)rdx, (uint16_t)rcx);
+		return sys_get_mem((uint8_t *)rsi, (uint8_t *)rdx, (uint16_t)rcx);
 	case 19:
 		get_mem_state((int *)rsi);
 		break;

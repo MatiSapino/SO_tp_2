@@ -85,9 +85,13 @@ void *initializeKernelBinary()
 int main()
 {
 	init_mm();
+	init_scheduler();
 	load_idt();
+	init_sem_list();
 	init_pipes();
+
 	((EntryPoint)sampleCodeModuleAddress)();
+
 	while (1)
 		;
 	return 0;

@@ -63,14 +63,14 @@ void close_dataDescriptor(dataDescriptor_t dataD)
 
 int dup2(unsigned int oldfd, unsigned int newfd)
 {
-    // process_t *process = get_current_process();
+    process_t *process = get_current_process();
 
-    // if (newfd >= process->dataD_index || oldfd >= process->dataD_index)
-    //     return -1;
+    if (newfd >= process->dataD_index || oldfd >= process->dataD_index)
+        return -1;
 
-    // dataDescriptor_t aux = process->dataDescriptors[oldfd];
-    // process->dataDescriptors[oldfd] = process->dataDescriptors[newfd];
-    // process->dataDescriptors[newfd] = aux;
+    dataDescriptor_t aux = process->dataDescriptors[oldfd];
+    process->dataDescriptors[oldfd] = process->dataDescriptors[newfd];
+    process->dataDescriptors[newfd] = aux;
 
     return 0;
 }

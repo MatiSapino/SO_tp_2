@@ -63,10 +63,10 @@ int sem_wait(sem_ptr sem)
     if (sem->value < 0)
     {
         // TODO: check
-        //process_t *current_process = get_current_process();
-        //add(sem->blocked_processes, &current_process->pid);
-        //release(&sem->lock);
-        //sleep((uint64_t)sem);
+        process_t *current_process = get_current_process();
+        add(sem->blocked_processes, &current_process->pid);
+        release(&sem->lock);
+        sleep((uint64_t)sem);
     }
     release(&sem->lock);
     return SUCCESS;
@@ -81,13 +81,13 @@ int sem_post(sem_ptr sem)
         return ERROR;
     }
     sem->value++;
-    // int pid = wakeup((uint64_t)sem);
-    // if (pid != ERROR)
-    // {
-    //     remove(sem->blocked_processes, &pid);
-    //     release(&sem->lock);
-    //     return SUCCESS;
-    // }
+    int pid = wakeup((uint64_t)sem);
+    if (pid != ERROR)
+    {
+        remove(sem->blocked_processes, &pid);
+        release(&sem->lock);
+        return SUCCESS;
+    }
     release(&sem->lock);
     return ERROR;
 }

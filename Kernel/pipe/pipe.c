@@ -38,16 +38,16 @@ static int process_pipe_comparison_function(void *pid, void *other_pid)
     return (*(int *)pid) == (*(int *)other_pid);
 }
 
-// static void wakeup_helper(uint64_t channel, list_ptr blocked_list) {
-//     int pid = wakeup(channel);
-//     remove(blocked_list, (void *)&pid);
-// }
+static void wakeup_helper(uint64_t channel, list_ptr blocked_list) {
+    int pid = wakeup(channel);
+    remove(blocked_list, (void *)&pid);
+}
 
-// static void sleep_helper(uint64_t channel,list_ptr blocked_list){
-//     process_t * process = get_current_process();
-//     add(blocked_list,&process->pid);
-//     sleep_process(channel);
-// }
+static void sleep_helper(uint64_t channel,list_ptr blocked_list){
+    process_t * process = get_current_process();
+    add(blocked_list,&process->pid);
+    sleep_process(channel);
+}
 
 static void set_data_descriptors(pipe_t pipe, int pipe_dataD[2])
 {
@@ -64,11 +64,11 @@ static void set_data_descriptors(pipe_t pipe, int pipe_dataD[2])
      * TODO: Considerar si el agregado a procesos debe hacerse en la syscall y
      * que el pipe devuelva en un array los punteros a dataD
      */
-    // process_t *process = get_current_process();
-    // pipe_dataD[0] = process->dataD_index;
-    // process->dataDescriptors[process->dataD_index++] = readEnd;
-    // pipe_dataD[1] = process->dataD_index;
-    // process->dataDescriptors[process->dataD_index++] = writeEnd;
+    process_t *process = get_current_process();
+    pipe_dataD[0] = process->dataD_index;
+    process->dataDescriptors[process->dataD_index++] = readEnd;
+    pipe_dataD[1] = process->dataD_index;
+    process->dataDescriptors[process->dataD_index++] = writeEnd;
 }
 
 int init_pipes()
@@ -124,81 +124,81 @@ int open_pipe(char *name, int pipe_dataD[2])
     return 0;
 }
 
-// int pipewrite(pipe_t pipe, const char *buffer, int count) {
+int pipewrite(pipe_t pipe, const char *buffer, int count) {
 
-//     if (pipe == NULL || buffer == NULL || count < 0)
-//         return -2;
+    if (pipe == NULL || buffer == NULL || count < 0)
+        return -2;
 
-//     int i;
-//     for (i = 0; i < count; i++) {
-//         while (pipe->nwrite == pipe->nread + PIPE_SIZE) {
-//             wakeup_helper((uint64_t) & pipe->nread, pipe->blocked_pid);
-//             sleep_helper((uint64_t) & pipe->nwrite, pipe->blocked_pid);
-//         }
-//         pipe->data[pipe->nwrite++ % PIPE_SIZE] = buffer[i];
-//     }
-//     wakeup_helper((uint64_t) & pipe->nread, pipe->blocked_pid);
+    int i;
+    for (i = 0; i < count; i++) {
+        while (pipe->nwrite == pipe->nread + PIPE_SIZE) {
+            wakeup_helper((uint64_t) & pipe->nread, pipe->blocked_pid);
+            sleep_helper((uint64_t) & pipe->nwrite, pipe->blocked_pid);
+        }
+        pipe->data[pipe->nwrite++ % PIPE_SIZE] = buffer[i];
+    }
+    wakeup_helper((uint64_t) & pipe->nread, pipe->blocked_pid);
 
-//     return i;
-// }
+    return i;
+}
 
-// int piperead(pipe_t pipe, char *buffer, int count) {
+int piperead(pipe_t pipe, char *buffer, int count) {
 
-//     if (pipe == NULL || buffer == NULL || count < 0)
-//         return -2;
+    if (pipe == NULL || buffer == NULL || count < 0)
+        return -2;
 
-//     while (pipe->nread == pipe->nwrite) {
-//         if (pipe->writeopen == 0)
-//             return EOF;
-//         sleep_helper((uint64_t)&pipe->nread, pipe->blocked_pid);
-//     }
+    while (pipe->nread == pipe->nwrite) {
+        if (pipe->writeopen == 0)
+            return EOF;
+        sleep_helper((uint64_t)&pipe->nread, pipe->blocked_pid);
+    }
 
-//     int i;
-//     for (i = 0; i < count; i++) {
-//         if (pipe->nread == pipe->nwrite)
-//             break;
-//         buffer[i] = pipe->data[pipe->nread++ % PIPE_SIZE];
-//     }
-//     wakeup_helper((uint64_t)&pipe->nwrite, pipe->blocked_pid);
+    int i;
+    for (i = 0; i < count; i++) {
+        if (pipe->nread == pipe->nwrite)
+            break;
+        buffer[i] = pipe->data[pipe->nread++ % PIPE_SIZE];
+    }
+    wakeup_helper((uint64_t)&pipe->nwrite, pipe->blocked_pid);
 
-//     if (pipe->nread == pipe->nwrite + 1)
-//         return EOF;
+    if (pipe->nread == pipe->nwrite + 1)
+        return EOF;
 
-//     return i;
-// }
+    return i;
+}
 
 void close_pipe(pipe_t pipe, int writable) {
 
-//     if (pipe_list == NULL || pipe == NULL)
-//         return;
+    if (pipe_list == NULL || pipe == NULL)
+        return;
 
-//     if (writable) {
-//         if (pipe->writeopen != 0) {
-//             pipe->writeopen--;
-//             wakeup_helper((uint64_t)&pipe->nread, pipe->blocked_pid);
-//         }
-//     } else {
-//         if (pipe->readopen != 0) {
-//             pipe->readopen--;
-//             wakeup_helper((uint64_t)&pipe->nread, pipe->blocked_pid);
-//         }
-//     }
+    if (writable) {
+        if (pipe->writeopen != 0) {
+            pipe->writeopen--;
+            wakeup_helper((uint64_t)&pipe->nread, pipe->blocked_pid);
+        }
+    } else {
+        if (pipe->readopen != 0) {
+            pipe->readopen--;
+            wakeup_helper((uint64_t)&pipe->nread, pipe->blocked_pid);
+        }
+    }
 
-//     if (pipe->readopen == 0 && pipe->writeopen == 0 && pipe->nread > 0 &&
-//         pipe->nwrite > 0) {
-//         remove(pipe_list, pipe->name);
-//         free_list(pipe->blocked_pid);
-//         kfree(pipe);
-//     }
+    if (pipe->readopen == 0 && pipe->writeopen == 0 && pipe->nread > 0 &&
+        pipe->nwrite > 0) {
+        remove(pipe_list, pipe->name);
+        free_list(pipe->blocked_pid);
+        kfree(pipe);
+    }
 
-//     to_begin(pipe_list);
+    to_begin(pipe_list);
 
-//     if (!hasNext(pipe_list)) {
-//         kfree(pipe_list);
-//         pipe_list = NULL;
-//     }
+    if (!hasNext(pipe_list)) {
+        kfree(pipe_list);
+        pipe_list = NULL;
+    }
 
-//     return;
+    return;
 }
 
 static int copy_pids(list_ptr blocked_pid, int blocked_pid_cpy[])

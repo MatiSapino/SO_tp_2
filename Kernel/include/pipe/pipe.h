@@ -1,7 +1,7 @@
 #ifndef _PIPE_H_
 #define _PIPE_H_
 
-#include <std_lib.h>
+//#include <std_lib.h>
 
 typedef struct pipe *pipe_t;
 typedef struct pipe_info pipe_info_t;

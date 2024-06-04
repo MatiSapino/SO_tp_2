@@ -1,4 +1,5 @@
 GLOBAL cpuVendor
+
 GLOBAL get_seconds
 GLOBAL get_minutes
 GLOBAL get_hours
@@ -6,13 +7,17 @@ GLOBAL get_weekDay
 GLOBAL get_monthDay
 GLOBAL get_month
 GLOBAL get_year
+
 GLOBAL getKey
-GLOBAL inb
+
 GLOBAL outb
-GLOBAL kbflag
-GLOBAL load_settings
+GLOBAL outw
+GLOBAL inb
+GLOBAL inw
+
 GLOBAL xadd
 GLOBAL xchg
+
 section .text
 
 %macro enter_func 0
@@ -147,4 +152,27 @@ xadd:
 xchg:
 	mov rax, rsi
 	xchg [rdi], eax
+	ret
+
+inw:
+	push rbp
+	mov rbp, rsp
+
+    mov rdx, rdi
+    in ax, dx
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+outw:
+	push rbp
+	mov rbp, rsp
+
+    mov rdx, rdi
+    mov rax, rsi
+    out dx, ax
+
+	mov rsp, rbp
+	pop rbp
 	ret

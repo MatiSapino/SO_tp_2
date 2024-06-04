@@ -1,4 +1,3 @@
-
 GLOBAL _cli
 GLOBAL _sti
 GLOBAL picMasterMask
@@ -14,22 +13,26 @@ GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
 GLOBAL _irq60Handler
-GLOBAL printRegAsm
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
+
+GLOBAL printRegAsm
 GLOBAL saveState
 
 GLOBAL _force_scheduler
+GLOBAL _force_timer_int
 
-EXTERN retUserland
-EXTERN printRegisters
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
+EXTERN schedule
+EXTERN getStackBase
 EXTERN sampleCodeModuleAddress
+EXTERN retUserland
+EXTERN printRegisters
 EXTERN clear
 EXTERN clearColor
-EXTERN getStackBase
 EXTERN getKey
+
 SECTION .text
 
 %macro dState 0
@@ -123,6 +126,18 @@ saveState:
 	mov rdi, %1 ; pasaje de parametro
 	call irqDispatcher
 
+	mov rdi, %1
+	cmp rdi, 0
+	je .schedule
+	cmp rdi, 1
+	jne .EOI
+
+.schedule:
+	mov rdi, rsp
+	call schedule
+	mov rsp, rax
+
+.EOI:
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
 	out 20h, al
@@ -170,6 +185,10 @@ _cli:
 
 _sti:
 	sti
+	ret
+
+_force_timer_int:
+	int 20h
 	ret
 
 picMasterMask:

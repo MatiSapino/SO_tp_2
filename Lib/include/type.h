@@ -7,4 +7,4 @@ int isalpha(int c);
 int islower(int c);
 int isupper(int c);
 
-#endif
+#endif /* _TYPE_H_ */

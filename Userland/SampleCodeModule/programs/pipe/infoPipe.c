@@ -1,4 +1,9 @@
 #include <infoPipe.h>
+#include <pipe.h>
+#include <mem.h>
+#include <std_lib.h>
+#include <std_io.h>
+#include <string_s.h>
 
 #define MAX_PIPES 32
 

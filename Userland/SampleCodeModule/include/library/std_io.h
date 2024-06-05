@@ -3,6 +3,7 @@
 
 #include <colors.h>
 #include <stdarg.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <shell.h>
 #include <std_lib.h>
@@ -10,6 +11,10 @@
 #include <utils.h>
 
 #include <UserSyscalls.h>
+
+#define STDIN 0
+#define STDOUT 1
+#define STDERR 2
 
 typedef enum chld {
     LEFT_CHD = 0,
@@ -48,7 +53,7 @@ int call_block(int pid);
 int call_unblock(int pid);
 int call_get_proc_status(int pid);
 int call_set_priority(int pid, int priority);
-int call_sleep(int seconds);
+int call_sleep_process(int seconds);
 int call_getpid();
 
 #endif

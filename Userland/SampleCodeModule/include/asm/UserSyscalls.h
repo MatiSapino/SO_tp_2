@@ -25,6 +25,4 @@ void call_beep(int freq);
 void call_put_char_in_set_position(char character, int color, int x, int y);
 void call_put_square(int x, int y, int size, int color);
 
-void _setfg(int pid);
-
 #endif

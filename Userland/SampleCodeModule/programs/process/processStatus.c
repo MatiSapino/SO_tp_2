@@ -8,7 +8,7 @@ static void draw_header() {
            "PRIO", "PARENT", "CHLD", "STACK", "BP");
 }
 
-int ps(int argc, char *argv[]) {
+int processStatus(int argc, char *argv[]) {
 
     char *status[] = {"WAITING", "READY", "TERM"};
     process_table_t *process_table = call_malloc(sizeof(process_table_t));

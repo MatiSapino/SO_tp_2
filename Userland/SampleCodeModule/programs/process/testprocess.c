@@ -1,4 +1,6 @@
 #include <testprocess.h>
+#include <std_io.h>
+#include <testUtil.h>
 
 typedef struct P_rq
 {

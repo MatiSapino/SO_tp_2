@@ -1,4 +1,8 @@
 #include <std_io.h>
+#include <std_lib.h>
+#include <string_s.h>
+#include <stdarg.h>
+#include <testUtil.h>
 
 char getC()
 {

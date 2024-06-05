@@ -1,4 +1,9 @@
 #include <testPipe.h>
+#include <infoPipe.h>
+#include <pipe.h>
+#include <semaphore.h>
+#include <std_io.h>
+#include <ipc.h>
 
 sem_ptr sem_shell;
 

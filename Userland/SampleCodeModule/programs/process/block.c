@@ -1,5 +1,5 @@
 #include <std_io.h>
-#include <process.h>
+#include <testUtil.h>
 #include <string_s.h>
 
 #define ERROR -1

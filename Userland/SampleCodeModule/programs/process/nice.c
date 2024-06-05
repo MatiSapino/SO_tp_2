@@ -1,6 +1,7 @@
+#include <nice.h>
 #include <std_io.h>
 #include <string_s.h>
-#include <nice.h>
+#include <testUtil.h>
 
 #define ERROR -1
 

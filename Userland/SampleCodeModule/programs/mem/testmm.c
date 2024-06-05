@@ -1,4 +1,11 @@
 #include <testmm.h>
+#include <mem.h>
+#include <std_io.h>
+#include <std_lib.h>
+#include <string_s.h>
+#include <testUtil.h>
+
+#define MAX_BLOCKS 80
 
 typedef struct MM_rq
 {

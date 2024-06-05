@@ -1,4 +1,8 @@
 #include <printmem.h>
+#include <std_io.h>
+#include <std_lib.h>
+
+#define PRINT_SIZE 32 // number of bytes
 
 int printmem(int argc, char *argv[])
 {

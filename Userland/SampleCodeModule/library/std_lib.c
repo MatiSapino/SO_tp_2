@@ -1,4 +1,7 @@
 #include <std_lib.h>
+#include <type.h>
+#include <string_s.h>
+#include <limits.h>
 
 char *itoa(int num, char *str, int base)
 {

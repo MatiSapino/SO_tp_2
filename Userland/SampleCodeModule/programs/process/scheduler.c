@@ -5,7 +5,7 @@ int dummy(int argc, char *argv[]) {
     return 0;
 }
 
-int schd(int argc, char *argv[]) {
+int scheduler(int argc, char *argv[]) {
     char *args[] = {"dummy"};
     while (1) {
         call_run(dummy, 1, args);

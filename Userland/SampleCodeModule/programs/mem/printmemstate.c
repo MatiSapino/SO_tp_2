@@ -1,4 +1,6 @@
 #include <printmemstate.h>
+#include <mem.h>
+#include <std_io.h>
 
 int printmemstate(int argc, char *argv[])
 {

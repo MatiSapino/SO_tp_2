@@ -1,3 +1,4 @@
+#include <testsync.h>
 #include <semaphore.h>
 #include <std_io.h>
 #include <testUtil.h>

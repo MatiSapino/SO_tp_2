@@ -1,4 +1,8 @@
 #include <buffer.h>
+#include <nice.h>
+#include <mem.h>
+#include <pipe.h>
+#include <std_io.h>
 
 #define MAX_ARGC 5
 #define TOKEN_LENGTH   512
@@ -27,7 +31,7 @@ sem_ptr sem_pipe_exec;
 static char whitespace[] = " \t\n";
 static char operators[] = "|&";
 
-cmd_entry_t cmd_table[] = {{"help", help},
+cmd_entry_t cmd_table[] = {{"nice", nice},
                            {NULL, NULL}};
 
 void clearBuffer(char *buff)
@@ -163,7 +167,7 @@ static line_t *parseline(char *line) {
 
 static function_t get_cmd(char *cmd_name) {
     for (int i = 0; cmd_table[i].name != NULL; i++) {
-        if (!strCompare(cmd_name, cmd_table[i].name)) {
+        if (!strcmp(cmd_name, cmd_table[i].name)) {
             return cmd_table[i].function;
         }
     }

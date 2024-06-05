@@ -6,10 +6,10 @@ void (*functionPointers[COMMAND_AMOUNT])(char *args[], int argCount) = {help, ti
 // searches for the command by going though the array of strings and comparing
 void checkCommands(char *command, char *args[], int argCount)
 {
-    removeLeadingTrailingSpaces(command); // deletes spaces at the beginning and end of the command
+    //removeLeadingTrailingSpaces(command); // deletes spaces at the beginning and end of the command
     for (int i = 0; i < COMMAND_AMOUNT; i++)
     {
-        if (strCompare(command_list[i], command) == 0)
+        if (strcmp(command_list[i], command) == 0)
         {
             functionPointers[i](args, argCount);
             return;

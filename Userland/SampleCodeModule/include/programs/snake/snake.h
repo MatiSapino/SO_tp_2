@@ -1,7 +1,6 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
-#include <utils.h>
 #include <colors.h>
 
 #include <commands.h>

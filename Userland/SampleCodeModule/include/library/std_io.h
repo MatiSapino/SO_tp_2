@@ -8,7 +8,9 @@
 #include <shell.h>
 #include <std_lib.h>
 #include <string_s.h>
-#include <utils.h>
+#include <testUtil.h>
+#include <std_io.h>
+#include <stdarg.h>
 
 #include <UserSyscalls.h>
 

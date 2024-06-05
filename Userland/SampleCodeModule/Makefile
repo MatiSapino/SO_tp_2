@@ -22,7 +22,7 @@ _loader.o: _loader.c
 	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@
 
 %.o: %.c
-	$(GCC) $(GCCFLAGS) -I./include -I./include/asm -I./include/library -I./include/library/mem -I./include/library/pipe -I./include/library/process -I./include/library/semaphore -I./include/programs/ipc -I./include/programs/mem -I./include/programs/pipe -I./include/programs/process -I./include/programs/shell -I./include/programs/snake -I../../Lib/include -c $< -o $@
+	$(GCC) $(GCCFLAGS) -I./include -I./include/asm -I./include/library -I./include/library/mem -I./include/library/pipe -I./include/library/process -I./include/library/semaphore -I./include/programs -I./include/programs/ipc -I./include/programs/mem -I./include/programs/pipe -I./include/programs/process -I./include/programs/semaphore -I./include/programs/shell -I./include/programs/snake -I./include/programs/util -I../../Lib/include -c $< -o $@
 
 %.o : %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@

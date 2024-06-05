@@ -25,7 +25,7 @@ char *strcpy(char *dest, const char *src)
     return dest;
 }
 
-int strcmp(char *str1, char *str2)
+int strcmp(const char *str1, const char *str2)
 {
     while (*str1 && *str2)
     {

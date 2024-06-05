@@ -1,7 +1,6 @@
 #ifndef __SNAKE2_H__
 #define __SNAKE2_H__
 
-#include <utils.h>
 #include <colors.h>
 
 #include <commands.h>

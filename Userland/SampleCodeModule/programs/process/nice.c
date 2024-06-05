@@ -15,7 +15,7 @@ int nice(int argc, char *argv[]) {
         return -1;
     }
     int pid = satoi(argv[1]);
-    if ((pid == 0 && strCmp("0", argv[1]) != 0) || pid < 0) {
+    if ((pid == 0 && strcmp("0", argv[1]) != 0) || pid < 0) {
         own_printf("nice: not a valid pid\n");
         return -1;
     }

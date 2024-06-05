@@ -1,4 +1,4 @@
-#ifndef _TESTUTIL_H:
+#ifndef _TESTUTIL_H_
 #define _TESTUTIL_H_
 
 #include <stdint.h>

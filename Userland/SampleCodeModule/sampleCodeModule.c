@@ -1,8 +1,15 @@
 /* sampleCodeModule.c */
-#include <shell.h>
+#include <initShell.h>
+#include <help.h>
+#include <type.h>
+#include <std_io.h>
+#include <std_lib.h>
+#include <strings.h>
 
 int main()
 {
-	start_shell();
-	return 0;
+	char *args[] = {"initShell"};
+    call_run(initShell, 1, args);
+
+    return 0xDEADBEEF;
 }

@@ -86,7 +86,7 @@ static function_t get_cmd(char *cmd_name) {
 
 static void invalid_command(char *cmd_name) {
     own_printf("ERROR: - '%s' is not a valid command\n", cmd_name);
-    own_printf("Type help to show all commands\n", GREEN);
+    own_printf("Type help to show all commands\n");
 }
 
 static int run_command(char *name, int argc, char *argv[]) {

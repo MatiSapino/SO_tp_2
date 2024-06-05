@@ -36,7 +36,7 @@ pid_t wait_process(pid_t pid, int *status_ptr);
  * one in the queue. This method should be called while IF flag is set to 0.
  *
  */
-extern void _force_scheduler();
+extern void force_scheduler();
 
 /**
  * @brief Switches the CPU to the context of the next process in the queue.

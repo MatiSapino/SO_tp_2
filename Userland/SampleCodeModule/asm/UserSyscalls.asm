@@ -46,6 +46,8 @@ GLOBAL call_waitpid
 GLOBAL call_get_proc_status
 GLOBAL call_set_priority
 GLOBAL call_getpid
+GLOBAL call_sched_yield
+GLOBAL call_sleep_process
 
 GLOBAL call_setfg
 
@@ -159,3 +161,7 @@ call_getpid:
     call_to_handler 43
 call_setfg:
     call_to_handler 44
+call_sched_yield:
+    call_to_handler 45
+call_sleep_process:
+    call_to_handler 46

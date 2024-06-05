@@ -1,5 +1,5 @@
 #include <circularLinkedList.h>
-#include <std_lib.h>
+#include <stdlib.h>
 
 #define ERROR -1
 #define SUCCESS 0

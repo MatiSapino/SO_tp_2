@@ -36,7 +36,7 @@ static int comparison_function(void *pipe, void *name)
     pipe_t pipe_test = (pipe_t)pipe;
     char *name_test = (char *)name;
 
-    return !strCompare(pipe_test->name, name_test);
+    return !strcmp(pipe_test->name, name_test);
 }
 
 static int process_pipe_comparison_function(void *pid, void *other_pid)

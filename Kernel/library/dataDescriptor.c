@@ -1,4 +1,5 @@
 #include <dataDescriptor.h>
+#include <pipe.h>
 #include <memory_manager.h>
 #include <scheduler.h>
 

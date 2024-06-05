@@ -29,4 +29,6 @@ int sys_get_proc_status(int pid);
 int sys_set_priority(int pid, int priority);
 int sys_getpid();
 
+void sys_sleep(int seconds);
+
 #endif // _KEYBOARD_H_

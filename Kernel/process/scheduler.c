@@ -4,6 +4,9 @@
 #include <idtLoader.h>
 #include <linkedList.h>
 #include <memory_manager.h>
+#include <process.h>
+#include <stdbool.h>
+#include <lib.h>
 
 #define PID_ERR        -1
 #define MAX_TERM_COUNT 2
@@ -19,16 +22,16 @@ static int priority_timer_tick = 0;
 static void remove_process(int pid);
 
 static int search_by_status(void *process, void *status) {
-    return ((process_t *)process)->status == status;
+    return ((process_t *)process)->status == *(enum pstatus *)status;
 }
 
 static int search_by_pid(void *process, void *pid) {
-    return ((process_t *)process)->pid == pid;
+    return ((process_t *)process)->pid == *(pid_t *)pid;
 }
 
 static int search_by_channel(void *process, void *channel) {
     return ((process_t *)process)->status == WAITING &&
-           ((process_t *)process)->channel == channel;
+           ((process_t *)process)->channel == (void *)channel;
 }
 
 void init_scheduler() {
@@ -44,7 +47,7 @@ int process_count() {
 pid_t wait_process(pid_t pid, int *status_ptr) {
 
     // if no children, return
-    if (size(current_process->children) == 0 || pid < -1)
+    if (size_list(current_process->children) == 0 || pid < -1)
         return PID_ERR;
 
     list_ptr children_list = current_process->children;
@@ -52,7 +55,7 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
 
     while (true) {
         if (pid >= 0) {
-            target_child = find(children_list, pid, search_by_pid);
+            target_child = find(children_list, (void *)&pid, search_by_pid);
 
             if (target_child != NULL && target_child->status == TERMINATED) {
                 if (status_ptr != NULL)
@@ -61,7 +64,7 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
                 return target_child->pid;
             }
         } else {
-            target_child = find(children_list, TERMINATED, search_by_status);
+            target_child = find(children_list, (void *)TERMINATED, search_by_status);
 
             if (target_child != NULL) {
                 if (status_ptr != NULL)
@@ -76,13 +79,13 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
 }
 
 void sleep_process(uint64_t channel) {
-    current_process->channel = channel;
+    current_process->channel = (void *)channel;
     current_process->status = WAITING;
-    _force_scheduler();
+    force_scheduler();
 }
 
 int wakeup(uint64_t channel) {
-    process_t *target = cl_find(process_list, channel, search_by_channel);
+    process_t *target = cl_find(process_list, (void *)channel, search_by_channel);
     if (target == NULL)
         return PID_ERR;
 
@@ -111,7 +114,7 @@ int add_process(function_t main, int argc, char *argv[]) {
 }
 
 static void remove_children(process_t *process) {
-    if (size(process->children) == 0)
+    if (size_list(process->children) == 0)
         return;
 
     to_begin(process->children);
@@ -122,7 +125,7 @@ static void remove_children(process_t *process) {
 }
 
 static void remove_process(int pid) {
-    process_t *target = cl_remove(process_list, pid);
+    process_t *target = cl_remove(process_list, (void *)(intptr_t)pid);
     if (target == NULL)
         return;
 
@@ -130,7 +133,7 @@ static void remove_process(int pid) {
         foreground_process = NULL;
 
     // remove process from parent's children list
-    remove(target->parent->children, pid);
+    remove(target->parent->children, (void *)(intptr_t)pid);
     free_process(target);
 }
 
@@ -148,11 +151,11 @@ void exit_process(int status) {
     current_process->status = TERMINATED;
     current_process->exit_status = status;
 
-    _force_scheduler();
+    force_scheduler();
 }
 
 int kill_process(int pid) {
-    process_t *target = cl_find(process_list, pid, search_by_pid);
+    process_t *target = cl_find(process_list, (void *)(intptr_t)pid, search_by_pid);
     if (target == NULL)
         return PID_ERR;
 
@@ -176,7 +179,7 @@ int kill_process(int pid) {
     // gprint_new_line(target->g_context);
 
     if (target == current_process)
-        _force_scheduler();
+        force_scheduler();
 
     return pid;
 }
@@ -186,11 +189,11 @@ process_t *get_current_process() {
 }
 
 process_t *get_process(pid_t pid) {
-    return cl_find(process_list, pid, search_by_pid);
+    return cl_find(process_list, (void *)(intptr_t)pid, search_by_pid);
 }
 
 void set_foreground_process(int pid) {
-    process_t *found = cl_find(process_list, pid, search_by_pid);
+    process_t *found = cl_find(process_list, (void *)(intptr_t)pid, search_by_pid);
     if (found == NULL)
         return;
 
@@ -205,7 +208,7 @@ process_t *get_foreground_process() {
 }
 
 int get_process_table(process_table_t *table) {
-    circular_list_iterator_t *iterator =
+    circular_list_iterator_t iterator =
         new_circular_list_iterator(process_list);
 
     int row = 0;
@@ -217,9 +220,9 @@ int get_process_table(process_table_t *table) {
         table->entries[row].pid = process->pid;
         table->entries[row].priority = process->priority;
         table->entries[row].status = process->status;
-        table->entries[row].rbp = process->context->rbp;
+        table->entries[row].rbp = (void *)(uintptr_t)process->context->rbp;
         table->entries[row].stack = process->context;
-        table->entries[row].children_count = size(process->children);
+        table->entries[row].children_count = size_list(process->children);
 
         if (process->parent != NULL)
             strcpy(table->entries[row].parent_name, process->parent->argv[0]);

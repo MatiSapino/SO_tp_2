@@ -1,4 +1,5 @@
 #include <irqDispatcher.h>
+#include <scheduler.h>
 
 static void int_20();
 static void int_21();
@@ -158,6 +159,12 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 		return sys_getpid();
 	case 44:
 		set_foreground_process((int)rsi);
+		break;
+	case 45:
+		force_scheduler();
+		break;
+	case 46:
+		sys_sleep((int)rsi);
 		break;
 
 

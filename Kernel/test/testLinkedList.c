@@ -1,6 +1,7 @@
 #include <testLinkedList.h>
 #include <linkedList.h>
 #include <assert.h>
+#include <stdlib.h>
 #include <lib.h>
 #include <videoDriver.h>
 

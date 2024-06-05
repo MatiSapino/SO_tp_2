@@ -1,9 +1,18 @@
-#include <std_lib.h>
+#include <videoDriver.h>
+#include <keyboard_driver.h>
+#include <keyboard_buffer.h>
+#include <stdlib.h>
+#include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <idtLoader.h>
 #include <memory_manager.h>
 #include <pipe.h>
+#include <process.h>
+#include <scheduler.h>
+#include <semaphore.h>
+#include <syscall.h>
+#include <time.h>
 
 extern uint8_t text;
 extern uint8_t rodata;

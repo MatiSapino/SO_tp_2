@@ -19,8 +19,8 @@ GLOBAL _exception6Handler
 GLOBAL printRegAsm
 GLOBAL saveState
 
-GLOBAL _force_scheduler
-GLOBAL _force_timer_int
+GLOBAL force_scheduler
+GLOBAL force_timer_int
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -187,7 +187,7 @@ _sti:
 	sti
 	ret
 
-_force_timer_int:
+force_timer_int:
 	int 20h
 	ret
 
@@ -274,7 +274,7 @@ haltcpu:
 	hlt
 	ret
 
-_force_scheduler:
+force_scheduler:
 	int 20h
 	ret
 

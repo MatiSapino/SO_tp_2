@@ -1,4 +1,6 @@
 #include <keyboard_driver.h>
+#include <scheduler.h>
+#include <defs.h>
 
 int snap = 0;
 static char ScanCodes[256] = {
@@ -134,6 +136,7 @@ static char ScanCodes[256] = {
 
 static int capsLockOn = 0;
 static int shiftPressed = 0;
+static int control = 0;
 
 void keyboard_handler()
 {
@@ -154,6 +157,15 @@ void keyboard_handler()
     else if (key == 0xAA)
     { // shift break
         shiftPressed = 0;
+    }
+
+    if (key == 0x1D) {
+        // control make
+        control = 1;
+    }
+    else if (key == 0x9D) {
+        // control break
+        control = 0;
     }
 
     uint16_t *buff = getBufferAddress();
@@ -178,6 +190,14 @@ void keyboard_handler()
         snap = 1;
         buff[buff_pos] = ScanCodes[key];
         return;
+    }
+
+    if (control && key ==0x2E) {
+        process_t *foreground_process = get_foreground_process();
+        if (foreground_process == NULL)
+            return;
+
+        kill_process(foreground_process->pid);
     }
 
     if ((capsLockOn || shiftPressed) && !(capsLockOn && shiftPressed) && (ScanCodes[key] - ('a' - 'A')) >= 'A' && (ScanCodes[key] - ('a' - 'A')) <= 'Z')

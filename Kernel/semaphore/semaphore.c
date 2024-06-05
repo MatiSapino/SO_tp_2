@@ -32,7 +32,7 @@ extern int xchg(int *var_ptr, int value);
 static int comparison_function(void *semaphore, void *name)
 {
     sem_t *sem_test = (sem_t *)semaphore;
-    if (strCompare(sem_test->name, (char *)name) == 0)
+    if (strcmp(sem_test->name, (char *)name) == 0)
     {
         return 1;
     }

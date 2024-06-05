@@ -3,10 +3,41 @@
 #include <mem.h>
 #include <pipe.h>
 #include <std_io.h>
+#include <fibonacci.h>
+#include <primes.h>
+#include <testprio.h>
+#include <block.h>
+#include <testprocess.h>
+#include <testsync.h>
+#include <loop.h>
+#include <ipc.h>
+#include <kill.h>
+#include <printSems.h>
+#include <testPipe.h>
+#include <processStatus.h>
+#include <phylo.h>
+#include <infoPipe.h>
+#include <time.h>
+#include <playSnake.h>
+#include <playSnake2.h>
+#include <help.h>
+#include <regState.h>
+#include <div0.h>
+#include <invalOp.h>
+#include <zoomOut.h>
+#include <zoomIn.h>
+#include <clearScreen.h>
+#include <testmm.h>
+#include <printmem.h>
+#include <printmemstate.h>
+#include <exitShell.h>
 
+#define MAX_PROC_COUNT 2
 #define MAX_ARGC 5
+#define LINE_LENGTH    512
 #define TOKEN_LENGTH   512
 
+#define PIPE_SYMBOL    '|'
 
 typedef struct cmd {
     char *name;
@@ -27,12 +58,48 @@ typedef struct cmd_entry {
     function_t function;
 } cmd_entry_t;
 
+static int background_exec(int argc, char *argv[]);
+
+cmd_entry_t cmd_table[] = {{"HELP", help}, {"TIME", time}, {"REGSTATE", regState}, {"DIV0", div0},
+{"INVALOP", invalidOp}, {"ZOOMOUT", zoomOut}, {"ZOOMIN", zoomIn}, {"SNAKE", play_snake},
+{"CLEAR", clearScreen}, {"EXIT", exitShell}, {"SNAKE2", playSnake2},
+{"FIBONACCI", fibonacci}, {"PRIMES", primes}, {"PRINTMEM", printmem}, {"MEM", printmemstate},
+{"TESTMM", testmm}, {"BLOCK", block}, {"TESTPIPES", test_pipes}, {"PIPE", info_all_pipes}, {"SEM", printsems},
+{"PHYLO", phylo}, {"PROCESSSTATUS", processStatus}, {"KILL", kill}, {"NICE", nice}, {"TESTPRIO", test_prio}, {"TESTPROC", test_proc},
+{"TESTSYNC", test_sync}, {"LOOP", loop}, {"CAT", cat}, {"FILTER", filter}, {"WC", wc}, {"BACKGROUND_EXEC", background_exec},
+{NULL, NULL}};
+
 sem_ptr sem_pipe_exec;
+
 static char whitespace[] = " \t\n";
 static char operators[] = "|&";
 
-cmd_entry_t cmd_table[] = {{"nice", nice},
-                           {NULL, NULL}};
+static function_t get_cmd(char *cmd_name) {
+    for (int i = 0; cmd_table[i].name != NULL; i++) {
+        if (!strcmp(cmd_name, cmd_table[i].name)) {
+            return cmd_table[i].function;
+        }
+    }
+
+    return NULL;
+}
+
+static void invalid_command(char *cmd_name) {
+    own_printf("ERROR: - '%s' is not a valid command\n", cmd_name);
+    own_printf("Type help to show all commands\n", GREEN);
+}
+
+static int run_command(char *name, int argc, char *argv[]) {
+
+    function_t function = get_cmd(name);
+
+    if (function == NULL) {
+        invalid_command(name);
+        return -2;
+    }
+
+    return call_run(function, argc, argv);
+}
 
 void clearBuffer(char *buff)
 {
@@ -165,16 +232,35 @@ static line_t *parseline(char *line) {
     return pline;
 }
 
-static function_t get_cmd(char *cmd_name) {
-    for (int i = 0; cmd_table[i].name != NULL; i++) {
-        if (!strcmp(cmd_name, cmd_table[i].name)) {
-            return cmd_table[i].function;
-        }
+void printcmd(cmd_t *cmd) {
+    own_printf("cmd: %s\n", cmd->name);
+    own_printf("argc: %d\n", cmd->argc);
+    for (int i = 0; i < cmd->argc; ++i) {
+        own_printf("arg[%d]: %s\n", i, cmd->argv[i]);
     }
-
-    return NULL;
+    own_printf("\n");
 }
 
+void sigint_msg() {
+    own_printf("\n[ process terminated ]\n");
+}
+
+void freecmd(cmd_t *cmd) {
+    if (cmd == NULL)
+        return;
+
+    for (size_t i = 0; i < cmd->argc; i++)
+        call_free(cmd->argv[i]);
+
+    call_free(cmd->name);
+    call_free(cmd);
+}
+
+void freepline(line_t *parsedline) {
+    freecmd(parsedline->left_cmd);
+    freecmd(parsedline->right_cmd);
+    call_free(parsedline);
+}
 
 static void pipe_exec_left(int argc, char *argv[]) {
 
@@ -219,22 +305,6 @@ static void pipe_exec(cmd_t *left, cmd_t *right) {
     call_sem_close(sem_pipe_exec);
 }
 
-static void invalid_command(char *cmd_name) {
-    own_printf("[ Command %s not found ]\n", cmd_name);
-}
-
-static int run_command(char *name, int argc, char *argv[]) {
-
-    function_t function = get_cmd(name);
-
-    if (function == NULL) {
-        invalid_command(name);
-        return -2;
-    }
-
-    return call_run(function, argc, argv);
-}
-
 static int background_exec(int argc, char *argv[]) {
 
     function_t function = get_cmd(argv[0]);
@@ -248,23 +318,6 @@ static int background_exec(int argc, char *argv[]) {
     function(argc, argv);
 
     return 0;
-}
-
-void freecmd(cmd_t *cmd) {
-    if (cmd == NULL)
-        return;
-
-    for (size_t i = 0; i < cmd->argc; i++)
-        call_free(cmd->argv[i]);
-
-    call_free(cmd->name);
-    call_free(cmd);
-}
-
-void freepline(line_t *parsedline) {
-    freecmd(parsedline->left_cmd);
-    freecmd(parsedline->right_cmd);
-    call_free(parsedline);
 }
 
 void read_buffer(int *screenIndx, char screen[], char buffer[], int *status)

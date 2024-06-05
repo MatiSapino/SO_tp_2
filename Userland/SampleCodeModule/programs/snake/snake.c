@@ -37,9 +37,11 @@ void start_snake()
 {
 	char c;
 	int flag = 1;
+	int argc = 0;
+	char *argv[1];
 	while (flag)
 	{
-		clearScreen();
+		clearScreen(argc, argv);
 		setFontSize(10);
 		own_printf("    SNAKE\n\n\n\n");
 		setFontSize(4);
@@ -125,11 +127,13 @@ void snake_multiplayer()
 	players = 2;
 	player1Alive = 1;
 	player2Alive = 1;
+	int argc = 0;
+	char *argv[1];
 	setupGame();
 	placeFruit();
 	while (!gameOver)
 	{
-		clearScreen();
+		clearScreen(argc, argv);
 		render();
 		inputCheck();
 		moveSnake();

@@ -2,8 +2,8 @@
 #define __SNAKE2_H__
 
 #include <colors.h>
-
-#include <commands.h>
+#include <clearScreen.h>
+#include <std_io.h>
 #include <UserSyscalls.h>
 
 // shows the snake titlecard

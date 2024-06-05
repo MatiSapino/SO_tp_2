@@ -2,8 +2,8 @@
 #define SNAKE_H
 
 #include <colors.h>
-
-#include <commands.h>
+#include <clearScreen.h>
+#include <std_io.h>
 #include <UserSyscalls.h>
 
 void snake();

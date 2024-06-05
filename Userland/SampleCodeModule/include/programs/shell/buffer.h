@@ -3,7 +3,6 @@
 
 #include <screen.h>
 #include <colors.h>
-#include <commands.h>
 #include <string_s.h>
 #include <semaphore.h>
 

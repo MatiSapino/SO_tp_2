@@ -61,7 +61,9 @@ void snake2_title_card()
     int startGame = 0;
     finish_game = 0;
     char c;
-    clearScreen();
+    int argc = 0;
+    char *argv[1];
+    clearScreen(argc, argv);
 
     while (startGame == 0)
     {
@@ -83,7 +85,7 @@ void snake2_title_card()
         }
     }
 
-    clearScreen();
+    clearScreen(argc, argv);
     create_map();
 
     if (startGame == 1)

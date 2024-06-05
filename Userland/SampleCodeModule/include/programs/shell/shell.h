@@ -9,6 +9,6 @@ int start_shell();
 void changeStatus();
 void showScreen();
 void clearScreenArray();
-void putIntoScreen();
+void putIntoScreen(char *str);
 
 #endif

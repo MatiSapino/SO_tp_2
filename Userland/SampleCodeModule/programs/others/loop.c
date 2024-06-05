@@ -15,6 +15,6 @@ int loop(int argc, char *argv[]) {
 
     while (1) {
         own_printf("Hello World!\n");
-        call_sleep(seconds);
+        call_sleep_process(seconds);
     }
 }

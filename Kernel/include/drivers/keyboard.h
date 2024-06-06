@@ -1,6 +1,5 @@
-
-#ifndef KEYBOARD_DRIVER_H
-#define KEYBOARD_DRIVER_H
+#ifndef _KEYBOARD_H_
+#define _KEYBOARD_H_
 
 #define BUFFER_SIZE 512
 
@@ -22,7 +21,7 @@ void kbd_enable();
  * @brief 
  * 
  */
-void keyboard_handler();
+void kbd_handler();
 
 /**
  * @brief 
@@ -79,4 +78,4 @@ uint8_t kbd_is_save_reg_shortcut();
  */
 void kbd_sets_cntrl_listener(uint8_t *listener);
 
-#endif /* KEYBOARD_DRIVER_H */
+#endif

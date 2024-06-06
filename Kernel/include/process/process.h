@@ -1,16 +1,16 @@
 #ifndef _PROCESS_H_
 #define _PROCESS_H_
 
-#include <dataDescriptor.h>
-#include <linkedList.h>
+#include <graphics.h>
+#include <lib/dataDescriptor.h>
+#include <linked_list.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <graphics.h>
 
-#define LOWEST 1
-#define MEDIUM 5
-#define HIGHEST 10
+#define LOWEST               1
+#define MEDIUM               5
+#define HIGHEST              10
 
 #define K_PROCESS_STACK_SIZE (1024 * 4)
 
@@ -22,8 +22,7 @@ typedef enum pstatus {
 
 typedef int pid_t;
 
-typedef struct context
-{
+typedef struct context {
     uint64_t r15;
     uint64_t r14;
     uint64_t r13;
@@ -50,8 +49,8 @@ typedef struct context
 } context_t;
 
 typedef struct process process_t;
-typedef struct process
-{
+
+typedef struct process {
     uint8_t k_stack[K_PROCESS_STACK_SIZE];
     context_t *context;
     pid_t pid;
@@ -70,17 +69,7 @@ typedef struct process
 
 typedef int (*function_t)(int, char *[]);
 
-/**
- * @brief Creates a new process.
- *
- * @param main main function of the process
- * @param argc argument count that the main function receives
- * @param argv an array containing all the arguments
- * @return process_t* pointer to the created process, or NULL if the process
- * could not be created
- */
 process_t *new_process(function_t main, int argc, char *argv[]);
-
 void free_process(process_t *process);
 
-#endif // _PROCESS_H_
+#endif

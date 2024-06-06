@@ -1,6 +1,5 @@
-#ifndef _REGISTERS_H
-#define _REGISTERS_H
-
+#ifndef _REGISTERS_H_
+#define _REGISTERS_H_
 #include <stdint.h>
 
 typedef enum {
@@ -37,4 +36,4 @@ void save_cpu_state(cpu_state_t *cpu, request_t request);
 cpu_state_t *get_cpu_state();
 int copy_cpu_state(cpu_state_t *cpu_ptr, request_t request);
 
-#endif /* _REGISTERS_H */
+#endif

@@ -1,20 +1,15 @@
-#ifndef NAIVE_CONSOLE_H
-#define NAIVE_CONSOLE_H
+#ifndef _NAIVE_CONSOLE_H_
+#define _NAIVE_CONSOLE_H_
 
 #include <stdint.h>
 
-#define deafultcolor 0x0f
-#define defaultback 0x00
-
 void ncPrint(const char *string);
 void ncPrintChar(char character);
-void ncPrintCharColor(char character, char color, char back);
 void ncNewline();
-void ncPrintDec(uint64_t value);                 // Imprime un numero en base 10
-void ncPrintHex(uint64_t value);                 // Imprime un numero en base 16
-void ncPrintBin(uint64_t value);                 // Imprime un numero en base 2
-void ncPrintBase(uint64_t value, uint32_t base); // Imprime un numero en la base que se le pase
-void ncClear();                                  // Limpia la pantalla
-void ncBackspace();                              // Borra el ultimo caracter                           // Devuelve la hora actual
+void ncPrintDec(uint64_t value);
+void ncPrintHex(uint64_t value);
+void ncPrintBin(uint64_t value);
+void ncPrintBase(uint64_t value, uint32_t base);
+void ncClear();
 
-#endif                                           /* NAIVE_CONSOLE_H */
+#endif

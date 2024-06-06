@@ -16,9 +16,9 @@ GLOBAL _exception0Handler
 GLOBAL _exception6Handler
 
 GLOBAL _syscall_master_handler
-GLOBAL force_scheduler
+GLOBAL _force_schedule
 
-GLOBAL force_timer_int
+GLOBAL _force_timer_int
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -28,7 +28,7 @@ EXTERN syscall_dispatcher
 EXTERN kbd_is_save_reg_shortcut
 EXTERN gsnapshot
 
-SECTION .text
+section .text
 
 %macro pushState 0
 	push rax
@@ -112,14 +112,12 @@ SECTION .text
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
 	out 20h, al
-
 	popState
 	iretq
 %endmacro
 
-
-
 %macro exceptionHandler 1
+;https://os.phil-opp.com/cpu-exceptions/#behind-the-scenes
 	saveRegisters
 	mov rsi,EXCEPTION
 	call save_cpu_state
@@ -136,12 +134,11 @@ _cli:
 	cli
 	ret
 
-
 _sti:
 	sti
 	ret
 
-force_timer_int:
+_force_timer_int:
 	int 20h
 	ret
 
@@ -157,7 +154,7 @@ picSlaveMask:
 	push    rbp
     mov     rbp, rsp
     mov     ax, di  ; ax = mascara de 16 bits
-    out	0A1h,al
+    out		0A1h,al
     pop     rbp
     retn
 
@@ -176,19 +173,31 @@ _irq02Handler:
 
 ;Serial Port 2 and 4
 _irq03Handler:
-	irqHandlerMaster 3
+irqHandlerMaster 3
 
 ;Serial Port 1 and 3
 _irq04Handler:
-	irqHandlerMaster 4
+irqHandlerMaster 4
 
 ;USB
 _irq05Handler:
-	irqHandlerMaster 5
+irqHandlerMaster 5
+
+;Zero Division Exception
+_exception0Handler:
+	exceptionHandler 0
+
+;Invalid Opcode Exception
+_exception6Handler:
+	exceptionHandler 6
+
+_force_schedule:
+	int 20h
+	ret
 
 _syscall_master_handler:
 	cli
-	
+
 	push rbx
 	push rcx
 	push rdx
@@ -207,7 +216,7 @@ _syscall_master_handler:
 	mov rcx, r10
 
 	push rax
-	call syscall_dispatcher
+	call syscall_dispatcher 
 	pop rbx
 
 	mov rbx,rax
@@ -233,23 +242,10 @@ _syscall_master_handler:
 
 	iretq
 
-;Zero Division Exception
-_exception0Handler:
-	exceptionHandler 0
-
-_exception6Handler:
-	exceptionHandler 6
-
 haltcpu:
 	cli
 	hlt
 	ret
-
-force_scheduler:
-	int 20h
-	ret
-
-
 
 SECTION .bss
 	aux resq 1

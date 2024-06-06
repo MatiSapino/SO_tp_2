@@ -1,23 +1,20 @@
 GLOBAL cpuVendor
-
-GLOBAL rtc_time
-GLOBAL set_hour12_mode
-GLOBAL set_hour24_mode
-GLOBAL set_decimal_mode
-GLOBAL set_BCD_mode
-
 GLOBAL outb
 GLOBAL outw
 GLOBAL inb
 GLOBAL inw
 
-GLOBAL xadd
-GLOBAL xchg
+GLOBAL _rtc_time
+GLOBAL _set_hour12_mode
+GLOBAL _set_hour24_mode
+GLOBAL _set_decimal_mode
+GLOBAL _set_BCD_mode
+
+GLOBAL _xadd
+GLOBAL _xchg
 
 section .text
-
-
-
+	
 cpuVendor:
 	push rbp
 	mov rbp, rsp
@@ -42,7 +39,31 @@ cpuVendor:
 	pop rbp
 	ret
 
-rtc_time:
+outb:
+    mov     rdx, rdi
+    mov     rax, rsi
+    out     dx, al
+    ret
+
+outw:
+    mov     rdx, rdi
+    mov     rax, rsi
+    out     dx, ax
+    ret
+
+inb:
+    xor     rax, rax
+    mov     rdx, rdi
+    in      al, dx
+    ret
+
+inw:
+    xor     rax, rax
+    mov     rdx, rdi
+    in      ax, dx
+    ret
+
+_rtc_time:
 	push rbp
 	mov rbp , rsp
 	mov [aux] , byte rdi
@@ -53,7 +74,7 @@ rtc_time:
 	pop rbp
 ret
 	
-set_hour12_mode:
+_set_hour12_mode:
 	push rbp
 	mov rbp , rsp
 	mov al, 11
@@ -67,7 +88,7 @@ set_hour12_mode:
 	pop rbp
 ret
 
-set_hour24_mode:
+_set_hour24_mode:
 	push rbp
 	mov rbp , rsp
 	mov al, 11
@@ -80,7 +101,7 @@ set_hour24_mode:
 	pop rbp
 ret
 
-set_decimal_mode:
+_set_decimal_mode:
 	push rbp
 	mov rbp , rsp
 	mov al, 11
@@ -93,7 +114,7 @@ set_decimal_mode:
 	pop rbp
 ret
 
-set_BCD_mode:
+_set_BCD_mode:
 	push rbp
 	mov rbp , rsp
 	mov al, 11
@@ -107,39 +128,15 @@ set_BCD_mode:
 	pop rbp
 ret
 
-inb:				; Funciones para el correcto funcionamiento del soundDriver
-    xor rax, rax
-	mov rdx,rdi
-    in al,dx		; pasaje en 8 bits
-	ret
+_xadd:
+  mov rax, rsi
+  lock xadd [rdi], eax
+  ret
 
-outb:
-	mov     rdx, rdi
-    mov     rax, rsi
-	out dx, al		; pasaje en 8 bits
-	ret
-
-xadd:
-	mov rax, rsi
-	lock xadd [rdi], eax
-	ret
-
-xchg:
-	mov rax, rsi
-	xchg [rdi], eax
-	ret
-
-inw:
-	xor rax, rax
-    mov rdx, rdi
-    in ax, dx
-	ret
-
-outw:
-	mov rdx, rdi
-    mov rax, rsi
-    out dx, ax
-	ret
+_xchg:
+  mov rax, rsi
+  xchg [rdi], eax
+  ret
 
 section .bss
 aux resb 1

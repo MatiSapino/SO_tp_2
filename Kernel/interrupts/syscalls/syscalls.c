@@ -1,14 +1,14 @@
-#include <syscalls.h>
-#include <process.h>
-#include <interrupts.h>
 #include <dataDescriptor.h>
+#include <interrupts.h>
 #include <keyboard.h>
-#include <defs.h>
-#include <pipe.h>
-#include <memory_manager.h>
+#include <lib/defs.h>
+#include <pipe/pipe.h>
+#include <pmm.h>
+#include <process.h>
 #include <registers.h>
 #include <scheduler.h>
-#include <semaphore.h>
+#include <semaphore/semaphore.h>
+#include <syscalls.h>
 #include <time.h>
 #include <video.h>
 
@@ -121,7 +121,7 @@ void sys_exit(int status)
 }
 
 uint8_t sys_gettime(time_rtc_t *struct_time, int utc_offset) {
-    // set_UTC_offset(utc_offset);
+    set_UTC_offset(utc_offset);
     get_struct_time();
     return SUCCESS;
 }

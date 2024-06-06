@@ -48,7 +48,7 @@ static void show_registers(char *error_message, int exception_id) {
 
     for (int i = 0; i < REGISTERS_COUNT; i++) {
         format_reg_str(reg_str, regs_values[i]);
-		printf("%s", registers_strings[i]);
+        printf("%s", registers_strings[i]);
         puts(reg_str);
     }
 }

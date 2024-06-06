@@ -7,11 +7,11 @@ void timer_reset() {
 }
 
 void timer_handler() {
-	ticks++;
+    ticks++;
 }
 
 int ticks_elapsed() {
-	return ticks;
+    return ticks;
 }
 
 int seconds_elapsed() {

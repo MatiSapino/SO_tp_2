@@ -1,12 +1,10 @@
 GLOBAL cpuVendor
 
-GLOBAL get_seconds
-GLOBAL get_minutes
-GLOBAL get_hours
-GLOBAL get_weekDay
-GLOBAL get_monthDay
-GLOBAL get_month
-GLOBAL get_year
+GLOBAL rtc_time
+GLOBAL set_hour12_mode
+GLOBAL set_hour24_mode
+GLOBAL set_decimal_mode
+GLOBAL set_BCD_mode
 
 GLOBAL outb
 GLOBAL outw
@@ -18,29 +16,7 @@ GLOBAL xchg
 
 section .text
 
-%macro enter_func 0
-  push rbp
-  mov rbp, rsp
-%endmacro
 
-%macro leave_func 0
-  mov rsp, rbp
-  pop rbp
-%endmacro
-
-%macro get_RTC_val 1
-  xor rax, rax
-  xor rdi, rdi
-  mov al, 0x0B
-  out 70h, al
-  in al, 71h 
-  or al, 0x04 
-  out 71h, al
-  mov al, %1
-  out 70h, al
-  in al, 71h
-  mov rdi, rax
-%endmacro
 
 cpuVendor:
 	push rbp
@@ -66,47 +42,70 @@ cpuVendor:
 	pop rbp
 	ret
 
-get_seconds:
-	enter_func
-	get_RTC_val 0
-	leave_func
-  	ret
+rtc_time:
+	push rbp
+	mov rbp , rsp
+	mov [aux] , byte rdi
+	mov  al , [aux]
+	out 70h,al
+	in al,71h
+	mov rsp, rbp
+	pop rbp
+ret
+	
+set_hour12_mode:
+	push rbp
+	mov rbp , rsp
+	mov al, 11
+	out 70h,al
+	in al,71h
+	mov ah,2
+	not ah
+	and al,ah
+	out 71h,al
+	mov rsp, rbp
+	pop rbp
+ret
 
-get_minutes:
-	enter_func
-	get_RTC_val 2
-	leave_func
-  	ret
+set_hour24_mode:
+	push rbp
+	mov rbp , rsp
+	mov al, 11
+	out 70h,al
+	in al,71h
+	mov ah,2
+	or al,ah
+	out 71h,al
+	mov rsp, rbp
+	pop rbp
+ret
 
-get_hours:
-	enter_func
-	get_RTC_val 4
-	leave_func
-  	ret
+set_decimal_mode:
+	push rbp
+	mov rbp , rsp
+	mov al, 11
+	out 70h,al
+	in al,71h
+	mov ah,4
+	or al,ah
+	out 71h,al
+	mov rsp, rbp
+	pop rbp
+ret
 
-get_weekDay:
-	enter_func
-	get_RTC_val 6
-	leave_func
-  	ret
-
-get_monthDay:
-	enter_func
-	get_RTC_val 7
-	leave_func
-  	ret
-
-get_month:
-	enter_func
-	get_RTC_val 8
-	leave_func
-  	ret
-
-get_year:
-	enter_func
-	get_RTC_val 9
-	leave_func
-  	ret
+set_BCD_mode:
+	push rbp
+	mov rbp , rsp
+	mov al, 11
+	out 70h,al
+	in al,71h
+	mov ah,4
+	not ah
+	and al,ah
+	out 71h,al
+	mov rsp, rbp
+	pop rbp
+ret
 
 inb:				; Funciones para el correcto funcionamiento del soundDriver
     xor rax, rax

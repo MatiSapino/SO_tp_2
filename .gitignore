@@ -1,6 +1,7 @@
 #Binary Files
 *.bin
 *.sys
+*.elf
 
 #The images
 *.img
@@ -9,8 +10,18 @@
 
 #Object files
 *.o
-*.elf
 
+#GDB files
+.gdbinit
+
+#VSCode
+.vscode
 .bash_history
-.vscode/
-.anima/
+.gdb_history
+
+#PVStudio
+*.tasks*
+strace_out
+*.log
+*.lic
+.config

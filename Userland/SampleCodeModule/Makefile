@@ -28,6 +28,6 @@ _loader.o: _loader.c
 	$(ASM) $(ASMFLAGS) $< -o $@
 
 clean:
-	rm -rf asm/*.o programs/*/*.o library/*.o ../../Lib/*.o *.o *.bin *.elf ../*.elf
+	rm -rf asm/*.o programs/*.o programs/*/*.o library/*.o ../../Lib/*.o *.o *.bin *.elf ../*.elf
 
 .PHONY: all clean print

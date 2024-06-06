@@ -1,8 +1,7 @@
-#include <testLinkedList.h>
-#include <linkedList.h>
+#include <lib/linked_list.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <video.h>
+#include <lib.h>
 
 void test_linked_list(){
     

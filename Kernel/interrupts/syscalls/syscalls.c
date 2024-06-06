@@ -121,7 +121,7 @@ void sys_exit(int status)
 }
 
 uint8_t sys_gettime(time_rtc_t *struct_time, int utc_offset) {
-    set_UTC_offset(utc_offset);
+    //set_UTC_offset(utc_offset);
     get_struct_time();
     return SUCCESS;
 }
@@ -216,7 +216,7 @@ void sys_focus(int pid) {
 }
 
 void sys_sched_yield() {
-    force_scheduler();
+    _force_schedule();
 }
 
 int sys_wait() {
@@ -272,11 +272,11 @@ int sys_dup2(unsigned int oldfd, unsigned int newfd) {
 }
 
 void *sys_malloc(size_t size) {
-    return malloc(size);
+    return kmalloc(size);
 }
 
 void sys_free(void *ptr) {
-    free(ptr);
+    kfree(ptr);
 }
 
 int sys_waitpid(int pid, int *status_ptr) {

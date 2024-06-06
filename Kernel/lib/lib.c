@@ -99,7 +99,7 @@ int puts(const char *str) {
     }
     new_str[i++] = '\n';
     new_str[i] = '\0';
-    return write(STDOUT, new_str, length + 1);
+    return sys_write(STDOUT, new_str, length + 1);
 }
 
 char *itoa(int num, char *str, int base) {
@@ -178,7 +178,7 @@ int printf(char *str, ...) {
         }
         i++;
     }
-    write(1, buff, j);
+    sys_write(1, buff, j);
     va_end(vl);
     return j;
 }

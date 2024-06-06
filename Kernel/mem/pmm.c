@@ -1,7 +1,7 @@
-#include <memory_manager.h>
+#include <pmm.h>
 #include <stdbool.h>
 
-#define SIZE (1024 * 1024 * 64) // 64MB
+#define SIZE      (1024 * 1024 * 64) // 64 MB
 #define BASE_ADDR 0x600000
 
 size_t occupied_mem = 0;
@@ -129,7 +129,7 @@ static size_t buddy_align_size(size_t size) {
     return actual_size;
 }
 
-void init_mm() {
+void init_pmm() {
     occupied_mem = 0;
 
     buddy_alloc->alignment = ALIGNMENT;
@@ -144,7 +144,7 @@ void init_mm() {
     buddy_alloc->tail = buddy_next(buddy_alloc->head);
 }
 
-void *malloc(size_t size) {
+void *kmalloc(size_t size) {
     if (size != 0) {
         size_t actual_size = buddy_align_size(size);
 
@@ -165,7 +165,7 @@ void *malloc(size_t size) {
     return NULL;
 }
 
-void free(void *ptr) {
+void kfree(void *ptr) {
     if (ptr != NULL) {
         buddy_block *block =
             (buddy_block *)((char *)ptr - buddy_alloc->alignment);
@@ -176,49 +176,51 @@ void free(void *ptr) {
 
 #else
 
-#define ALIGNMENT 8
+#define ALIGNMENT        8
 
 #define GET_SIZE(header) (header->size & ~0x1)
-#define ALIGN(size) (((size) + ALIGNMENT - 1) & ~ALIGNMENT)
+#define ALIGN(size)      (((size) + ALIGNMENT - 1) & -ALIGNMENT)
 
-typedef union header
-{
+typedef union header {
     uint64_t size;
-    uint8_t alloced : 1;
+    uint8_t alloced : 1; // bit_0
 } __attribute__((packed)) header_t;
 
 static header_t *start = (header_t *)BASE_ADDR;
 
-void init_mm()
-{
+void init_pmm() {
     header_t *current_header = start;
 
     current_header->size = SIZE;
     current_header->alloced = 0;
 
-    current_header = current_header + 1 + GET_SIZE(current_header) / sizeof(header_t);
+    // insert the end of space header
+
+    current_header =
+        current_header + 1 + GET_SIZE(current_header) / sizeof(header_t);
     current_header->size = 0;
     current_header->alloced = 1;
 }
 
-void *malloc(size_t size)
-{
+void *kmalloc(size_t size) {
     header_t *current_header = start;
 
-    while (((uint64_t)current_header < BASE_ADDR + SIZE - sizeof(header_t)))
-    {
-        if (size <= GET_SIZE(current_header) && !current_header->alloced)
-        {
-            void *alloced_addr = current_header + 1;
+    while (((uint64_t)current_header < BASE_ADDR + SIZE - sizeof(header_t))) {
+        if (size <= GET_SIZE(current_header) && !current_header->alloced) {
+            void *alloced_addr = current_header + 1; // return pointer
             uint64_t old_size = GET_SIZE(current_header);
-            uint64_t new_size = ALIGN(size);
+            uint64_t new_size = ALIGN(size); // round up to even value
 
             current_header->size = new_size;
             current_header->alloced = 1;
 
-            if (new_size < old_size)
-            {
-                current_header = current_header + 1 + new_size / sizeof(header_t);
+            // then insert new split block
+
+            if (new_size < old_size) {
+                // go to the next header
+                current_header =
+                    current_header + 1 + new_size / sizeof(header_t);
+
                 current_header->size = old_size - new_size - sizeof(header_t);
                 current_header->alloced = 0;
             }
@@ -227,32 +229,33 @@ void *malloc(size_t size)
             return alloced_addr;
         }
 
-        current_header = current_header + 1 + GET_SIZE(current_header) / sizeof(header_t);
+        // go to the next header
+        current_header =
+            current_header + 1 + GET_SIZE(current_header) / sizeof(header_t);
     }
-
     return NULL;
 }
 
-void free(void *ptr)
-{
+void kfree(void *ptr) {
     header_t *current_header = ptr - sizeof(header_t);
 
     current_header->alloced = 0;
     occupied_mem -= GET_SIZE(current_header);
 
-    header_t *next_header = current_header + 1 + GET_SIZE(current_header) / sizeof(header_t);
+    header_t *next_header =
+        current_header + 1 +
+        GET_SIZE(current_header) / sizeof(header_t); // go to the next header
 
     if (!next_header->alloced)
-    {
-        current_header->size += next_header->size + sizeof(header_t);
-    }
+        current_header->size +=
+            next_header->size + sizeof(header_t); // no need to mask out alloced
+                                                  // bit because is always 0
 }
 
 #endif
 
-void get_mem_state(int mm_state[])
-{
-    mm_state[0] = SIZE;
-    mm_state[1] = occupied_mem;
-    mm_state[2] = SIZE - occupied_mem;
+void get_mem_state(int mem_state[]) {
+    mem_state[0] = SIZE;
+    mem_state[1] = occupied_mem;
+    mem_state[2] = SIZE - occupied_mem;
 }

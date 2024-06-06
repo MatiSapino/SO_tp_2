@@ -1,10 +1,10 @@
-#include <scheduler.h>
-#include <time.h>
-#include <circularLinkedList.h>
+#include "interrupts/time/time.h"
+#include <circular_linked_list.h>
 #include <idtLoader.h>
-#include <linkedList.h>
-#include <memory_manager.h>
+#include <lib/linked_list.h>
+#include <pmm.h>
 #include <process.h>
+#include <scheduler.h>
 #include <stdbool.h>
 
 #define PID_ERR        -1
@@ -21,16 +21,16 @@ static int priority_timer_tick = 0;
 static void remove_process(int pid);
 
 static int search_by_status(void *process, void *status) {
-    return ((process_t *)process)->status == *(enum pstatus *)status;
+    return ((process_t *)process)->status == status;
 }
 
 static int search_by_pid(void *process, void *pid) {
-    return ((process_t *)process)->pid == *(pid_t *)pid;
+    return ((process_t *)process)->pid == pid;
 }
 
 static int search_by_channel(void *process, void *channel) {
     return ((process_t *)process)->status == WAITING &&
-           ((process_t *)process)->channel == (void *)channel;
+           ((process_t *)process)->channel == channel;
 }
 
 void init_scheduler() {
@@ -46,7 +46,7 @@ int process_count() {
 pid_t wait_process(pid_t pid, int *status_ptr) {
 
     // if no children, return
-    if (size_list(current_process->children) == 0 || pid < -1)
+    if (size(current_process->children) == 0 || pid < -1)
         return PID_ERR;
 
     list_ptr children_list = current_process->children;
@@ -54,7 +54,7 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
 
     while (true) {
         if (pid >= 0) {
-            target_child = find(children_list, (void *)&pid, search_by_pid);
+            target_child = find(children_list, pid, search_by_pid);
 
             if (target_child != NULL && target_child->status == TERMINATED) {
                 if (status_ptr != NULL)
@@ -63,7 +63,7 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
                 return target_child->pid;
             }
         } else {
-            target_child = find(children_list, (void *)TERMINATED, search_by_status);
+            target_child = find(children_list, TERMINATED, search_by_status);
 
             if (target_child != NULL) {
                 if (status_ptr != NULL)
@@ -73,18 +73,18 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
             }
         }
 
-        sleep_process((uint64_t)current_process);
+        sleep((uint64_t)current_process);
     }
 }
 
-void sleep_process(uint64_t channel) {
-    current_process->channel = (void *)channel;
+void sleep(uint64_t channel) {
+    current_process->channel = channel;
     current_process->status = WAITING;
-    force_scheduler();
+    _force_schedule();
 }
 
 int wakeup(uint64_t channel) {
-    process_t *target = cl_find(process_list, (void *)channel, search_by_channel);
+    process_t *target = cl_find(process_list, channel, search_by_channel);
     if (target == NULL)
         return PID_ERR;
 
@@ -113,7 +113,7 @@ int add_process(function_t main, int argc, char *argv[]) {
 }
 
 static void remove_children(process_t *process) {
-    if (size_list(process->children) == 0)
+    if (size(process->children) == 0)
         return;
 
     to_begin(process->children);
@@ -124,7 +124,7 @@ static void remove_children(process_t *process) {
 }
 
 static void remove_process(int pid) {
-    process_t *target = cl_remove(process_list, (void *)(intptr_t)pid);
+    process_t *target = cl_remove(process_list, pid);
     if (target == NULL)
         return;
 
@@ -132,7 +132,7 @@ static void remove_process(int pid) {
         foreground_process = NULL;
 
     // remove process from parent's children list
-    remove(target->parent->children, (void *)(intptr_t)pid);
+    remove(target->parent->children, pid);
     free_process(target);
 }
 
@@ -150,11 +150,11 @@ void exit_process(int status) {
     current_process->status = TERMINATED;
     current_process->exit_status = status;
 
-    force_scheduler();
+    _force_schedule();
 }
 
 int kill_process(int pid) {
-    process_t *target = cl_find(process_list, (void *)(intptr_t)pid, search_by_pid);
+    process_t *target = cl_find(process_list, pid, search_by_pid);
     if (target == NULL)
         return PID_ERR;
 
@@ -167,18 +167,8 @@ int kill_process(int pid) {
     // leave process as terminated. Parent will clean it up on wait
     target->status = TERMINATED;
     target->exit_status = -1;
-
-    // the right way of doing this would be with signals and their handlers
-    // between processes but these are not implemented yet.
-    // since the shell doesn't know the graphics context of each process,
-    // force printing messages should be done here.
-    // gprint_new_line(target->g_context);
-    // gprint_new_line(target->g_context);
-    // gprint_string("[ process terminated ]", target->g_context);
-    // gprint_new_line(target->g_context);
-
     if (target == current_process)
-        force_scheduler();
+        _force_schedule();
 
     return pid;
 }
@@ -188,11 +178,11 @@ process_t *get_current_process() {
 }
 
 process_t *get_process(pid_t pid) {
-    return cl_find(process_list, (void *)(intptr_t)pid, search_by_pid);
+    return cl_find(process_list, pid, search_by_pid);
 }
 
 void set_foreground_process(int pid) {
-    process_t *found = cl_find(process_list, (void *)(intptr_t)pid, search_by_pid);
+    process_t *found = cl_find(process_list, pid, search_by_pid);
     if (found == NULL)
         return;
 
@@ -207,7 +197,7 @@ process_t *get_foreground_process() {
 }
 
 int get_process_table(process_table_t *table) {
-    circular_list_iterator_t iterator =
+    circular_list_iterator_t *iterator =
         new_circular_list_iterator(process_list);
 
     int row = 0;
@@ -219,9 +209,9 @@ int get_process_table(process_table_t *table) {
         table->entries[row].pid = process->pid;
         table->entries[row].priority = process->priority;
         table->entries[row].status = process->status;
-        table->entries[row].rbp = (void *)(uintptr_t)process->context->rbp;
+        table->entries[row].rbp = process->context->rbp;
         table->entries[row].stack = process->context;
-        table->entries[row].children_count = size_list(process->children);
+        table->entries[row].children_count = size(process->children);
 
         if (process->parent != NULL)
             strcpy(table->entries[row].parent_name, process->parent->argv[0]);

@@ -25,7 +25,7 @@ EXTERN exceptionDispatcher
 EXTERN schedule
 EXTERN save_cpu_state
 EXTERN syscall_dispatcher
-EXTERN is_save_reg_shortcut
+EXTERN kbd_is_save_reg_shortcut
 EXTERN gsnapshot
 
 SECTION .text
@@ -92,7 +92,7 @@ SECTION .text
 	cmp rdi, 1
 	jne .EOI
 
-	call is_save_reg_shortcut
+	call kbd_is_save_reg_shortcut
 	cmp rax,1
 	jne .EOI
 	popState

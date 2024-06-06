@@ -3,7 +3,6 @@
 
 #include <defs.h>
 #include <interrupts.h>
-#include <stdint.h>
 
 void load_idt();
 

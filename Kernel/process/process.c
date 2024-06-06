@@ -1,7 +1,5 @@
 #include <process.h>
 #include <memory_manager.h>
-#include <syscall.h>
-#include <lib.h>
 
 #define P_INIT_EFLAGS 0x202
 #define P_INIT_CS 0x8
@@ -10,25 +8,21 @@
 
 static int last_pid = 0;
 
-static void start(function_t function, int argc, char *argv[])
-{
+static void start(function_t function, int argc, char *argv[]){
     int status = function(argc, argv);
     sys_exit(status);
 }
 
-static int search_by_pid(void *process, void *pid)
-{
+static int search_by_pid(void *process, void *pid){
     return ((process_t *)process)->pid == *((pid_t *)pid);
 }
 
-static char **get_argv_copy(int argc, char *argv[])
-{
+static char **get_argv_copy(int argc, char *argv[]){
     if (argc == 0 || argv == NULL)
         return NULL;
 
     char **argv_copy = malloc(argc * sizeof(char *));
-    for (size_t i = 0; i < argc; i++)
-    {
+    for (size_t i = 0; i < argc; i++){
         argv_copy[i] = malloc(strlen(argv[i]) + 1);
         strcpy(argv_copy[i], argv[i]);
     }
@@ -37,8 +31,7 @@ static char **get_argv_copy(int argc, char *argv[])
 }
 
 static context_t *get_init_context(process_t *process, function_t main,
-                                   int argc, char *argv[])
-{
+                                   int argc, char *argv[]){
     context_t *context =
         (context_t *)((uint64_t)process + K_PROCESS_STACK_SIZE -
                       sizeof(context_t));
@@ -57,8 +50,7 @@ static context_t *get_init_context(process_t *process, function_t main,
     return context;
 }
 
-process_t *new_process(function_t main, int argc, char *argv[])
-{
+process_t *new_process(function_t main, int argc, char *argv[]){
     process_t *process = (process_t *)malloc(sizeof(process_t));
     if (process == NULL)
         return NULL;
@@ -78,6 +70,7 @@ process_t *new_process(function_t main, int argc, char *argv[])
 
     process->context =
         get_init_context(process, main, process->argc, process->argv);
+    process->g_context = get_context_id();
 
     /* Creates stdin in dataDescriptor 0*/
     process->dataDescriptors[0] = create_dataDescriptor(STD_T, READ_MODE);
@@ -90,13 +83,11 @@ process_t *new_process(function_t main, int argc, char *argv[])
     return process;
 }
 
-void free_process(process_t *process)
-{
+void free_process(process_t *process){
     free_list(process->children);
 
     // free arguments
-    if (process->argc)
-    {
+    if (process->argc){
         for (size_t i = 0; i < process->argc; i++)
             free(process->argv[i]);
 

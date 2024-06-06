@@ -2,7 +2,6 @@
 #define NAIVE_CONSOLE_H
 
 #include <stdint.h>
-#include <lib.h>
 
 #define deafultcolor 0x0f
 #define defaultback 0x00

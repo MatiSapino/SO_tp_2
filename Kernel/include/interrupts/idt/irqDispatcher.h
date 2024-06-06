@@ -3,7 +3,7 @@
 
 #include <interrupts.h>
 #include <time.h>
-#include <keyboard_driver.h>
+#include <keyboard.h>
 
 static void (*irq_handlers[])() = {timer_handler, keyboard_handler};
 

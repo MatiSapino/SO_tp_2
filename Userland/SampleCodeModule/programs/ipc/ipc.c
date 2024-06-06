@@ -12,7 +12,7 @@ int filter(int argc, char *argv[])
     int16_t c;
     int i = 0;
     char buffer[SIZE_BUFFER];
-    while (((c = getC()) != (int16_t)-1) && i < (SIZE_BUFFER - 2))
+    while (((c = getchar()) != (int16_t)-1) && i < (SIZE_BUFFER - 2))
     {
         if (!IS_VOWEL(c))
         {
@@ -41,7 +41,7 @@ int cat(int argc, char *argv[])
     int16_t c;
     int i = 0;
     char buffer[SIZE_BUFFER];
-    while (((c = getC()) != (int16_t)-1) && i < (SIZE_BUFFER - 2))
+    while (((c = getchar()) != (int16_t)-1) && i < (SIZE_BUFFER - 2))
     {
         buffer[i++] = c;
         if (c == '\n')
@@ -68,7 +68,7 @@ int wc(int argc, char *argv[])
     int count = 0;
     int i = 0;
     char buffer[SIZE_BUFFER];
-    while (((c = getC()) != (int16_t)-1))
+    while (((c = getchar()) != (int16_t)-1))
     {
         buffer[i++] = c;
         if (c == '\n')

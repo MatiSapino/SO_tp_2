@@ -1,6 +1,6 @@
 #ifndef _HELP_H_
 #define _HELP_H_
 
-int help(int argc, char *argv[]);
+int help();
 
-#endif
+#endif /* _HELP_H_ */

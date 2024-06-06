@@ -118,7 +118,7 @@ void remove_phylo(){
 
 void receptionist(){
     int c;
-    while((c = getC()) != EOF){
+    while((c = getchar()) != EOF){
 
         own_printf("%c\n",c);
         

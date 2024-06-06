@@ -1,7 +1,5 @@
-#include <videoDriver.h>
-#include <keyboard_driver.h>
-#include <keyboard_buffer.h>
-#include <stdlib.h>
+#include <graphics.h>
+#include <keyboard.h>
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
@@ -11,6 +9,8 @@
 #include <process.h>
 #include <scheduler.h>
 #include <semaphore.h>
+#include <stdint.h>
+#include <string.h>
 #include <syscall.h>
 #include <time.h>
 

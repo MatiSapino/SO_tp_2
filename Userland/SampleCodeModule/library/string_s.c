@@ -1,14 +1,11 @@
 #include <string_s.h>
 
-char *strchr(const char *str, int c)
+char *strchr(char *str, int character)
 {
-    while (*str)
-    {
-        if (*str == (char)c)
-        {
-            return (char *)str;
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == character) {
+            return str + i;
         }
-        str++;
     }
     return NULL;
 }
@@ -27,30 +24,11 @@ char *strcpy(char *dest, const char *src)
 
 int strcmp(const char *str1, const char *str2)
 {
-    while (*str1 && *str2)
-    {
-        char c1 = *str1;
-        char c2 = *str2;
-
-        if (c1 >= 'A' && c1 <= 'Z')
-        {
-            c1 += 'a' - 'A';
-        }
-        if (c2 >= 'A' && c2 <= 'Z')
-        {
-            c2 += 'a' - 'A';
-        }
-
-        if (c1 != c2)
-        {
-            return c1 - c2;
-        }
-
+    while (*str1 && (*str1 == *str2)) {
         str1++;
         str2++;
     }
-
-    return (*str1 - *str2);
+    return *str1 - *str2;
 }
 
 void swap(char *c1, char *c2)

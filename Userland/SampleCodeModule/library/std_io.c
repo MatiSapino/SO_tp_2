@@ -4,244 +4,135 @@
 #include <stdarg.h>
 #include <testUtil.h>
 
-char getC()
-{
-    char c;
-    call_sys_read(&c, 1, 0);
-    return c;
+int getchar() {
+    int buffer;
+    if (call_read(STDIN, (char *)&buffer, 1) == -1)
+        return -1;
+    return buffer;
 }
 
-void putC(char c, int color)
-{
-    call_sys_write(&c, 1, color);
-    putIntoScreen(&c);
+int putchar(int character) {
+    call_write(STDOUT, (char *)&character, 1);
+    return character;
 }
 
-void putNewLine()
-{
-    putC('\n', 0);
-}
-
-void putString(char *str, int color)
-{
-    call_sys_write(str, 0, color); // lo escribe en el buffer nomas (creo) TESTEAR
-    putIntoScreen(str);
-}
-
-void putInt(int num)
-{
-    putIntColor(num, GREEN);
-}
-
-void putIntColor(int num, int color)
-{
-    if (num < 0)
-    {
-        putC('-', color);
-        num = -num;
+int puts(const char *str) {
+    size_t length = strlen(str);
+    char new_str[length + 2];
+    int i;
+    for (i = 0; i < length; i++) {
+        new_str[i] = str[i];
     }
-
-    int divisor = 1;
-    while (num / divisor >= 10)
-    {
-        divisor *= 10;
-    }
-
-    while (divisor > 0)
-    {
-        int digit = num / divisor;
-        putC('0' + digit, color);
-        num %= divisor;
-        divisor /= 10;
-    }
+    new_str[i++] = '\n';
+    new_str[i] = '\0';
+    return call_write(STDOUT, new_str, length + 1);
 }
 
-void own_printf(const char *str, ...)
-{
+
+int own_printf(char *str, ...) {
     va_list vl;
     int i = 0, j = 0;
     char buff[1024] = {0}, tmp[20];
     char num_buff[5];
     va_start(vl, str);
-    while (str && str[i])
-    {
-        if (str[i] == '%')
-        {
+    while (str && str[i]) {
+        if (str[i] == '%') {
             i++;
             int min = 0;
             int s = 0;
-            while (str[i] >= '0' && str[i] <= '9')
-            {
+            while (str[i] >= '0' && str[i] <= '9') {
                 num_buff[s] = str[i];
                 s++;
                 i++;
             }
             num_buff[s] = '\0';
-            switch (str[i])
-            {
-            case 'c':
-            {
-                buff[j] = (char)va_arg(vl, int);
-                j++;
-                min++;
-                break;
+            switch (str[i]) {
+                case 'c': {
+                    buff[j] = (char)va_arg(vl, int);
+                    j++;
+                    min++;
+                    break;
+                }
+                case 'd': {
+                    itoa(va_arg(vl, int), tmp, 10);
+                    strcpy(&buff[j], tmp);
+                    j += strlen(tmp);
+                    min = strlen(tmp);
+                    break;
+                }
+                case 'x': {
+                    ltoa(va_arg(vl, uint64_t), tmp, 16);
+                    strcpy(&buff[j], tmp);
+                    j += strlen(tmp);
+                    min = strlen(tmp);
+                    break;
+                }
+                case 's': {
+                    char *src = va_arg(vl, char *);
+                    strcpy(&buff[j], src);
+                    j += strlen(src);
+                    min = strlen(src);
+                    break;
+                }
             }
-            case 'd':
-            {
-                itoa(va_arg(vl, int), tmp, 10);
-                strcpy(&buff[j], tmp);
-                j += strlen(tmp);
-                min = strlen(tmp);
-                break;
-            }
-            case 'x':
-            {
-                ltoa(va_arg(vl, uint64_t), tmp, 16);
-                strcpy(&buff[j], tmp);
-                j += strlen(tmp);
-                min = strlen(tmp);
-                break;
-            }
-            case 's':
-            {
-                char *src = va_arg(vl, char *);
-                strcpy(&buff[j], src);
-                j += strlen(src);
-                min = strlen(src);
-                break;
-            }
-            }
-            while (min < satoi(num_buff))
-            {
+            while (min < satoi(num_buff)) {
                 buff[j] = ' ';
                 min++;
                 j++;
             }
-        }
-        else
-        {
+        } else {
             buff[j] = str[i];
             j++;
         }
         i++;
     }
-
-    putString(buff, GREEN);
+    call_write(1, buff, j);
     va_end(vl);
+    return j;
 }
 
-int own_scanf(char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    int toRet = 0;
-
-    while (*format != '\0')
-    {
-
-        if (*format == '%')
-        {
-            format++;
-            switch (*format)
-            {
-            case 'c':
-            {
-                char *c = va_arg(args, char *);
-                *c = getC();
-                toRet++;
-                break;
+int own_scanf(char *str, ...) {
+    va_list vl;
+    int i = 0, j = 0, ret = 0;
+    char buff[100] = {0}, c;
+    c = '\0';
+    char *out_loc;
+    while (c != '\n') {
+        call_read(STDIN, &c, 1);
+        buff[i] = c;
+        i++;
+    }
+    va_start(vl, str);
+    i = 0;
+    while (str && str[i]) {
+        if (str[i] == '%') {
+            i++;
+            switch (str[i]) {
+                case 'c': {
+                    *(char *)va_arg(vl, char *) = buff[j];
+                    j++;
+                    ret++;
+                    break;
+                }
+                case 'd': {
+                    *(int *)va_arg(vl, int *) = strtol(&buff[j], &out_loc, 10);
+                    j += out_loc - &buff[j];
+                    ret++;
+                    break;
+                }
+                case 'x': {
+                    *(int *)va_arg(vl, int *) = strtol(&buff[j], &out_loc, 16);
+                    j += out_loc - &buff[j];
+                    ret++;
+                    break;
+                }
             }
-            case 'd':
-            {
-                int *d = va_arg(args, int *);
-                toRet += readInt(d);
-                break;
-            }
-            case 's':
-            {
-                char *s = va_arg(args, char *);
-                toRet += readString(s);
-                break;
-            }
-            case 'x':
-            {
-                int *d = va_arg(args, int *);
-                toRet += readHexInt(d);
-                break;
-            }
-            default:
-                break;
-            }
+        } else {
+            buff[j] = str[i];
+            j++;
         }
-        format++;
+        i++;
     }
-    va_end(args);
-
-    return toRet;
-}
-
-int readInt(int *d)
-{
-    int value = 0;
-    int sign = 1;
-    char c = getC();
-
-    if (c == '-')
-    {
-        sign = -1;
-        c = getC();
-    }
-
-    while ((c != '\0') && (c >= '0' && c <= '9'))
-    {
-        value = (c - '0') + value * 10;
-        c = getC();
-    }
-
-    *d = value * sign;
-    return 1;
-}
-
-int readString(char *s)
-{
-    int i = 0;
-    char c = getC();
-
-    while (c != '\0' && c != '\n')
-    {
-        s[i++] = c;
-        c = getC();
-    }
-    s[i] = '\0'; // null terminated
-    return i;
-}
-
-int readHexInt(int *d)
-{
-    int value = 0;
-    int sign = 1;
-    char c = getC();
-
-    if (c == '-')
-    {
-        sign = -1;
-        c = getC();
-    }
-
-    while (c != '\0' && ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F')))
-    {
-        if (c >= 'A' && c <= 'F')
-        {
-            c = c - 'A' + 10;
-        }
-        else
-        {
-            c = c - '0';
-        }
-        value = value * 16 + c;
-        c = getC();
-    }
-
-    *d = value * sign;
-    return 1;
+    va_end(vl);
+    return ret;
 }

@@ -1,7 +1,6 @@
 #ifndef _PIPE_H_
 #define _PIPE_H_
 
-
 typedef struct pipe_info{
     char * name;
     unsigned int nwrite;

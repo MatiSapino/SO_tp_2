@@ -1,9 +1,8 @@
 #include <syscalls.h>
 #include <process.h>
-#include <time.h>
 #include <interrupts.h>
 #include <dataDescriptor.h>
-#include <keyboard_driver.h>
+#include <keyboard.h>
 #include <defs.h>
 #include <pipe.h>
 #include <memory_manager.h>
@@ -11,8 +10,7 @@
 #include <scheduler.h>
 #include <semaphore.h>
 #include <time.h>
-#include <naiveConsole.h>
-#include <videoDriver.h>
+#include <video.h>
 
 #define ADDRESS_LIMIT 0xFFFFFFFF
 
@@ -21,7 +19,7 @@ enum DISTRIBUTION {
     SPLIT_DISTRIBUTION
 };
 
-sys_write(int fd, char *buffer, uint16_t count)
+int16_t sys_write(int fd, char *buffer, uint16_t count)
 {
     if (fd < 0)
         return -2;
@@ -67,7 +65,7 @@ sys_write(int fd, char *buffer, uint16_t count)
     }
 }
 
-sys_read(int fd, char *buffer, uint16_t count)
+int16_t sys_read(int fd, char *buffer, uint16_t count)
 {
     if (fd < 0)
         return -2;
@@ -114,7 +112,7 @@ sys_read(int fd, char *buffer, uint16_t count)
 
 
 void sys_clear_screen() {
-    clearScreen();
+    clear_screen();
 }
 
 void sys_exit(int status)
@@ -122,8 +120,9 @@ void sys_exit(int status)
     exit_process(status);
 }
 
-uint8_t sys_gettime(char *buffer) {
-    TimeClock(&buffer);
+uint8_t sys_gettime(time_rtc_t *struct_time, int utc_offset) {
+    // set_UTC_offset(utc_offset);
+    get_struct_time();
     return SUCCESS;
 }
 
@@ -273,11 +272,11 @@ int sys_dup2(unsigned int oldfd, unsigned int newfd) {
 }
 
 void *sys_malloc(size_t size) {
-    return kmalloc(size);
+    return malloc(size);
 }
 
 void sys_free(void *ptr) {
-    kfree(ptr);
+    free(ptr);
 }
 
 int sys_waitpid(int pid, int *status_ptr) {
@@ -306,4 +305,13 @@ void sys_sleep(int seconds) {
     while (seconds_elapsed() < (prev + seconds))
         ;
     _cli();
+}
+
+void sys_switch_screen_mode(int mode) {
+    if (mode == FULL_DISTRIBUTION) {
+        full_screen_distribution();
+    }
+    if (mode == SPLIT_DISTRIBUTION) {
+        split_screen_distribution();
+    }
 }

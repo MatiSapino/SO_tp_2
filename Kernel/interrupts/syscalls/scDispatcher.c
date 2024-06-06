@@ -1,23 +1,6 @@
-#include <irqDispatcher.h>
-#include <scheduler.h>
-#include <time.h>
-#include <stdint.h>
-#include <defs.h>
+#include <scDispatcher.h>
 #include <naiveConsole.h>
-#include <interrupts.h>
-#include <exceptions.h>
-#include <registers.h>
-#include <videoDriver.h>
-#include <keyboard_buffer.h>
-#include <lib.h>
-#include <time.h>
-#include <keyboard_driver.h>
 #include <syscalls.h>
-#include <sound_driver.h>
-#include <memory_manager.h>
-#include <pipe.h>
-#include <dataDescriptor.h>
-#include <semaphore.h>
 
 int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
                          uint64_t arg3, uint64_t arg4, uint64_t arg5,
@@ -27,7 +10,7 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 	case 1:
 		return sys_read((int)arg0, (char *)arg1, arg2);
 	case 2:
-		return sys_write((char *)arg0, (int)(uintptr_t)arg1, arg2);
+		return sys_write((int)arg0, (char *)arg1, arg2);
 	case 3:
 		sys_clear_screen();
 		break;
@@ -35,7 +18,7 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 		sys_exit((int)arg0);
 		break;
 	case 5:
-		return sys_gettime((char *)arg0);
+		return sys_gettime((time_rtc_t *)arg0, (int)arg1);
 		break;
 	case 6:
 		return sys_run((void *)arg0, (int)arg1, (char **)arg2);
@@ -71,8 +54,6 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 	case 18:
         sys_sched_yield();
         break;
-
-
 	case 19:
 		return sys_wait();
 	case 20:
@@ -116,6 +97,10 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 	case 37:
 		sys_sleep((int)arg0);
 		break;
+	case 38:
+		sys_switch_screen_mode((int)arg0);
+		break;
+	
 	default:
 		return 0;
 	}

@@ -112,7 +112,7 @@ static void print_line(pipe_info_t *info)
     itoa(info->nwrite, aux, 10);
     own_printf("%s", aux);
     print_tabs(get_spaces(aux, 6));
-    putNewLine();
+    putchar('\n');
 }
 
 static void init_columns_size()
@@ -136,7 +136,7 @@ void info_pipe(char *name)
     print_header();
     print_line(pipe_info);
 
-    putNewLine();
+    putchar('\n');
 }
 
 int info_all_pipes(int argc, char *argv[])
@@ -157,7 +157,7 @@ int info_all_pipes(int argc, char *argv[])
         print_line(arr[i]);
     }
 
-    putNewLine();
+    putchar('\n');
 
     for (int i = 0; i < MAX_PIPES; i++)
     {

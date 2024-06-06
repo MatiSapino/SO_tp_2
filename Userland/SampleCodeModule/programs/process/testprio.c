@@ -1,3 +1,4 @@
+#include <testprio.h>
 #include <std_io.h>
 #include <stdint.h>
 #include <testUtil.h>

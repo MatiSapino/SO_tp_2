@@ -1,6 +1,6 @@
 #ifndef _DIV0_H_
 #define _DIV0_H_
 
-int div0(int argc, char *argv[]);
+int divzero();
 
-#endif
+#endif /* _DIVZERO_H_ */

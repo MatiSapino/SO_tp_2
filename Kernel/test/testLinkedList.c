@@ -2,8 +2,7 @@
 #include <linkedList.h>
 #include <assert.h>
 #include <stdlib.h>
-#include <lib.h>
-#include <videoDriver.h>
+#include <video.h>
 
 void test_linked_list(){
     
@@ -17,7 +16,7 @@ void test_linked_list(){
 
     while (hasNext(list))
     {
-        drawWord((char *)next(list));
+        puts((char *)next(list));
     }
     
     add(list,"Emilio");
@@ -25,9 +24,9 @@ void test_linked_list(){
 
     to_begin(list);
 
-    drawWord("____________________________________");
+    puts("____________________________________");
     while (hasNext(list))
     {
-        drawWord((char *)next(list));
+        puts((char *)next(list));
     }
 }

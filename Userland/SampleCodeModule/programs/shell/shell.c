@@ -1,46 +1,53 @@
-#include <buffer.h>
-#include <nice.h>
-#include <mem.h>
-#include <pipe.h>
-#include <std_io.h>
-#include <fibonacci.h>
-#include <primes.h>
-#include <testprio.h>
 #include <block.h>
-#include <testprocess.h>
-#include <testsync.h>
-#include <loop.h>
+#include <clear.h>
+#include <div0.h>
+#include <fibonacci.h>
+#include <help.h>
+#include <infoPipe.h>
+#include <inforeg.h>
+#include <invopcode.h>
 #include <ipc.h>
 #include <kill.h>
-#include <printSems.h>
-#include <testPipe.h>
-#include <processStatus.h>
+#include <mem.h>
+#include <pipe.h>
+#include <semaphore.h>
+#include <stdbool.h>
+#include <std_io.h>
+#include <string_s.h>
+#include <loop.h>
+#include <nice.h>
 #include <phylo.h>
-#include <infoPipe.h>
-#include <time.h>
-#include <playSnake.h>
-#include <playSnake2.h>
-#include <help.h>
-#include <regState.h>
-#include <div0.h>
-#include <invalOp.h>
-#include <zoomOut.h>
-#include <zoomIn.h>
-#include <clearScreen.h>
-#include <testmm.h>
+#include <primes.h>
 #include <printmem.h>
 #include <printmemstate.h>
-#include <exitShell.h>
+#include <printSems.h>
+#include <processStatus.h>
+#include <testinforeg.h>
+#include <testPipe.h>
+#include <testmm.h>
+#include <testprio.h>
+#include <testprocess.h>
+#include <testsync.h>
+#include <time.h>
+#include <kerberos.h>
 
-#define MAX_PROC_COUNT 2
-#define MAX_ARGC 5
 #define LINE_LENGTH    512
 #define TOKEN_LENGTH   512
+#define MAX_PROC_COUNT 2
+#define MAX_ARGC       5
 
-#define PIPE_SYMBOL    '|'
 #define PROMPT_SYMBOL  '>'
+#define PIPE_SYMBOL    '|'
 
 #define BACKSPACE_KEY  8
+#define PAUSE_KEY      'p'
+#define SIGINT_KEY     'c'
+#define FOCUS_KEY      9
+
+typedef enum layout_mode {
+    FULLSCREEN = 0,
+    SPLITSCREEN
+} layout_mode_t;
 
 typedef struct cmd {
     char *name;
@@ -63,19 +70,41 @@ typedef struct cmd_entry {
 
 static int background_exec(int argc, char *argv[]);
 
-cmd_entry_t cmd_table[] = {{"HELP", help}, {"TIME", time}, {"REGSTATE", regState}, {"DIV0", div0},
-{"INVALOP", invalidOp}, {"ZOOMOUT", zoomOut}, {"ZOOMIN", zoomIn}, {"SNAKE", play_snake},
-{"CLEAR", clearScreen}, {"EXIT", exitShell}, {"SNAKE2", playSnake2},
-{"FIBONACCI", fibonacci}, {"PRIMES", primes}, {"PRINTMEM", printmem}, {"MEM", printmemstate},
-{"TESTMM", testmm}, {"BLOCK", block}, {"TESTPIPES", test_pipes}, {"PIPE", info_all_pipes}, {"SEM", printsems},
-{"PHYLO", phylo}, {"PROCESSSTATUS", processStatus}, {"KILL", kill}, {"NICE", nice}, {"TESTPRIO", test_prio}, {"TESTPROC", test_proc},
-{"TESTSYNC", test_sync}, {"LOOP", loop}, {"CAT", cat}, {"FILTER", filter}, {"WC", wc}, {"BACKGROUND_EXEC", background_exec},
-{NULL, NULL}};
+cmd_entry_t cmd_table[] = {{"help", help},
+                           {"clear", clear},
+                           {"fibonacci", fibonacci},
+                           {"primes", primes},
+                           {"time", time},
+                           {"divzero", divzero},
+                           {"kerberos", kerberos},
+                           {"invopcode", invopcode},
+                           {"printmem", printmem},
+                           {"mem", printmemstate},
+                           {"loop", loop},
+                           {"testsync", test_sync},
+                           {"sem", printsems},
+                           {"pipe", info_all_pipes},
+                           {"cat", cat},
+                           {"filter", filter},
+                           {"wc", wc},
+                           {"block", block},
+                           {"testpipes", test_pipes},
+                           {"testmm", testmm},
+                           {"phylo", phylo},
+                           {"processstatus", processStatus},
+                           {"kill", kill},
+                           {"nice", nice},
+                           {"background_exec", background_exec},
+                           {"testprio", test_prio},
+                           {"testproc", test_proc},
+                           {NULL, NULL}};
 
 sem_ptr sem_pipe_exec;
 
 static char whitespace[] = " \t\n";
 static char operators[] = "|&";
+
+static layout_mode_t current_layout_mode = FULLSCREEN;
 
 static char ctrl_pressed = 0;
 
@@ -89,9 +118,9 @@ static function_t get_cmd(char *cmd_name) {
     return NULL;
 }
 
+// temporary workaround
 static void invalid_command(char *cmd_name) {
-    own_printf("ERROR: - '%s' is not a valid command\n", cmd_name);
-    own_printf("Type help to show all commands\n");
+    own_printf("[ Command %s not found ]\n", cmd_name);
 }
 
 static int run_command(char *name, int argc, char *argv[]) {
@@ -106,13 +135,6 @@ static int run_command(char *name, int argc, char *argv[]) {
     return call_run(function, argc, argv);
 }
 
-void clearBuffer(char *buff)
-{
-    for (int i = 0; i < BUFFER_SIZE; i++)
-    {
-        buff[i] = 0;
-    }
-}
 
 static int gettoken(char **src, char *token, char *delimiters) {
     enum {
@@ -170,7 +192,7 @@ static cmd_t *parsecommand(char *input) {
     char *cmdidx = input;
     char token[TOKEN_LENGTH] = {0};
 
-    cmd_t *cmd =call_malloc(sizeof(cmd_t));
+    cmd_t *cmd = call_malloc(sizeof(cmd_t));
     cmd->argc = 0;
 
     // get the name of the command;
@@ -237,12 +259,43 @@ static line_t *parseline(char *line) {
     return pline;
 }
 
+static void switch_layout(layout_mode_t mode) {
+    if (current_layout_mode != mode) {
+        current_layout_mode = mode;
+        call_switch_screen_mode(mode);
+    }
+}
+
+static void lock_screen() {
+    if (current_layout_mode == SPLITSCREEN)
+        getchar();
+}
+
 void printcmd(cmd_t *cmd) {
     own_printf("cmd: %s\n", cmd->name);
     own_printf("argc: %d\n", cmd->argc);
     for (int i = 0; i < cmd->argc; ++i) {
         own_printf("arg[%d]: %s\n", i, cmd->argv[i]);
     }
+    own_printf("\n");
+}
+
+static void read_input(char *buffer) {
+    char c;
+    unsigned int offset = 0;
+    own_printf("%c", PROMPT_SYMBOL);
+    while ((c = getchar()) != '\n') {
+        if (c == BACKSPACE_KEY) {
+            if (offset) {
+                call_delete_char();
+                offset--;
+            }
+        } else {
+            putchar(c);
+            buffer[offset++] = c;
+        }
+    }
+    buffer[offset] = '\0';
     own_printf("\n");
 }
 
@@ -325,25 +378,6 @@ static int background_exec(int argc, char *argv[]) {
     return 0;
 }
 
-static void read_input(char *buffer) {
-    char c;
-    unsigned int offset = 0;
-    own_printf("%c", PROMPT_SYMBOL);
-    while ((c = getchar()) != '\n') {
-        if (c == BACKSPACE_KEY) {
-            if (offset) {
-                call_delete_char();
-                offset--;
-            }
-        } else {
-            putC(c, GREEN);
-            buffer[offset++] = c;
-        }
-    }
-    buffer[offset] = '\0';
-    own_printf("\n");
-}
-
 int shell() {
     char cmd_buff[LINE_LENGTH];
     call_cntrl_listener(&ctrl_pressed);
@@ -351,6 +385,9 @@ int shell() {
     kerberos(0, NULL); // show welcome screen
 
     while (1) {
+        lock_screen();
+        switch_layout(FULLSCREEN);
+
         read_input(cmd_buff);
         char *input = cmd_buff;
 

@@ -134,45 +134,17 @@ void *memset(void *destination, int32_t c, uint64_t length)
     return destination;
 }
 
-// convierte un entero a una base dada y lo guarda en un buffer
-uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base)
-{
-	char *p = buffer;
-	char *p1, *p2;
-	uint32_t digits = 0;
-
-	// Calculate characters for each digit
-	do
-	{
-		uint32_t remainder = value % base;
-		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
-	} while (value /= base);
-
-	// Terminate string in buffer.
-	*p = 0;
-
-	// Reverse string in buffer.
-	p1 = buffer;
-	p2 = p - 1;
-	while (p1 < p2)
-	{
-		char tmp = *p1;
-		*p1 = *p2;
-		*p2 = tmp;
-		p1++;
-		p2--;
-	}
-
-	return digits;
+int puts(const char *str) {
+    size_t length = strlen(str);
+    char new_str[length + 2];
+    int i;
+    for (i = 0; i < length; i++) {
+        new_str[i] = str[i];
+    }
+    new_str[i++] = '\n';
+    new_str[i] = '\0';
+    return sys_write(STDOUT, new_str, length + 1);
 }
-
-void sleepms(int mseconds)
-{
-	int startTime = ticks_elapsed();
-	while (mseconds > ticks_elapsed() * 18 - startTime * 18)
-		_hlt();
-};
 
 char *itoa(int num, char *str, int base)
 {
@@ -207,4 +179,48 @@ char *itoa(int num, char *str, int base)
     reverse(str, i);
 
     return str;
+}
+
+int printf(char *str, ...) {
+    va_list vl;
+    int i = 0, j = 0;
+    char buff[100] = {0}, tmp[20];
+    va_start(vl, str);
+    while (str && str[i]) {
+        if (str[i] == '%') {
+            i++;
+            switch (str[i]) {
+                case 'c': {
+                    buff[j] = (char)va_arg(vl, int);
+                    j++;
+                    break;
+                }
+                case 'd': {
+                    itoa(va_arg(vl, int), tmp, 10);
+                    strcpy(&buff[j], tmp);
+                    j += strlen(tmp);
+                    break;
+                }
+                case 'x': {
+                    itoa(va_arg(vl, int), tmp, 16);
+                    strcpy(&buff[j], tmp);
+                    j += strlen(tmp);
+                    break;
+                }
+                case 's': {
+                    char *src = va_arg(vl, char *);
+                    strcpy(&buff[j], src);
+                    j += strlen(src);
+                    break;
+                }
+            }
+        } else {
+            buff[j] = str[i];
+            j++;
+        }
+        i++;
+    }
+    sys_write(1, buff, j);
+    va_end(vl);
+    return j;
 }

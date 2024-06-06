@@ -1,7 +1,6 @@
 #include <exceptions.h>
 #include <interrupts.h>
 #include <registers.h>
-#include <videoDriver.h>
 
 #define ZERO_EXCEPTION_ID           0
 #define INVALID_OPCODE_EXCEPTION_ID 6
@@ -30,12 +29,10 @@ static void format_reg_str(char *dest, uint64_t reg) {
 }
 
 static void show_registers(char *error_message, int exception_id) {
-    //clearScreen(get_current_process()->g_context);
+    gclear_screen(get_current_process()->g_context);
 
-	drawWordColor(RED, error_message);
-	drawWordColor(RED, " - CODE=");
-	drawWordColor(RED, exception_id);
-	drawWordColor(RED, "\n");
+    printf("%s", error_message);
+    printf(" - CODE=%d\n", exception_id);
 
     char reg_str[REG_SIZE + 3];
     char *registers_strings[] = {
@@ -51,9 +48,7 @@ static void show_registers(char *error_message, int exception_id) {
 
     for (int i = 0; i < REGISTERS_COUNT; i++) {
         format_reg_str(reg_str, regs_values[i]);
-		drawWordColor(GREEN, registers_strings[i]);
-		drawWordColor(RED, "\n");
-		drawWordColor(GREEN, reg_str);
+		printf("%s", registers_strings[i]);
         puts(reg_str);
     }
 }

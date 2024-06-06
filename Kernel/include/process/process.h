@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <graphics.h>
 
 #define LOWEST 1
 #define MEDIUM 5
@@ -56,6 +57,7 @@ typedef struct process
     pid_t pid;
     pstatus_t status;
     process_t *parent;
+    context_id_t g_context;
     dataDescriptor_t dataDescriptors[128];
     size_t dataD_index;
     void *channel;

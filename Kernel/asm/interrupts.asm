@@ -12,15 +12,16 @@ GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
-GLOBAL _syscall_master_handler
 GLOBAL _exception0Handler
 GLOBAL _exception6Handler
 
+GLOBAL _syscall_master_handler
 GLOBAL force_scheduler
+
 GLOBAL force_timer_int
 
-EXTERN exceptionDispatcher
 EXTERN irqDispatcher
+EXTERN exceptionDispatcher
 EXTERN schedule
 EXTERN save_cpu_state
 EXTERN syscall_dispatcher
@@ -47,7 +48,7 @@ SECTION .text
 	push r15
 %endmacro
 
-%macro pushState 0
+%macro popState 0
 	pop r15
 	pop r14
 	pop r13
@@ -186,6 +187,7 @@ _irq05Handler:
 	irqHandlerMaster 5
 
 _syscall_master_handler:
+	cli
 	
 	push rbx
 	push rcx

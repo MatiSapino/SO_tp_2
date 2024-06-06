@@ -33,11 +33,6 @@ void clearBSS(void *bssAddress, uint64_t bssSize)
 	memset(bssAddress, 0, bssSize);
 }
 
-void *retUserland()
-{
-	return sampleCodeModuleAddress;
-}
-
 void *getStackBase()
 {
 	return (void *)((uint64_t)&endOfKernel + PageSize * 8 // The size of the stack itself, 32KiB
@@ -72,6 +67,10 @@ void *initializeKernelBinary()
 
 	clearBSS(&bss, &endOfKernel - &bss);
 
+	ncNewline();
+    ncPrint("  endOfKernel: 0x");
+    ncPrintHex((uint64_t)&endOfKernel);
+	ncNewline();
 	ncPrint("  text: 0x");
 	ncPrintHex((uint64_t)&text);
 	ncNewline();

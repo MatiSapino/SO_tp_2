@@ -2,54 +2,119 @@
 #include <process.h>
 #include <time.h>
 #include <interrupts.h>
+#include <dataDescriptor.h>
+#include <keyboard_driver.h>
+#include <defs.h>
+#include <pipe.h>
+#include <memory_manager.h>
+#include <registers.h>
+#include <scheduler.h>
+#include <semaphore.h>
+#include <time.h>
+#include <naiveConsole.h>
+#include <videoDriver.h>
 
 #define ADDRESS_LIMIT 0xFFFFFFFF
 
-void sys_write(char *buf, int len, int color)
-{
-    drawWordColor(COLORS[color], buf);
-}
+enum DISTRIBUTION {
+    FULL_DISTRIBUTION = 0,
+    SPLIT_DISTRIBUTION
+};
 
-void sys_read(char *buf, int len, int filedescriptor)
+sys_write(int fd, char *buffer, uint16_t count)
 {
-    int pos;
-    getBufferPosition(&pos);
-    char aux = 0;
-    for (int i = 0; i < len;)
-    {
-        _hlt();
-        aux = getCharAt(pos);
-        if (aux > 0 && aux <= 255)
-        {
-            if (aux == 0x39)
-                buf[i++] = ' ';
-            else
-                buf[i++] = aux;
-            setPos(pos + 1);
-        }
-        getBufferPosition(&pos);
-    }
-}
+    if (fd < 0)
+        return -2;
 
-uint16_t sys_get_mem(uint8_t *address, uint8_t *buffer, uint16_t count) {
-    int i;
-    for (i = 0; i < count; i++) {
-        if ((uint64_t)address > ADDRESS_LIMIT) {
+    process_t *current_process = get_current_process();
+
+    if (fd >= current_process->dataD_index)
+        return -2;
+
+    dataDescriptor_t dataD = current_process->dataDescriptors[fd];
+
+    if(dataD == NULL)
+        return -2;
+
+    if (getMode_dataDescriptor(dataD) != WRITE_MODE)
+        return -1;
+
+    pipe_t pipe;
+    context_id_t gc;
+    uint16_t i;
+    char c;
+
+    switch (getDataType_dataDescriptor(dataD)) {
+        case PIPE_T:
+            pipe = getPipe_dataDescriptor(dataD);
+            return pipewrite(pipe, buffer, count);
+
+        default:
+            gc = current_process->g_context;
+
+            i = 0;
+            while (i < count) {
+                c = buffer[i];
+                if (c == '\n') {
+                    gprint_new_line(gc);
+                } else {
+                    gprint_char(c, gc);
+                }
+                i++;
+            }
             return i;
-        }
-        buffer[i] = (*address);
-        address++;
+            break;
     }
-    return i;
 }
 
-void sys_close(unsigned int fd)
+sys_read(int fd, char *buffer, uint16_t count)
 {
-    process_t *process = get_current_process();
-    if (fd >= process->dataD_index)
-        return;
-    close_dataDescriptor(process->dataDescriptors[fd]);
-    process->dataDescriptors[fd] = NULL;
+    if (fd < 0)
+        return -2;
+
+    process_t *current_process = get_current_process();
+
+    if (fd >= current_process->dataD_index)
+        return -2;
+
+    dataDescriptor_t dataD = current_process->dataDescriptors[fd];
+    if(dataD == NULL)
+        return -2;
+
+    if (getMode_dataDescriptor(dataD) != READ_MODE)
+        return -2;
+
+    pipe_t pipe;
+    uint16_t i;
+    char aux[BUFFER_SIZE];
+
+    switch (getDataType_dataDescriptor(dataD)) {
+        case PIPE_T:
+            pipe = getPipe_dataDescriptor(dataD);
+            return piperead(pipe, buffer, count);
+
+        default:
+            kbd_clear_buffer();
+            _sti();
+            while (count > kbd_get_current_index()) {
+            }
+            _cli();
+
+            int code = kbd_get_buffer(aux);
+            if (code == EOF)
+                return EOF;
+
+            for (i = 0; i < count; i++) {
+                buffer[i] = aux[i];
+            }
+            return i - 1;
+    }
+}
+
+
+
+void sys_clear_screen() {
+    clearScreen();
 }
 
 void sys_exit(int status)
@@ -57,8 +122,29 @@ void sys_exit(int status)
     exit_process(status);
 }
 
+uint8_t sys_gettime(char *buffer) {
+    TimeClock(&buffer);
+    return SUCCESS;
+}
+
 int sys_run(void *main, int argc, char *argv[]) {
     return add_process(main, argc, argv);
+}
+
+uint8_t sys_cntrl_listener(uint8_t *listener) {
+    kbd_sets_cntrl_listener(listener);
+    return SUCCESS;
+}
+
+void sys_delete_char() {
+    process_t *current_process = get_current_process();
+    context_id_t gc = current_process->g_context;
+
+    gdelete_char(gc);
+}
+
+int sys_kill(int pid) {
+    return kill_process(pid);
 }
 
 int sys_block(int pid) {
@@ -77,6 +163,22 @@ int sys_unblock(int pid) {
         return SUCCESS;
     }
     return ERROR;
+}
+
+uint16_t sys_get_mem(uint8_t *address, uint8_t *buffer, uint16_t count) {
+    int i;
+    for (i = 0; i < count; i++) {
+        if ((uint64_t)address > ADDRESS_LIMIT) {
+            return i;
+        }
+        buffer[i] = (*address);
+        address++;
+    }
+    return i;
+}
+
+void sys_get_mem_state(int mem_state[]) {
+    get_mem_state(mem_state);
 }
 
 int sys_get_proc_status(int pid) {
@@ -101,6 +203,93 @@ int sys_set_priority(int pid, int priority) {
     else
         process->priority = priority;
     return SUCCESS;
+}
+
+int sys_copy_cpu_state(cpu_state_t *cpu_ptr, request_t request) {
+    return copy_cpu_state(cpu_ptr, request);
+}
+
+void sys_focus(int pid) {
+    process_t *process = get_process(pid);
+    if (process != NULL) {
+        gfocus(process->g_context);
+    }
+}
+
+void sys_sched_yield() {
+    force_scheduler();
+}
+
+int sys_wait() {
+    return wait_process(-1, NULL);
+}
+
+sem_ptr sys_sem_open(char *name, int value) {
+    return sem_open(name, value);
+}
+
+int sys_sem_wait(sem_ptr sem) {
+    return sem_wait(sem);
+}
+
+int sys_sem_post(sem_ptr sem) {
+    return sem_post(sem);
+}
+
+void sys_close(unsigned int fd) {
+    process_t *process = get_current_process();
+    if (fd >= process->dataD_index)
+        return;
+    close_dataDescriptor(process->dataDescriptors[fd]);
+    process->dataDescriptors[fd] = NULL;
+}
+
+int sys_create_pipe(char *name, int fd[2]) {
+    return create_pipe(name, fd);
+}
+
+int sys_open_pipe(char *name, int fd[2]) {
+    return open_pipe(name, fd);
+}
+
+int sys_sem_close(sem_ptr sem) {
+    return sem_close(sem);
+}
+
+int sys_info_pipe(char *name, pipe_info_t *info) {
+    return info_pipe(name, info);
+}
+
+int sys_info_all_pipes(pipe_info_t *info[], unsigned int size) {
+    return info_all_pipes(info, size);
+}
+
+int sys_get_semaphores(copy_sem_t *sems[]) {
+    return get_semaphores(sems);
+}
+
+int sys_dup2(unsigned int oldfd, unsigned int newfd) {
+    return dup2(oldfd, newfd);
+}
+
+void *sys_malloc(size_t size) {
+    return kmalloc(size);
+}
+
+void sys_free(void *ptr) {
+    kfree(ptr);
+}
+
+int sys_waitpid(int pid, int *status_ptr) {
+    return wait_process(pid, status_ptr);
+}
+
+void sys_setfg(int pid) {
+    set_foreground_process(pid);
+}
+
+void sys_proctable(process_table_t *table) {
+    get_process_table(table);
 }
 
 int sys_getpid() {

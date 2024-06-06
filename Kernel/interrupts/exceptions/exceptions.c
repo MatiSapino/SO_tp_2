@@ -1,7 +1,7 @@
 #include <exceptions.h>
 #include <interrupts.h>
 #include <registers.h>
-#include <video_driver.h>
+#include <videoDriver.h>
 
 #define ZERO_EXCEPTION_ID           0
 #define INVALID_OPCODE_EXCEPTION_ID 6
@@ -30,7 +30,7 @@ static void format_reg_str(char *dest, uint64_t reg) {
 }
 
 static void show_registers(char *error_message, int exception_id) {
-    clearScreen(get_current_process()->g_context);
+    //clearScreen(get_current_process()->g_context);
 
 	drawWordColor(RED, error_message);
 	drawWordColor(RED, " - CODE=");

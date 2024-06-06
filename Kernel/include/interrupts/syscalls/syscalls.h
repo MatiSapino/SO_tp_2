@@ -14,8 +14,8 @@
 #define STDOUT 1
 #define STDERR 2
 
-void sys_write(char *buf, int len, int filedescriptor);
-void sys_read(char *buf, int len, int filedescriptor);
+int16_t sys_write(char *buf, int len, int filedescriptor);
+int16_t sys_read(char *buf, int len, int filedescriptor);
 
 uint16_t sys_get_mem(uint8_t *address, uint8_t *buffer, uint16_t count);
 

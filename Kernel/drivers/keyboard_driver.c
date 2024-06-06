@@ -21,7 +21,7 @@ enum CTRL_CMD {
     KBD_CTRL_CMD_ENABLE = 0xAE
 };
 
-#define KBD_SIZE           90
+#define KBD_SIZE           256
 
 #define MAYUS_OFFSET       ('a' - 'A')
 #define IS_ASCII_LETTER(l) ((l) >= 'a' && (l) <= 'z')

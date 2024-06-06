@@ -8,85 +8,47 @@ static uint8_t *currentVideo = (uint8_t *)0xB8000;
 static const uint32_t width = 80;
 static const uint32_t height = 25;
 
-// borra el ultimo caracter
-void ncBackspace()
-{
-	if (*currentVideo >= 0xB8002)
-	{ // si no es el primer caracter
-		currentVideo -= 2;
-		*currentVideo = ' ';
-	}
+void ncPrint(const char *string) {
+    int i;
+
+    for (i = 0; string[i] != 0; i++)
+        ncPrintChar(string[i]);
 }
 
-// imprime un string
-void ncPrint(const char *string)
-{
-	int i;
-
-	for (i = 0; string[i] != 0; i++)
-		ncPrintChar(string[i]);
-}
-// imprime un string con un color de letra y de fondo
-void ncPrintColor(const char *string, char color, char back)
-{
-	int i;
-	for (i = 0; string[i] != 0; i++)
-		ncPrintCharColor(string[i], color, back);
+void ncPrintChar(char character) {
+    *currentVideo = character;
+    currentVideo += 2;
 }
 
-// imprime un caracter con un color de letra y de fondo
-void ncPrintCharColor(char character, char color, char back)
-{
-
-	*currentVideo = character;
-	char font = color | back;
-	currentVideo++;
-	*currentVideo = font;
-	currentVideo++;
+void ncNewline() {
+    do {
+        ncPrintChar(' ');
+    } while ((uint64_t)(currentVideo - video) % (width * 2) != 0);
 }
 
-void ncPrintChar(char character)
-{
-
-	ncPrintCharColor(character, deafultcolor, defaultback);
+void ncPrintDec(uint64_t value) {
+    ncPrintBase(value, 10);
 }
 
-void ncNewline()
-{
-	do
-	{
-		ncPrintChar(' ');
-	} while ((uint64_t)(currentVideo - video) % (width * 2) != 0);
+void ncPrintHex(uint64_t value) {
+    ncPrintBase(value, 16);
 }
 
-void ncPrintDec(uint64_t value)
-{
-	ncPrintBase(value, 10);
+void ncPrintBin(uint64_t value) {
+    ncPrintBase(value, 2);
 }
 
-void ncPrintHex(uint64_t value)
-{
-	ncPrintBase(value, 16);
+void ncPrintBase(uint64_t value, uint32_t base) {
+    uintToBase(value, buffer, base);
+    ncPrint(buffer);
 }
 
-void ncPrintBin(uint64_t value)
-{
-	ncPrintBase(value, 2);
-}
+void ncClear() {
+    int i;
 
-void ncPrintBase(uint64_t value, uint32_t base)
-{
-	uintToBase(value, buffer, base);
-	ncPrint(buffer);
-}
-
-void ncClear()
-{
-	int i;
-
-	for (i = 0; i < height * width; i++)
-		video[i * 2] = ' ';
-	currentVideo = video;
+    for (i = 0; i < height * width; i++)
+        video[i * 2] = ' ';
+    currentVideo = video;
 }
 
 static uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base) {

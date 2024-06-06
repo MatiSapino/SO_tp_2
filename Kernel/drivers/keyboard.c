@@ -1,11 +1,11 @@
 #include <keyboard.h>
+#include <lib/defs.h>
 #include <scheduler.h>
-#include <defs.h>
 
-#define ENCODER_PORT 0x60
-#define CTRL_PORT 0x64
-
-enum CTRL_MASK {
+#define KBD_ENCODER_PORT 0x60
+#define KBD_CTRL_PORT    0x64
+/// 0x64 mask status register
+enum KBD_CTRL_MASK {
 
     KBD_CTRL_MASK_OUT_BUF = 1,    // 00000001
     KBD_CTRL_MASK_IN_BUF = 2,     // 00000010
@@ -16,12 +16,12 @@ enum CTRL_MASK {
     KBD_CTRL_MASK_TIMEOUT = 0x40, // 01000000
     KBD_CTRL_MASK_PARITY = 0x80   // 10000000
 };
-enum CTRL_CMD {
+enum KBD_CTRL_CMD {
     KBD_CTRL_CMD_DISABLE = 0xAD,
     KBD_CTRL_CMD_ENABLE = 0xAE
 };
 
-#define KBD_SIZE           256
+#define KBD_SIZE           90
 
 #define MAYUS_OFFSET       ('a' - 'A')
 #define IS_ASCII_LETTER(l) ((l) >= 'a' && (l) <= 'z')
@@ -46,138 +46,100 @@ static uint8_t *cntrl_listener = &cntrl_pressed;
 
 static uint8_t ctrl_d_flag = 0;
 
-static char US_1[KBD_SIZE] = {
-    0,    // 0x00 - Null
-    27,    // 0x01 - Escape
-    '1',  // 0x02 - '1'
-    '2',  // 0x03 - '2'
-    '3',  // 0x04 - '3'
-    '4',  // 0x05 - '4'
-    '5',  // 0x06 - '5'
-    '6',  // 0x07 - '6'
-    '7',  // 0x08 - '7'
-    '8',  // 0x09 - '8'
-    '9',  // 0x0A - '9'
-    '0',  // 0x0B - '0'
-    '-',  // 0x0C - '-'
-    '=',  // 0x0D - '='
-    '\b', // 0x0E - Backspace
-    '\t', // 0x0F - Tab
-    'q',  // 0x10 - 'Q'
-    'w',  // 0x11 - 'W'
-    'e',  // 0x12 - 'E'
-    'r',  // 0x13 - 'R'
-    't',  // 0x14 - 'T'
-    'y',  // 0x15 - 'Y'
-    'u',  // 0x16 - 'U'
-    'i',  // 0x17 - 'I'
-    'o',  // 0x18 - 'O'
-    'p',  // 0x19 - 'P'
-    '[',  // 0x1A - '['
-    ']',  // 0x1B - ']'
-    '\n', // 0x1C - Enter
-    0,    // 0x1D - Control (Left Ctrl)
-    'a',  // 0x1E - 'A'
-    's',  // 0x1F - 'S'
-    'd',  // 0x20 - 'D'
-    'f',  // 0x21 - 'F'
-    'g',  // 0x22 - 'G'
-    'h',  // 0x23 - 'H'
-    'j',  // 0x24 - 'J'
-    'k',  // 0x25 - 'K'
-    'l',  // 0x26 - 'L'
-    ';',    // 0x27 - (Unused)
-    '\'', // 0x28 - '''
-    '`',  // 0x29 - '`'
-    0,    // 0x2A - Shift (Left Shift)
-    '\\', // 0x2B - '\'
-    'z',  // 0x2C - 'Z'
-    'x',  // 0x2D - 'X'
-    'c',  // 0x2E - 'C'
-    'v',  // 0x2F - 'V'
-    'b',  // 0x30 - 'B'
-    'n',  // 0x31 - 'N'
-    'm',  // 0x32 - 'M'
-    ',',  // 0x33 - ',' (comma)
-    '.',    // 0x34 - '.' (period)
-    '/',    // 0x35 - '/' (forward slash)
-    0,    // 0x36 - Shift (Right Shift)
-    '*',    // 0x37 - (Print Screen)
-    0,    // 0x38 - Alt (Left Alt)
-    ' ',  // 0x39 - Space
-    0,    // 0x3A - Caps Lock
-    0,    // 0x3B - (F1)
-    0,    // 0x3C - (F2)
-    0,    // 0x3D - (F3)
-    0,    // 0x3E - (F4)
-    0,    // 0x3F - (F5)
-    0,    // 0x40 - (F6)
-    0,    // 0x41 - (F7)
-    0,    // 0x42 - (F8)
-    0,    // 0x43 - (F9)
-    0,    // 0x44 - (F10)
-    0,    // 0x45 - Num Lock
-    0,    // 0x46 - Scroll Lock
-    '7',  // 0x47 - Numpad 7
-    '^',  // 0x48 - Numpad 8
-    '9',  // 0x49 - Numpad 9
-    '-',  // 0x4A - Numpad '-'
-    '4',  // 0x4B - Numpad 4
-    '5',  // 0x4C - Numpad 5
-    '6',  // 0x4D - Numpad 6
-    '+',  // 0x4E - Numpad '+'
-    '1',  // 0x4F - Numpad 1
-    'v',  // 0x50 - Numpad 2
-    '3',  // 0x51 - Numpad 3
-    '0',  // 0x52 - Numpad 0
-    '.',  // 0x53 - Numpad '.'
-    0,    // 0x54 - (Unused)
-    0,    // 0x55 - (Unused)
-    0,    // 0x56 - (Unused)
-    0,    // 0x57 - (F11)
-    0,    // 0x58 - (F12)
-    0,    // 0x59 - (Unused)
-    0,    // 0x5A - (Unused)
-    0,    // 0x5B - (Unused)
-    0,    // 0x5C - (Unused)
-    0,    // 0x5D - (Unused)
-    0,    // 0x5E - (Unused)
-    0,    // 0x5F - (Unused)
-    0,    // 0x60 - (Unused)
-    0,    // 0x61 - (Unused)
-    0,    // 0x62 - (Unused)
-    0,    // 0x63 - (Unused)
-    0,    // 0x64 - (Unused)
-    0,    // 0x65 - (Unused)
-    0,    // 0x66 - (Unused)
-    0,    // 0x67 - (Unused)
-    0,    // 0x68 - (Unused)
-    0,    // 0x69 - (Unused)
-    0,    // 0x6A - (Unused)
-    0,    // 0x6B - (Unused)
-    0,    // 0x6C - (Unused)
-    0,    // 0x6D - (Unused)
-    0,    // 0x6E - (Unused)
-    0,    // 0x6F - (Unused)
-    0,    // 0x70 - (Unused)
-    0,    // 0x71 - (Unused)
-    0,    // 0x72 - (Unused)
-    0,    // 0x73 - (Unused)
-    0,    // 0x74 - (Unused)
-    0,    // 0x75 - (Unused)
-    0,    // 0x76 - (Unused)
-    0,    // 0x77 - (Unused)
-    0,    // 0x78 - (Unused)
-    0,    // 0x79 - (Unused)
-    0,    // 0x7A - (Unused)
-    0,    // 0x7B - (Unused)
-    0,    // 0x7C - (Unused)
-    0,    // 0x7D - (Unused)
-    0,    // 0x7E - (Unused)
-    0     // 0x7F - (Unused)
+static char kbd_US_1[KBD_SIZE] = {
+    0,
+    27 /* Esc */,
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '0',
+    '-',
+    '=',
+    '\b' /* Backspace */,
+    '\t', /* Tab */
+    'q',
+    'w',
+    'e',
+    'r',
+    't',
+    'y',
+    'u',
+    'i',
+    'o',
+    'p',
+    '[',
+    ']',
+    '\n' /* Enter */,
+    0, /* control key */
+    'a',
+    's',
+    'd',
+    'f',
+    'g',
+    'h',
+    'j',
+    'k',
+    'l',
+    ';',
+    '\'',
+    '`',
+    0,
+    '\\',
+    'z',
+    'x',
+    'c',
+    'v',
+    'b',
+    'n',
+    'm',
+    ',',
+    '.',
+    '/',
+    0,
+    '*',
+    0,   /* Alt */
+    ' ', /* Space bar */
+    0,   /* Caps lock */
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0, /* F1 ... F10 keys */
+    0, /* Num lock*/
+    0, /* Scroll Lock */
+    0, /* Home key */
+    0, /* Up Arrow */
+    0, /* Page Up */
+    '-',
+    0, /* Left Arrow */
+    0,
+    0, /* Right Arrow */
+    '+',
+    0, /* End key*/
+    0, /* Down Arrow */
+    0, /* Page Down */
+    0, /* Insert Key */
+    0, /* Delete Key */
+    0,
+    0,
+    0,
+    0, /* F11 Key */
+    0, /* F12 Key */
+    0, /* Undefined Keys*/
 };
 
-static char shift_US_1[KBD_SIZE] = {
+static char kbd_shift_US_1[KBD_SIZE] = {
     0,   0,   /*Numbers shift locked*/ '|',
     '@', '#', '$',
     '%', '^', '&',
@@ -224,18 +186,18 @@ static char shift_US_1[KBD_SIZE] = {
 
 void kbd_send_enc_cmd(uint8_t cmd) {
     while (1) {
-        if ((inb(CTRL_PORT) & KBD_CTRL_MASK_IN_BUF) == 0)
+        if ((inb(KBD_CTRL_PORT) & KBD_CTRL_MASK_IN_BUF) == 0)
             break;
     }
-    outb(ENCODER_PORT, cmd);
+    outb(KBD_ENCODER_PORT, cmd);
 }
 
 void kbd_send_ctrl_cmd(uint8_t cmd) {
     while (1) {
-        if ((inb(CTRL_PORT) & KBD_CTRL_MASK_IN_BUF) == 0)
+        if ((inb(KBD_CTRL_PORT) & KBD_CTRL_MASK_IN_BUF) == 0)
             break;
     }
-    outb(CTRL_PORT, cmd);
+    outb(KBD_CTRL_PORT, cmd);
 }
 
 void kbd_disable() {
@@ -258,9 +220,9 @@ static void ctrl_d_handler() {
     ctrl_d_flag = 1;
 }
 
-void keyboard_handler() {
+void kbd_handler() {
 
-    uint8_t scan_code = inb(ENCODER_PORT);
+    uint8_t scan_code = inb(KBD_ENCODER_PORT);
     if ((scan_code == LSHIFT_MK) || (scan_code == RSHIFT_MK)) {
         shift_pressed = 1;
         return;
@@ -288,9 +250,9 @@ void keyboard_handler() {
     }
     uint8_t character;
     if (shift_pressed) {
-        character = shift_US_1[scan_code];
+        character = kbd_shift_US_1[scan_code];
     } else {
-        character = US_1[scan_code];
+        character = kbd_US_1[scan_code];
     }
     if (character == 0) {
         return; // no character to map

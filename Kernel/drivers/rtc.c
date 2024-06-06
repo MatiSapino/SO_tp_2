@@ -1,11 +1,11 @@
 #include <rtc.h>
 #include <stddef.h>
 
-extern uint16_t rtc_time();
-extern void set_hour12_mode();
-extern void set_hour24_mode();
-extern void set_decimal_mode();
-extern void set_BCD_mode();
+extern uint16_t _rtc_time();
+extern void _set_hour12_mode();
+extern void _set_hour24_mode();
+extern void _set_decimal_mode();
+extern void _set_BCD_mode();
 // extern void _set_binary_RTC();
 
 static int rtc_utc_offset = 0;
@@ -20,10 +20,10 @@ void set_base_mode(BASE_MODE base_mode) {
     rtc_base_mode = base_mode;
     switch (rtc_base_mode) {
         case BCD:
-            set_BCD_mode();
+            _set_BCD_mode();
             break;
         case DECIMAL:
-            set_decimal_mode();
+            _set_decimal_mode();
             break;
     }
 }
@@ -32,10 +32,10 @@ void set_hs_mode(HS_MODE hs_mode) {
     rtc_hs_mode = hs_mode;
     switch (rtc_hs_mode) {
         case HS_24:
-            set_hour24_mode();
+            _set_hour24_mode();
             break;
         case HS_12:
-            set_hour12_mode();
+            _set_hour12_mode();
             break;
         default:
             break;
@@ -44,7 +44,7 @@ void set_hs_mode(HS_MODE hs_mode) {
 
 uint64_t get_time(TIME time_type) {
     set_base_mode(rtc_base_mode);
-    uint16_t time = rtc_time(time_type);
+    uint16_t time = _rtc_time(time_type);
     return (uint64_t)time;
 }
 

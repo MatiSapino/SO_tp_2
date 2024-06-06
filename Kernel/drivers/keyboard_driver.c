@@ -2,10 +2,53 @@
 #include <scheduler.h>
 #include <defs.h>
 
-int snap = 0;
-static char ScanCodes[256] = {
+#define ENCODER_PORT 0x60
+#define CTRL_PORT 0x64
+
+enum CTRL_MASK {
+
+    KBD_CTRL_MASK_OUT_BUF = 1,    // 00000001
+    KBD_CTRL_MASK_IN_BUF = 2,     // 00000010
+    KBD_CTRL_MASK_SYSTEM = 4,     // 00000100
+    KBD_CTRL_MASK_CMD_DATA = 8,   // 00001000
+    KBD_CTRL_MASK_LOCKED = 0x10,  // 00010000
+    KBD_CTRL_MASK_AUX_BUF = 0x20, // 00100000
+    KBD_CTRL_MASK_TIMEOUT = 0x40, // 01000000
+    KBD_CTRL_MASK_PARITY = 0x80   // 10000000
+};
+enum CTRL_CMD {
+    KBD_CTRL_CMD_DISABLE = 0xAD,
+    KBD_CTRL_CMD_ENABLE = 0xAE
+};
+
+#define KBD_SIZE           90
+
+#define MAYUS_OFFSET       ('a' - 'A')
+#define IS_ASCII_LETTER(l) ((l) >= 'a' && (l) <= 'z')
+
+#define LSHIFT_MK          0x2A
+#define LSHIFT_BK          0xAA
+#define RSHIFT_MK          0x36
+#define RSHIFT_BK          0xB6
+#define CAPS_MK            0x3A
+#define LCNTRL_MK          0x1D
+#define LCNTRL_BK          0X9D
+
+// CONTROL + R save registers
+#define SAVE_REG_KEY 'R'
+
+static char buffer[BUFFER_SIZE];
+static uint16_t index = 0;
+static uint8_t caps_locked = 0;
+static uint8_t shift_pressed = 0;
+static uint8_t cntrl_pressed = 0;
+static uint8_t *cntrl_listener = &cntrl_pressed;
+
+static uint8_t ctrl_d_flag = 0;
+
+static char US_1[KBD_SIZE] = {
     0,    // 0x00 - Null
-    0,    // 0x01 - Escape
+    27,    // 0x01 - Escape
     '1',  // 0x02 - '1'
     '2',  // 0x03 - '2'
     '3',  // 0x04 - '3'
@@ -43,7 +86,7 @@ static char ScanCodes[256] = {
     'j',  // 0x24 - 'J'
     'k',  // 0x25 - 'K'
     'l',  // 0x26 - 'L'
-    0,    // 0x27 - (Unused)
+    ';',    // 0x27 - (Unused)
     '\'', // 0x28 - '''
     '`',  // 0x29 - '`'
     0,    // 0x2A - Shift (Left Shift)
@@ -55,11 +98,11 @@ static char ScanCodes[256] = {
     'b',  // 0x30 - 'B'
     'n',  // 0x31 - 'N'
     'm',  // 0x32 - 'M'
-    ';',  // 0x33 - ',' (comma)
-    0,    // 0x34 - '.' (period)
-    0,    // 0x35 - '/' (forward slash)
+    ',',  // 0x33 - ',' (comma)
+    '.',    // 0x34 - '.' (period)
+    '/',    // 0x35 - '/' (forward slash)
     0,    // 0x36 - Shift (Right Shift)
-    0,    // 0x37 - (Print Screen)
+    '*',    // 0x37 - (Print Screen)
     0,    // 0x38 - Alt (Left Alt)
     ' ',  // 0x39 - Space
     0,    // 0x3A - Caps Lock
@@ -134,80 +177,195 @@ static char ScanCodes[256] = {
     0     // 0x7F - (Unused)
 };
 
-static int capsLockOn = 0;
-static int shiftPressed = 0;
-static int control = 0;
+static char shift_US_1[KBD_SIZE] = {
+    0,   0,   /*Numbers shift locked*/ '|',
+    '@', '#', '$',
+    '%', '^', '&',
+    '*', '(', ')',
+    '_', '+', 0,
+    0, /* Backspace and tab */
+    'Q', 'W', 'E',
+    'R', 'T', 'Y',
+    'U', 'I', 'O',
+    'P', '{', '}',
+    0,   0, /*Enter and control key*/
+    'A', 'S', 'D',
+    'F', 'G', 'H',
+    'J', 'K', 'L',
+    ':', '"', '~',
+    0,   0,   'Z',
+    'X', 'C', 'V',
+    'B', 'N', 'M',
+    '<', '>', '?',
+    0,   0,   0, /* Alt */
+    ' ',         /* Space bar */
+    0,           /* Caps lock */
+    0,   0,   0,
+    0,   0,   0,
+    0,   0,   0,
+    0,      /* F1 ... F10 keys */
+    0,      /* Num lock */
+    0,      /* Scroll Lock */
+    0,      /* Home key */
+    0,      /* Up Arrow */
+    0,      /* Page Up */
+    0,   0, /* Left Arrow */
+    0,   0, /* Right Arrow */
+    0,   0, /* End key*/
+    0,      /* Down Arrow */
+    0,      /* Page Down */
+    0,      /* Insert Key */
+    0,      /* Delete Key */
+    0,   0,   0,
+    0, /* F11 Key */
+    0, /* F12 Key */
+    0, /* Undefined Keys*/
+};
 
-void keyboard_handler()
-{
-    uint16_t key = getKey(); // Obtiene el valor de la tecla presionada
-
-    if (key == 0) // Si no se presionó ninguna tecla, retorna
-        return;
-
-    if (key == 0x3A)
-    {
-        capsLockOn = 1 - capsLockOn;
+void kbd_send_enc_cmd(uint8_t cmd) {
+    while (1) {
+        if ((inb(CTRL_PORT) & KBD_CTRL_MASK_IN_BUF) == 0)
+            break;
     }
-
-    if (key == 0x2A)
-    { // shift make
-        shiftPressed = 1;
-    }
-    else if (key == 0xAA)
-    { // shift break
-        shiftPressed = 0;
-    }
-
-    if (key == 0x1D) {
-        // control make
-        control = 1;
-    }
-    else if (key == 0x9D) {
-        // control break
-        control = 0;
-    }
-
-    uint16_t *buff = getBufferAddress();
-    int buff_pos;
-    getBufferPosition(&buff_pos);
-
-    // Verifica si hay espacio suficiente en el búfer para almacenar el valor de la tecla
-    if (buff_pos + 1 < BUFF_SIZE)
-    {
-        setPos(buff_pos + 1);
-        buff[buff_pos + 1] = 0;
-    }
-    else
-    {
-        setPos(0);
-        buff[0] = 0;
-    }
-
-    if (key == 0x0C)
-    { // make key for '-'
-        saveState();
-        snap = 1;
-        buff[buff_pos] = ScanCodes[key];
-        return;
-    }
-
-    if (control && key ==0x2E) {
-        process_t *foreground_process = get_foreground_process();
-        if (foreground_process == NULL)
-            return;
-
-        kill_process(foreground_process->pid);
-    }
-
-    if ((capsLockOn || shiftPressed) && !(capsLockOn && shiftPressed) && (ScanCodes[key] - ('a' - 'A')) >= 'A' && (ScanCodes[key] - ('a' - 'A')) <= 'Z')
-        buff[buff_pos] = (ScanCodes[key] - ('a' - 'A')); // Almacena el valor de la tecla en el búfer
-    else
-        buff[buff_pos] = ScanCodes[key]; // Almacena el valor de la tecla en el búfer
-    return;
+    outb(ENCODER_PORT, cmd);
 }
 
-int snapshot()
-{
-    return snap;
+void kbd_send_ctrl_cmd(uint8_t cmd) {
+    while (1) {
+        if ((inb(CTRL_PORT) & KBD_CTRL_MASK_IN_BUF) == 0)
+            break;
+    }
+    outb(CTRL_PORT, cmd);
+}
+
+void kbd_disable() {
+    kbd_send_ctrl_cmd(KBD_CTRL_CMD_DISABLE);
+}
+
+void kbd_enable() {
+    kbd_send_ctrl_cmd(KBD_CTRL_CMD_ENABLE);
+}
+
+static void ctrl_c_handler() {
+    process_t *foreground_process = get_foreground_process();
+    if (foreground_process == NULL)
+        return;
+
+    kill_process(foreground_process->pid);
+}
+
+static void ctrl_d_handler() {
+    ctrl_d_flag = 1;
+}
+
+void keyboard_handler() {
+
+    uint8_t scan_code = inb(ENCODER_PORT);
+    if ((scan_code == LSHIFT_MK) || (scan_code == RSHIFT_MK)) {
+        shift_pressed = 1;
+        return;
+    }
+    if ((scan_code == LSHIFT_BK) || (scan_code == RSHIFT_BK)) {
+        shift_pressed = 0;
+        return;
+    }
+    if (scan_code == LCNTRL_MK) {
+        cntrl_pressed = 1;
+        (*cntrl_listener) = cntrl_pressed;
+        return;
+    }
+    if (scan_code == LCNTRL_BK) {
+        cntrl_pressed = 0;
+        (*cntrl_listener) = cntrl_pressed;
+        return;
+    }
+    if (scan_code == CAPS_MK) {
+        caps_locked = !caps_locked;
+        return;
+    }
+    if (index >= BUFFER_SIZE || scan_code >= KBD_SIZE) {
+        return;
+    }
+    uint8_t character;
+    if (shift_pressed) {
+        character = shift_US_1[scan_code];
+    } else {
+        character = US_1[scan_code];
+    }
+    if (character == 0) {
+        return; // no character to map
+    }
+    if (caps_locked && IS_ASCII_LETTER(character)) {
+        buffer[index] = character - MAYUS_OFFSET;
+    } else if (cntrl_pressed) {
+        switch (character) {
+            case 'c':
+                ctrl_c_handler();
+                break;
+
+            case 'd':
+                ctrl_d_handler();
+
+            default:
+                break;
+        }
+
+    } else {
+        buffer[index] = character;
+    }
+    index++;
+    buffer[index] = 0;
+}
+
+int kbd_get_buffer(char *buffer_ret) {
+    if (ctrl_d_flag) {
+        ctrl_d_flag = 0;
+        return EOF;
+    }
+    memcpy(buffer_ret, buffer, index);
+    return 0;
+}
+
+void kbd_clear_buffer() {
+    buffer[0] = 0;
+    index = 0;
+}
+
+uint16_t kbd_get_current_index() {
+    return index;
+}
+
+char kbd_get_last_key() {
+    if (index > 0) {
+        return buffer[index - 1];
+    }
+    return 0;
+}
+
+char kbd_get_rm_last_key() {
+    if (index > 0) {
+        char toReturn = buffer[index - 1];
+        index--;
+        buffer[index] = 0;
+        return toReturn;
+    }
+    return 0;
+}
+
+void kbd_sets_cntrl_listener(uint8_t *listener) {
+    cntrl_listener = listener;
+}
+
+uint8_t kbd_is_cntrl_pressed() {
+    return cntrl_pressed;
+}
+
+uint8_t kbd_is_save_reg_shortcut() {
+    if (cntrl_pressed &&
+        ((kbd_get_last_key() == SAVE_REG_KEY) ||
+         ((kbd_get_last_key() - MAYUS_OFFSET) == SAVE_REG_KEY))) {
+        kbd_get_rm_last_key();
+        return 1;
+    }
+    return 0;
 }

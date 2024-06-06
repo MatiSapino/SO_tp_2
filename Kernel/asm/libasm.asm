@@ -8,8 +8,6 @@ GLOBAL get_monthDay
 GLOBAL get_month
 GLOBAL get_year
 
-GLOBAL getKey
-
 GLOBAL outb
 GLOBAL outw
 GLOBAL inb
@@ -110,38 +108,16 @@ get_year:
 	leave_func
   	ret
 
-getKey:
-  push rbp
-  mov rbp, rsp
-  mov rax, 0
-
-  in al, 0x60       ; lee la TECLA PRESIONADA desde el puerto 60h
-_good:  
-  mov rsp, rbp 
-  pop rbp
-  ret
-
 inb:				; Funciones para el correcto funcionamiento del soundDriver
-	push rbp
-	mov rbp, rsp
-
-    mov rdx,rdi
+    xor rax, rax
+	mov rdx,rdi
     in al,dx		; pasaje en 8 bits
-
-	mov rsp, rbp
-	pop rbp
 	ret
 
 outb:
-	push rbp
-	mov rbp, rsp
-
-    mov rax, rsi    
-    mov rdx, rdi
+	mov     rdx, rdi
+    mov     rax, rsi
 	out dx, al		; pasaje en 8 bits
-
-	mov rsp, rbp
-	pop rbp
 	ret
 
 xadd:
@@ -155,24 +131,16 @@ xchg:
 	ret
 
 inw:
-	push rbp
-	mov rbp, rsp
-
+	xor rax, rax
     mov rdx, rdi
     in ax, dx
-
-	mov rsp, rbp
-	pop rbp
 	ret
 
 outw:
-	push rbp
-	mov rbp, rsp
-
-    mov rdx, rdi
+	mov rdx, rdi
     mov rax, rsi
     out dx, ax
-
-	mov rsp, rbp
-	pop rbp
 	ret
+
+section .bss
+aux resb 1

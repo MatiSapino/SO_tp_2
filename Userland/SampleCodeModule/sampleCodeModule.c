@@ -8,8 +8,8 @@
 
 int main()
 {
-	char *args[] = {"initShell"};
-    call_run(initShell, 1, args);
+	char *args[] = {"shell"};
+    call_run(shell, 1, args);
 
     return 0xDEADBEEF;
 }

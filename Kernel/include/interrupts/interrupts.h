@@ -8,35 +8,36 @@
 #ifndef INTERRUPS_H_
 #define INTERRUPS_H_
 
-#include <idtLoader.h>
-#include <registers.h>
+#include <stdint.h>
 
-void _irq00Handler(void);
-void _irq01Handler(void);
-void _irq02Handler(void);
-void _irq03Handler(void);
-void _irq04Handler(void);
-void _irq05Handler(void);
-void _irq60Handler(void);
+#define IRQ_01 1
 
-void _exception0Handler(void);
-void _exception6Handler(void);
-void printRegAsm(void);
-void saveState(void);
+extern void _irq00Handler(void);
+extern void _irq01Handler(void);
+extern void _irq02Handler(void);
+extern void _irq03Handler(void);
+extern void _irq04Handler(void);
+extern void _irq05Handler(void);
+extern void _irq60Handler(void);
 
-void _cli(void);
+extern void _exception0Handler(void);
+extern void _exception6Handler(void);
 
-void _sti(void);
+extern uint8_t _syscall_master_handler(void);
 
-void _hlt(void);
+extern void _cli(void);
 
-void picMasterMask(uint8_t mask);
+extern void _sti(void);
 
-void picSlaveMask(uint8_t mask);
+extern void _hlt(void);
+
+extern void picMasterMask(uint8_t mask);
+
+extern void picSlaveMask(uint8_t mask);
 
 //Termina la ejecución de la cpu.
-void haltcpu(void);
+extern void haltcpu(void);
 
-void _force_timer_int(void);
+extern void force_timer_int(void);
 
 #endif /* INTERRUPS_H_ */

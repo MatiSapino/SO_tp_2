@@ -56,9 +56,9 @@ area_t create_window(area_t area) {
     set_working_area(area);
     set_foreground_color(area.first_row, area.first_col,
                          area.first_row + area.height - 1,
-                         area.first_col + area.width - 1, LIGHT_GRAY);
-    draw_bottom_line(area);
-    draw_top_line(area);
+                         area.first_col + area.width - 1, BLACK);
+    // draw_bottom_line(area);
+    // draw_top_line(area);
     for (int i = area.first_row + 1; i < (area.first_row + area.height - 1);
          i++) {
         for (int j = 0; j < 2; j++) {
@@ -76,7 +76,7 @@ area_t create_window(area_t area) {
     set_working_area(new_area);
     set_foreground_color(new_area.first_row, new_area.first_col,
                          new_area.first_row + new_area.height - 1,
-                         new_area.first_col + new_area.width - 1, WHITE);
+                         new_area.first_col + new_area.width - 1, GREEN);
     move_cursor((position_t){new_area.first_row, new_area.first_col});
     enable_scroll();
     return new_area;
@@ -188,11 +188,11 @@ void full_screen_distribution() {
     clear_screen();
 
     area_t top_line = {MAX_COLS, 1, 0, 0};
-    create_line(top_line, CYAN);
-    set_foreground_color(0, 0, 0, MAX_COLS - 1, WHITE);
-    print_string(" KerberOS");
+    // create_line(top_line, CYAN);
+    // set_foreground_color(0, 0, 0, MAX_COLS - 1, WHITE);
+    // print_string(" KerberOS");
 
-    create_bottom_module();
+    // create_bottom_module();
     move_cursor(contexts[2].last_cursor_pos);
 }
 

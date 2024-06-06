@@ -1,5 +1,3 @@
-// This is a personal academic project. Dear PVS-Studio, please check it.
-// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <help.h>
 #include <std_io.h>
 #include <string_s.h>
@@ -15,7 +13,7 @@ static void help_cmds() {
     formatter("processstatus", "mem", "sem", "kill");
     formatter("nice", "block", "cat", "wc");
     formatter("filter", "pipe", "phylo", "loop");
-    formatter("printmem", "divzero", "invopcode", "kerberos");
+    formatter("printmem", "divzero", "invopcode", "welcome");
     puts("");
     puts("Tests:");
     formatter("testmm", "testprocesses", "testpriority", "testsync");
@@ -81,10 +79,10 @@ static void help_invopcode() {
     puts("");
 }
 
-static void help_kerberos() {
+static void help_welcome() {
     puts("");
     puts("Command:");
-    puts("    kerberos        The KerberOS boot screen.");
+    puts("    welcome        The OS boot screen.");
     puts("");
 }
 
@@ -166,8 +164,8 @@ int help(int argc, char *argv[]) {
     else if (strcmp("invopcode", argv[1]) == 0)
         help_invopcode();
 
-    else if (strcmp("kerberos", argv[1]) == 0)
-        help_kerberos();
+    else if (strcmp("welcome", argv[1]) == 0)
+        help_welcome();
 
     else if (strcmp("pipe", argv[1]) == 0)
         help_pipe();

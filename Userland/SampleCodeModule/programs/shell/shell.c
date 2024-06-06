@@ -29,7 +29,7 @@
 #include <testprocess.h>
 #include <testsync.h>
 #include <time.h>
-#include <kerberos.h>
+#include <welcome.h>
 
 #define LINE_LENGTH    512
 #define TOKEN_LENGTH   512
@@ -76,7 +76,7 @@ cmd_entry_t cmd_table[] = {{"help", help},
                            {"primes", primes},
                            {"time", time},
                            {"divzero", divzero},
-                           {"kerberos", kerberos},
+                           {"welcome", welcome},
                            {"invopcode", invopcode},
                            {"printmem", printmem},
                            {"mem", printmemstate},
@@ -382,7 +382,7 @@ int shell() {
     char cmd_buff[LINE_LENGTH];
     call_cntrl_listener(&ctrl_pressed);
 
-    kerberos(0, NULL); // show welcome screen
+    welcome(0, NULL); // show welcome screen
 
     while (1) {
         lock_screen();

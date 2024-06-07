@@ -82,6 +82,9 @@
     "stdbool.h": "c",
     "stddef.h": "c",
     "linkedlist.h": "c",
-    "pipe.h": "c"
+    "pipe.h": "c",
+    "time.h": "c",
+    "irqdispatcher.h": "c",
+    "keyboard_driver.h": "c"
   }
 }

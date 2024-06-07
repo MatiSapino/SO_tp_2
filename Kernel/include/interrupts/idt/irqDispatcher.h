@@ -1,7 +1,7 @@
 #ifndef _IRQDISPATCHER_H
 #define _IRQDISPATCHER_H
 
-#include <time.h>
+#include <timer.h>
 #include <stdint.h>
 #include <defs.h>
 #include <naiveConsole.h>

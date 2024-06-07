@@ -1,4 +1,4 @@
-#include <irqDispatcher.h>
+#include <irqDispatcher.h> 
 
 static void int_20();
 static void int_21();
@@ -22,8 +22,8 @@ void irqDispatcher(uint64_t irq, uint64_t rdi, uint64_t rsi, uint64_t rdx, uint6
 	}
 }
 
-void int_20() {
-	timer_handler();
+void int_20() { 
+	timer_handler(); 
 }
 
 void int_21() {
@@ -118,16 +118,16 @@ int int_80(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rcx, uint64_t r8, 
 		return 0;
 	case 29:
 		// call_sem_up
-		return my_sem_up((char*)rsi);
+		//return my_sem_up((char*)rsi);
 	case 30:
 		// call_sem_down
-		return my_sem_down((char*)rsi);
+		//return my_sem_down((char*)rsi);
 	case 31:
 		// call_sem_open
-		return my_sem_open((char*)rsi, rdx);
+		//return my_sem_open((char*)rsi, rdx);
 	case 32:
 		// call_sem_close
-		return my_sem_close((char*)rsi);
+		//return my_sem_close((char*)rsi); 
 	case 33:
 		// return my_get_pid(); faltaria el getpid() propio
 		break;

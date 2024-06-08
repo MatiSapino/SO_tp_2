@@ -1,5 +1,7 @@
 #include <div0.h>
 
 int divzero(int argc ,  char * argv[]) {
-    return 1 / 0;
+    int a = 1;
+    int b = 0;
+    return a/b;
 }

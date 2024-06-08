@@ -148,10 +148,21 @@ void clearScreen(){
 }
 
 void backspace(){
-    if (cursorX > font_size*56) {
+    // if (cursorX > font_size*56) {
+    //     cursorX -= font_size*8;
+    // }
+
+    
+    if(cursorX != 0){
         cursorX -= font_size*8;
     }
+
 	drawRectangle(bg_color, cursorX, cursorY, font_size*8, font_size*16);
+
+    if(cursorX == 0){
+        cursorY -= font_size*16;
+        cursorX = getMaxWidth();
+    }
 }
 
 void newline(){

@@ -4,7 +4,7 @@
 #include <lib/defs.h>
 #include <pipe/pipe.h>
 #include <pmm.h>
-#include <process.h>
+#include "../../include/process/process.h"
 #include <registers.h>
 #include <scheduler.h>
 #include <semaphore/semaphore.h>
@@ -39,7 +39,7 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
         return -1;
 
     pipe_t pipe;
-    context_id_t gc;
+    context_id_t gc;                        // no se que hace esto, si tiene que ver con el modo texto lo borro
     uint16_t i;
     char c;
 
@@ -56,10 +56,8 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
                 c = buffer[i];
                 if (c == '\n') {
                     newline();
-                    // gprint_new_line(gc);                     esto es modo texto
                 } else {
                     character(GREEN, c);
-                    // gprint_char(c, gc);                      esto es modo texto
                 }
                 i++;
             }
@@ -115,7 +113,6 @@ int16_t sys_read(int fd, char *buffer, uint16_t count)
 
 
 void sys_clear_screen() {
-    // clear_screen();                                           esto es modo texto
     clearScreen();
 }
 

@@ -1,7 +1,7 @@
 #include <lib.h>
 #include <lib/defs.h>
 #include <linked_list.h>
-#include <pipe/pipe.h>
+#include "../include/pipe/pipe.h"
 #include <pmm.h>
 #include <scheduler.h>
 

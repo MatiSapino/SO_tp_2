@@ -58,7 +58,7 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 	case 19:
 		return sys_wait();
 	case 20:
-		return sys_sem_open((char *)arg0, (int)arg1);
+		return (int64_t)sys_sem_open((char *)arg0, (int)arg1);							// casteo puede romper todo ojo
 	case 21:
 		return sys_sem_wait((sem_ptr)arg0);
 	case 22:
@@ -81,7 +81,7 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 	case 30:
 		return sys_dup2((unsigned int)arg0, (unsigned int)arg1);
 	case 31:
-		return sys_malloc((size_t)arg0);
+		return (int64_t)sys_malloc((size_t)arg0);							// casteo puede romper todo
 	case 32:
 		sys_free((void *)arg0);
 		break;
@@ -103,7 +103,7 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 		break;
 	case 39:
 		newline();
-		return;
+		return 0;
 	default:
 		return 0;
 	}

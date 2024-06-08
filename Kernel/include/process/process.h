@@ -71,5 +71,6 @@ typedef int (*function_t)(int, char *[]);
 
 process_t *new_process(function_t main, int argc, char *argv[]);
 void free_process(process_t *process);
+int search_by_pid(void *process, pid_t pid);
 
 #endif

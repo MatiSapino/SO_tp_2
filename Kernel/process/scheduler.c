@@ -3,8 +3,8 @@
 #include <idtLoader.h>
 #include <lib/linked_list.h>
 #include <pmm.h>
-#include <process.h>
-#include <scheduler.h>
+#include "../include/process/process.h"
+#include "../include/process/scheduler.h"
 #include <stdbool.h>
 
 #define PID_ERR        -1
@@ -20,12 +20,8 @@ static int priority_timer_tick = 0;
 
 static void remove_process(int pid);
 
-static int search_by_status(void *process, void *status) {
+int search_by_status(void *process, pstatus_t status) {
     return ((process_t *)process)->status == status;
-}
-
-static int search_by_pid(void *process, void *pid) {
-    return ((process_t *)process)->pid == pid;
 }
 
 static int search_by_channel(void *process, void *channel) {

@@ -41,5 +41,6 @@ void sleep(uint64_t channel);
 int wakeup(uint64_t channel);
 void init_scheduler();
 int get_process_table(process_table_t *table);
+int search_by_status(void *process, pstatus_t status);
 
 #endif

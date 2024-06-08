@@ -1,5 +1,5 @@
 #include <std_io.h>
-#include <scheduler.h>
+#include <test_scheduler.h>
 
 int dummy(int argc, char *argv[]) {
     return 0;

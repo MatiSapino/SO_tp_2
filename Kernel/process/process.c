@@ -13,7 +13,7 @@ static void start(function_t function, int argc, char *argv[]) {
     sys_exit(status);
 }
 
-static int search_by_pid(void *process, void *pid) {
+int search_by_pid(void *process, pid_t pid) {
     return ((process_t *)process)->pid == pid;
 }
 

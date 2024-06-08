@@ -25,29 +25,6 @@ distribution_t current_distribution = FULL_DISTRIBUTION;
 
 gcontext_t contexts[3];
 
-static void draw_top_line(area_t area) {
-    int line = area.first_row;
-    int first_col = area.first_col;
-    move_cursor((position_t){line, first_col});
-    print_char(LEFT_TOP_CORNER);
-    for (int i = area.first_col + 1; i < (area.first_col + area.width - 1);
-         i++) {
-        print_char(HZ_LINE);
-    }
-    print_char(RIGHT_TOP_CORNER);
-}
-
-static void draw_bottom_line(area_t area) {
-    int line = area.first_row + area.height - 1;
-    int first_col = area.first_col;
-    move_cursor((position_t){line, first_col});
-    print_char(LEFT_BOTTOM_CORNER);
-    for (int i = first_col + 1; i < (area.first_col + area.width - 1); i++) {
-        print_char(HZ_LINE);
-    }
-    print_char(RIGHT_BOTTOM_CORNER);
-}
-
 area_t create_window(area_t area) {
     enable_cursor(15, 16);
     disable_scroll();
@@ -187,7 +164,6 @@ void full_screen_distribution() {
 
     clear_screen();
 
-    area_t top_line = {MAX_COLS, 1, 0, 0};
     // create_line(top_line, CYAN);
     // set_foreground_color(0, 0, 0, MAX_COLS - 1, WHITE);
     // print_string(" KerberOS");

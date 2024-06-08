@@ -1,11 +1,11 @@
 #include <circular_linked_list.h>
 #include <stdlib.h>
 
+
 #define ERROR         -1
 #define SUCCESS       0
 #define MAX_ITERATORS 2
 
-static int visited = 0;
 
 typedef struct node_list_t *node_list_ptr;
 typedef struct node_list_t {
@@ -31,7 +31,7 @@ typedef struct list_t {
                                           // list and be notified with changes
 } list_t;
 
-list_t *new_circular_linked_list(int (*comp_funct)(void *, void *)) {
+list_t *new_circular_linked_list(int (*comp_funct)(void *, pid_t)) {
     list_t *new_list = kmalloc(sizeof(list_t));
     new_list->start = NULL;
     new_list->end = NULL;

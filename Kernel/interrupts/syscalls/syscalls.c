@@ -39,7 +39,6 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
         return -1;
 
     pipe_t pipe;
-    context_id_t gc;                        // no se que hace esto, si tiene que ver con el modo texto lo borro
     uint16_t i;
     char c;
 
@@ -49,7 +48,6 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
             return pipewrite(pipe, buffer, count);
 
         default:
-            gc = current_process->g_context;
 
             i = 0;
             while (i < count) {
@@ -138,11 +136,7 @@ uint8_t sys_cntrl_listener(uint8_t *listener) {
 }
 
 void sys_delete_char() {
-    process_t *current_process = get_current_process();
-    context_id_t gc = current_process->g_context;
     backspace();
-    // gdelete_char(gc);
-    
 }
 
 int sys_kill(int pid) {

@@ -154,31 +154,39 @@ void backspace(){
 
     
     if(cursorX != 0){
+        deleteCursor();
         cursorX -= font_size*8;
     }
 
+    
 	drawRectangle(bg_color, cursorX, cursorY, font_size*8, font_size*16);
 
     if(cursorX == 0){
         cursorY -= font_size*16;
         cursorX = getMaxWidth();
     }
+
+    drawCursor();
 }
 
 void newline(){
+    deleteCursor();
     cursorX = 0;
     cursorY += (font_size*16);
+    drawCursor();
     return;
 }
 
 void tab(){
     int tabWidth = 15;
+        deleteCursor();
         int spaces = tabWidth - (cursorX / (int)font_size*8) % tabWidth;
 
         for (int i = 0; i < spaces; i++) {
             drawChar(WHITE, ' ');
             cursorX += font_size*8;
         }
+        drawCursor();
         return;
 }
 
@@ -207,20 +215,28 @@ void character(uint64_t hexColor, char c){
             return;
         }
         if (c == ' '){
+            deleteCursor();
             cursorX += font_size*8;
+            drawCursor();
             return;
         }
         //Carácter
         if (cursorX >= getMaxWidth()) {
+            deleteCursor();
             cursorX = 0;
             cursorY += font_size*16;
+            drawCursor();
         }
         if (cursorY >= getMaxHeight()){ 
+            deleteCursor();
             cursorX = 0;
             moveOneLineUp();
+            deleteCursor();
         }
+        deleteCursor();
         drawChar(hexColor, c);
         cursorX += font_size*8;
+        drawCursor();
         return;
 }
 

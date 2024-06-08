@@ -30,6 +30,7 @@
 #include <testsync.h>
 #include <time.h>
 #include <welcome.h>
+#include "../../include/library/semaphore/semaphore.h"
 
 #define LINE_LENGTH    512
 #define TOKEN_LENGTH   512
@@ -286,9 +287,9 @@ static void read_input(char *buffer) {
     own_printf("%c", PROMPT_SYMBOL);
     while ((c = getchar()) != '\n') {
         if (c == BACKSPACE_KEY) {
-            if (offset) {
+                if (offset) {
                 call_delete_char();
-                offset--;
+                offset--;                                           // this is to not include the last char in the buffer 
             }
         } else {
             putchar(c);

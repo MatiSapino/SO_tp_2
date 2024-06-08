@@ -56,7 +56,8 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
                 c = buffer[i];
                 if (c == '\n') {
                     newline();
-                } else {
+                } 
+                else{
                     character(GREEN, c);
                 }
                 i++;
@@ -139,7 +140,7 @@ uint8_t sys_cntrl_listener(uint8_t *listener) {
 void sys_delete_char() {
     process_t *current_process = get_current_process();
     context_id_t gc = current_process->g_context;
-
+    backspace();
     // gdelete_char(gc);
     
 }

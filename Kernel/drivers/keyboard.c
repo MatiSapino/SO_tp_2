@@ -1,6 +1,8 @@
 #include <keyboard.h>
 #include <lib/defs.h>
 #include <scheduler.h>
+#include "../include/process/process.h"
+
 
 #define KBD_ENCODER_PORT 0x60
 #define KBD_CTRL_PORT    0x64

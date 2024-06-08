@@ -31,6 +31,7 @@ void setSize(int new_size);
 void putCharInSetSpace(char c, int color, int x, int y);
 void drawSquareInSetPosition(int x, int y, int size, int color);
 void character(uint64_t hexColor, char c);
+void backspace();
 
 
 #endif /* _VIDEO_DRIVER_H */

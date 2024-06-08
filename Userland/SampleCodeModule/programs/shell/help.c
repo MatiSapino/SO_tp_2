@@ -7,23 +7,16 @@ static void formatter(char *name1, char *name2, char *name3, char *name4) {
 }
 
 static void help_cmds() {
-    puts("");
-    puts("Available commands:");
+    own_printf("\nAvilable commands:\n");
     formatter("clear", "time", "fibonacci", "primes");
     formatter("processstatus", "mem", "sem", "kill");
     formatter("nice", "block", "cat", "wc");
     formatter("filter", "pipe", "phylo", "loop");
     formatter("printmem", "divzero", "invopcode", "welcome");
-    puts("");
-    puts("Tests:");
+    own_printf("\nTests:\n");
     formatter("testmm", "testprocesses", "testpriority", "testsync");
-    puts("");
-    puts("Operators:");
-    puts(" [c1] | [c2]     Connects a pipe between [c1] and [c2] commands.");
-    puts(" [c1] &          Runs command [c1] on background.");
-    puts("");
-    puts("Type \"help [command]\" for information about a specific command.");
-    puts("");
+    own_printf("\nOperadors:\n [c1] | [c2]     Connects a pipe between [c1] and [c2] commands.\n [c1] &          Runs command [c1] on background.\n");
+    own_printf("Type \"help [command]\" for information about a specific command.\n");
 }
 
 static void help_error(char *cmd) {
@@ -32,31 +25,19 @@ static void help_error(char *cmd) {
 }
 
 static void help_fibonacci() {
-    puts("");
-    puts("Command:");
-    puts("    fibonacci       Prints fibonacci sequence.");
-    puts("");
+    own_printf("\nCommand:\n     fibonacci       Prints fibonacci sequence.\n");
 }
 
 static void help_primes() {
-    puts("");
-    puts("Command:");
-    puts("    primes          Prints prime numbers.");
-    puts("");
+    own_printf("\nCommand:\n    primes          Prints prime numbers.)\n");
 }
 
 static void help_time() {
-    puts("");
-    puts("Command:");
-    puts("    time            Displays system day and hour.");
-    puts("");
+    own_printf("\nCommand:\n     time            Displays system day and hour.\n");
 }
 
 static void help_divzero() {
-    puts("");
-    puts("Command:");
-    puts("    divzero         Forces divide-by-zero exception.");
-    puts("");
+    own_printf("\nCommand:\n    divzero         Forces divide-by-zero exception.\n");
 }
 
 static void help_inforeg() {

@@ -6,7 +6,7 @@
 typedef struct list_t *circular_list_t;
 typedef struct iterator_t *circular_list_iterator_t;
 
-circular_list_t new_circular_linked_list(int (*comp_funct)(void *, pid_t));
+circular_list_t new_circular_linked_list(int (*comp_funct)(void *, void *));
 circular_list_iterator_t new_circular_list_iterator(circular_list_t l);
 
 void cl_add(circular_list_t list, void *data);

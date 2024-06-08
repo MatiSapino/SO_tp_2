@@ -40,12 +40,12 @@ static int process_pipe_comparison_function(void * pid, void * other_pid){
     return (*(int *)pid) == (*(int *)other_pid);
 }
 
-static void wakeup_helper(uint64_t channel, list_ptr blocked_list) {
+static void wakeup_helper(void * channel, list_ptr blocked_list) {
     int pid = wakeup(channel);
     remove(blocked_list, (void *)&pid);
 }
 
-static void sleep_helper(uint64_t channel,list_ptr blocked_list){
+static void sleep_helper(void * channel,list_ptr blocked_list){
     process_t * process = get_current_process();
     add(blocked_list,&process->pid);
     sleep(channel);
@@ -124,12 +124,12 @@ int pipewrite(pipe_t pipe, const char *buffer, int count) {
     int i;
     for (i = 0; i < count; i++) {
         while (pipe->nwrite == pipe->nread + PIPE_SIZE) {
-            wakeup_helper((uint64_t) & pipe->nread, pipe->blocked_pid);
-            sleep_helper((uint64_t) & pipe->nwrite, pipe->blocked_pid);
+            wakeup_helper(&pipe->nread, pipe->blocked_pid);
+            sleep_helper(&pipe->nwrite, pipe->blocked_pid);
         }
         pipe->data[pipe->nwrite++ % PIPE_SIZE] = buffer[i];
     }
-    wakeup_helper((uint64_t) & pipe->nread, pipe->blocked_pid);
+    wakeup_helper(&pipe->nread, pipe->blocked_pid);
 
     return i;
 }
@@ -142,7 +142,7 @@ int piperead(pipe_t pipe, char *buffer, int count) {
     while (pipe->nread == pipe->nwrite) {
         if (pipe->writeopen == 0)
             return EOF;
-        sleep_helper((uint64_t)&pipe->nread, pipe->blocked_pid);
+        sleep_helper(&pipe->nread, pipe->blocked_pid);
     }
 
     int i;
@@ -151,7 +151,7 @@ int piperead(pipe_t pipe, char *buffer, int count) {
             break;
         buffer[i] = pipe->data[pipe->nread++ % PIPE_SIZE];
     }
-    wakeup_helper((uint64_t)&pipe->nwrite, pipe->blocked_pid);
+    wakeup_helper(&pipe->nwrite, pipe->blocked_pid);
 
     if (pipe->nread == pipe->nwrite + 1)
         return EOF;
@@ -167,12 +167,12 @@ void close_pipe(pipe_t pipe, int writable) {
     if (writable) {
         if (pipe->writeopen != 0) {
             pipe->writeopen--;
-            wakeup_helper((uint64_t)&pipe->nread, pipe->blocked_pid);
+            wakeup_helper(&pipe->nread, pipe->blocked_pid);
         }
     } else {
         if (pipe->readopen != 0) {
             pipe->readopen--;
-            wakeup_helper((uint64_t)&pipe->nread, pipe->blocked_pid);
+            wakeup_helper(&pipe->nread, pipe->blocked_pid);
         }
     }
 

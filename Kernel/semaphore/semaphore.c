@@ -1,4 +1,4 @@
-#include <semaphore/semaphore.h>
+#include "../include/semaphore/semaphore.h"
 #include <scheduler.h>
 #include <pmm.h>
 #include <linked_list.h>
@@ -86,7 +86,7 @@ int sem_wait(sem_ptr sem) {
         process_t *current_process = get_current_process();
         add(sem->blocked_processes, &current_process->pid);
         release(&sem->lock);
-        sleep((uint64_t)sem);
+        sleep(sem);
     }
     release(&sem->lock);
     return SUCCESS;
@@ -99,7 +99,7 @@ int sem_post(sem_ptr sem) {
         return ERROR;
     }
     sem->value++;
-    int pid = wakeup((uint64_t)sem);
+    int pid = wakeup(sem);
     if (pid != ERROR){
         remove(sem->blocked_processes, &pid);
         release(&sem->lock);

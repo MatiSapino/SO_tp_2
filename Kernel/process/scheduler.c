@@ -20,8 +20,8 @@ static int priority_timer_tick = 0;
 
 static void remove_process(int pid);
 
-int search_by_status(void *process, pstatus_t status) {
-    return ((process_t *)process)->status == status;
+int search_by_status(void *process, void *status) {
+    return ((process_t *)process)->status == *((pstatus_t *)status);
 }
 
 static int search_by_channel(void *process, void *channel) {
@@ -50,7 +50,7 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
 
     while (true) {
         if (pid >= 0) {
-            target_child = find(children_list, pid, search_by_pid);
+            target_child = find(children_list, &pid, NULL);
 
             if (target_child != NULL && target_child->status == TERMINATED) {
                 if (status_ptr != NULL)
@@ -59,7 +59,8 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
                 return target_child->pid;
             }
         } else {
-            target_child = find(children_list, TERMINATED, search_by_status);
+            int terminated = TERMINATED;
+            target_child = find(children_list, &terminated, search_by_status);
 
             if (target_child != NULL) {
                 if (status_ptr != NULL)
@@ -69,17 +70,17 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
             }
         }
 
-        sleep((uint64_t)current_process);
+        sleep(current_process);
     }
 }
 
-void sleep(uint64_t channel) {
+void sleep(void * channel) {
     current_process->channel = channel;
     current_process->status = WAITING;
     _force_schedule();
 }
 
-int wakeup(uint64_t channel) {
+int wakeup(void * channel) {
     process_t *target = cl_find(process_list, channel, search_by_channel);
     if (target == NULL)
         return PID_ERR;
@@ -120,7 +121,7 @@ static void remove_children(process_t *process) {
 }
 
 static void remove_process(int pid) {
-    process_t *target = cl_remove(process_list, pid);
+    process_t *target = cl_remove(process_list, &pid);
     if (target == NULL)
         return;
 
@@ -128,7 +129,7 @@ static void remove_process(int pid) {
         foreground_process = NULL;
 
     // remove process from parent's children list
-    remove(target->parent->children, pid);
+    remove(target->parent->children, &pid);
     free_process(target);
 }
 
@@ -140,7 +141,7 @@ void exit_process(int status) {
     current_process->dataDescriptors[1] = NULL;
 
     remove_children(current_process);
-    wakeup((uint64_t)current_process->parent);
+    wakeup(current_process->parent);
 
     // leave process as terminated. Parent will clean it up on wait
     current_process->status = TERMINATED;
@@ -150,7 +151,7 @@ void exit_process(int status) {
 }
 
 int kill_process(int pid) {
-    process_t *target = cl_find(process_list, pid, search_by_pid);
+    process_t *target = cl_find(process_list, &pid, search_by_pid);
     if (target == NULL)
         return PID_ERR;
 
@@ -158,7 +159,7 @@ int kill_process(int pid) {
     close_dataDescriptor(target->dataDescriptors[1]);
 
     remove_children(target);
-    wakeup((uint64_t)target->parent);
+    wakeup(target->parent);
 
     // leave process as terminated. Parent will clean it up on wait
     target->status = TERMINATED;
@@ -174,11 +175,11 @@ process_t *get_current_process() {
 }
 
 process_t *get_process(pid_t pid) {
-    return cl_find(process_list, pid, search_by_pid);
+    return cl_find(process_list, &pid, search_by_pid);
 }
 
 void set_foreground_process(int pid) {
-    process_t *found = cl_find(process_list, pid, search_by_pid);
+    process_t *found = cl_find(process_list, &pid, search_by_pid);
     if (found == NULL)
         return;
 
@@ -193,8 +194,7 @@ process_t *get_foreground_process() {
 }
 
 int get_process_table(process_table_t *table) {
-    circular_list_iterator_t *iterator =
-        new_circular_list_iterator(process_list);
+    circular_list_iterator_t iterator = new_circular_list_iterator(process_list);
 
     int row = 0;
     cl_subscribe_iterator(process_list, iterator);

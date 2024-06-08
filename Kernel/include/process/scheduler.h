@@ -37,10 +37,10 @@ process_t *get_current_process();
 process_t *get_process(pid_t pid);
 process_t *get_foreground_process();
 void set_foreground_process(int pid);
-void sleep(uint64_t channel);
-int wakeup(uint64_t channel);
+void sleep(void * channel);
+int wakeup(void * channel);
 void init_scheduler();
 int get_process_table(process_table_t *table);
-int search_by_status(void *process, pstatus_t status);
+int search_by_status(void *process, void *status);
 
 #endif

@@ -31,7 +31,7 @@ typedef struct list_t {
                                           // list and be notified with changes
 } list_t;
 
-list_t *new_circular_linked_list(int (*comp_funct)(void *, pid_t)) {
+list_t *new_circular_linked_list(int (*comp_funct)(void *, void *)) {
     list_t *new_list = kmalloc(sizeof(list_t));
     new_list->start = NULL;
     new_list->end = NULL;
@@ -158,8 +158,8 @@ void cl_free_list(circular_list_t list) {
     kfree(list);
 }
 
-iterator_t *new_circular_list_iterator(list_t *l) {
-    iterator_t *new_iterator = kmalloc(sizeof(iterator_t));
+circular_list_iterator_t new_circular_list_iterator(list_t *l) {
+    circular_list_iterator_t new_iterator = kmalloc(sizeof(iterator_t));
     new_iterator->start = l->start;
     new_iterator->current = l->start;
     new_iterator->end = l->end;
@@ -171,14 +171,14 @@ void cl_free_iterator(iterator_t *i) {
     kfree(i);
 }
 
-void cl_to_begin(list_t *l, iterator_t *i) {
+void cl_to_begin(list_t *l, circular_list_iterator_t i) {
     i->start = l->start;
     i->current = l->start;
     i->end = l->end;
     i->visited = 0;
 }
 
-int cl_has_next(iterator_t *i) {
+int cl_has_next(circular_list_iterator_t i) {
     if (i->current == i->start && i->visited) {
         return 0;
     }

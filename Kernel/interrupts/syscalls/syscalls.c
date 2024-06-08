@@ -11,6 +11,7 @@
 #include <syscalls.h>
 #include <time.h>
 #include <video.h>
+#include <videoDriver.h>
 
 #define ADDRESS_LIMIT 0xFFFFFFFF
 
@@ -54,9 +55,11 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
             while (i < count) {
                 c = buffer[i];
                 if (c == '\n') {
-                    gprint_new_line(gc);
+                    newline();
+                    // gprint_new_line(gc);                     esto es modo texto
                 } else {
-                    gprint_char(c, gc);
+                    character(GREEN, c);
+                    // gprint_char(c, gc);                      esto es modo texto
                 }
                 i++;
             }
@@ -112,7 +115,8 @@ int16_t sys_read(int fd, char *buffer, uint16_t count)
 
 
 void sys_clear_screen() {
-    clear_screen();
+    // clear_screen();                                           esto es modo texto
+    clearScreen();
 }
 
 void sys_exit(int status)
@@ -139,7 +143,8 @@ void sys_delete_char() {
     process_t *current_process = get_current_process();
     context_id_t gc = current_process->g_context;
 
-    gdelete_char(gc);
+    // gdelete_char(gc);
+    
 }
 
 int sys_kill(int pid) {

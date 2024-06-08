@@ -20,5 +20,6 @@ size_t strlen(const char *str);
 char *strcat(char *destination, const char *source);
 int strcmp(const char *str1, const char *str2);
 char *strcpy(char *dest, const char *src);
+uint32_t uintToBase(uint64_t value, char *buffer, uint32_t base);
 
 #endif

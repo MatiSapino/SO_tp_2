@@ -132,7 +132,10 @@ void receptionist(){
         case 'r':
             remove_phylo();
             break;
-
+        case 'Q':
+        case 'q':
+            // FALTA QUE SE TERMINE EL PROCESO
+            break;
         default:
             break;
         }

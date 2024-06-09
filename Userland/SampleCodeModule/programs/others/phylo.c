@@ -1,5 +1,5 @@
 #include <phylo.h>
-#include <semaphore.h>
+#include <userland_semaphore.h>
 #include <std_io.h>
 #include <std_lib.h>
 #include <string_s.h>

@@ -1,7 +1,7 @@
 #include <testPipe.h>
 #include <infoPipe.h>
-#include <pipe.h>
-#include <semaphore.h>
+#include <userland_pipe.h>
+#include <userland_semaphore.h>
 #include <std_io.h>
 #include <ipc.h>
 

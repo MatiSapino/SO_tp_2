@@ -9,8 +9,8 @@
 #include <ipc.h>
 #include <kill.h>
 #include <mem.h>
-#include <pipe.h>
-#include <semaphore.h>
+#include <userland_pipe.h>
+#include <userland_semaphore.h>
 #include <stdbool.h>
 #include <std_io.h>
 #include <string_s.h>
@@ -30,7 +30,6 @@
 #include <testsync.h>
 #include <time.h>
 #include <welcome.h>
-#include "../../include/library/semaphore/semaphore.h"
 
 #define LINE_LENGTH    512
 #define TOKEN_LENGTH   512

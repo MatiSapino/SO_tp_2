@@ -1,5 +1,5 @@
-#ifndef _PIPE_H_
-#define _PIPE_H_
+#ifndef _USERLAND_PIPE_H_
+#define _USERLAND_PIPE_H_
 
 typedef struct pipe_info{
     char * name;

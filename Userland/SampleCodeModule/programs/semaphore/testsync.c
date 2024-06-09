@@ -1,5 +1,5 @@
 #include <testsync.h>
-#include <semaphore.h>
+#include <userland_semaphore.h>
 #include <std_io.h>
 #include <testUtil.h>
 

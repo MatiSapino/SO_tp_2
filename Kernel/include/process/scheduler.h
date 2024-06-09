@@ -14,7 +14,7 @@ typedef struct process_entry {
     char name[MAX_NAME_LENGTH];
     int priority;
     void *stack;
-    void *rbp;
+    uint64_t rbp;
     int children_count;
     char parent_name[MAX_NAME_LENGTH];
     int status;

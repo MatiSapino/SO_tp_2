@@ -135,7 +135,7 @@ void split_screen_distribution() {
 
 void full_screen_distribution() {
     allocated_windows_count = 0;
-    current_distribution = FULL;
+    current_distribution = FULL_DISTRIBUTION;
 
     area_t screen = {MAX_COLS, MAX_ROWS - 2, 0, 1};
     screen = create_window(screen);

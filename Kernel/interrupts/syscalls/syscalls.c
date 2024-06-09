@@ -9,7 +9,7 @@
 #include <scheduler.h>
 #include <syscalls.h>
 #include <timer.h>
-#include <video.h> 
+#include <my_video.h>
 #include <videoDriver.h>
 
 #define ADDRESS_LIMIT 0xFFFFFFFF

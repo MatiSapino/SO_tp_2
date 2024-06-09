@@ -4,9 +4,6 @@
 #include <graphics.h>
 #include <lib/dataDescriptor.h>
 #include <linked_list.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
 
 #define LOWEST   1
 #define MEDIUM   5

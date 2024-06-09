@@ -2,8 +2,6 @@
 #define _SCHEDULER_H_
 
 #include <process.h>
-#include <stdbool.h>
-#include <stdint.h>
 
 #define MAX_PROC_COUNT         256
 #define MAX_NAME_LENGTH        10

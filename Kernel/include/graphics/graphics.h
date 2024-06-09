@@ -3,7 +3,7 @@
 
 #include <lib.h>
 #include <rtc.h>
-#include <video.h>
+#include "../drivers/my_video.h"
 
 #define LEFT_TOP_CORNER     0xDA
 #define RIGHT_TOP_CORNER    0xBF

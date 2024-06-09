@@ -1,4 +1,4 @@
-#include <video.h>
+#include <my_video.h>  
 
 #define VIDEO_ADDRESS                 0xB8000
 

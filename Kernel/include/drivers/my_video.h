@@ -1,7 +1,7 @@
-#ifndef _VIDEO_H
-#define _VIDEO_H
+#ifndef _MY_VIDEO_H
+#define _MY_VIDEO_H
 
-#include <lib.h>
+#include <lib.h>  
 #include <stdint.h>
 #include <stdlib.h>
 

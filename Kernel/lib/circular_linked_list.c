@@ -1,42 +1,12 @@
 #include <circular_linked_list.h>
 #include <stdlib.h>
 
-
-#define ERROR         -1
-#define SUCCESS       0
-#define MAX_ITERATORS 2
-
-
-typedef struct node_list_t *node_list_ptr;
-typedef struct node_list_t {
-    void *data;
-    struct node_list_t *next;
-} node_list_t;
-
-typedef struct iterator_t {
-    struct node_list_t *start;
-    struct node_list_t *end;
-    struct node_list_t *current;
-    int visited;
-} iterator_t;
-
-typedef struct list_t {
-    struct node_list_t *start;
-    struct node_list_t *end;
-    struct node_list_t *current;
-    int (*comp_funct)(void *, void *); // function that will compare node->data
-                                       // with argument "data" for deletion
-    int size;
-    iterator_t *iterators[MAX_ITERATORS]; // one iterator can subscribe to the
-                                          // list and be notified with changes
-} list_t;
-
-list_t *new_circular_linked_list(int (*comp_funct)(void *, void *)) {
-    list_t *new_list = kmalloc(sizeof(list_t));
+circular_list_ptr new_circular_linked_list(int (*comp_funct)(void *, void *)) {
+    circular_list_ptr new_list = (circular_list_ptr)kmalloc(sizeof(list_t));
     new_list->start = NULL;
     new_list->end = NULL;
     new_list->current = NULL;
-    new_list->comp_funct = comp_funct;
+    new_list->comp_funct = comp_funct; 
     new_list->size = 0;
 
     for (size_t i = 0; i < MAX_ITERATORS; i++) {
@@ -46,19 +16,19 @@ list_t *new_circular_linked_list(int (*comp_funct)(void *, void *)) {
     return new_list;
 }
 
-static node_list_t *create_node(void *data) {
-    node_list_t *new_node = (node_list_t *)kmalloc(sizeof(node_list_t));
+static node_ptr create_node(void *data) {
+    node_ptr new_node = (node_ptr)kmalloc(sizeof(node_t));
     new_node->data = data;
     new_node->next = NULL;
     return new_node;
 }
 
-int cl_size(list_t *l) {
+int cl_size(list_ptr l) {
     return l->size;
 }
 
-void cl_add(list_t *list, void *data) {
-    node_list_t *new_node = create_node(data);
+void cl_add(list_ptr list, void *data) {
+    node_ptr new_node = create_node(data);
 
     if (list->start == NULL) {
         list->start = new_node;
@@ -83,8 +53,8 @@ void cl_add(list_t *list, void *data) {
     list->size++;
 }
 
-static node_list_t *find_node_before(list_t *list, void *data) {
-    node_list_t *aux_node = list->start;
+static node_ptr find_node_before(list_ptr list, void *data) {
+    node_ptr aux_node = list->start;
 
     do {
         if (list->comp_funct(aux_node->next->data, data))
@@ -96,13 +66,13 @@ static node_list_t *find_node_before(list_t *list, void *data) {
     return NULL;
 }
 
-void *cl_remove(list_t *list, void *data) {
-    node_list_t *node_before_target = find_node_before(list, data);
+void *cl_remove(list_ptr list, void *data) {
+    node_ptr node_before_target = find_node_before(list, data);
 
     if (node_before_target == NULL)
         return NULL;
 
-    node_list_t *target_node = node_before_target->next;
+    node_ptr target_node = node_before_target->next;
 
     node_before_target->next = target_node->next;
 
@@ -114,7 +84,7 @@ void *cl_remove(list_t *list, void *data) {
 
     // Notify subscribed iterators
     for (size_t i = 0; i < MAX_ITERATORS; i++) {
-        iterator_t *iterator = list->iterators[i];
+        iterator_ptr iterator = list->iterators[i];
         if (iterator != NULL) {
             iterator->start = list->start;
             iterator->end = list->end;
@@ -129,14 +99,14 @@ void *cl_remove(list_t *list, void *data) {
     return target_node->data;
 }
 
-void *cl_find(list_t *list, void *data, int (*comp_funct)(void *, void *)) {
+void *cl_find(list_ptr list, void *data, int (*comp_funct)(void *, void *)) {
     int (*funct)(void *, void *);
     if (comp_funct == NULL) {
         funct = list->comp_funct;
     } else {
         funct = comp_funct;
     }
-    node_list_t *node = list->start;
+    node_ptr node = list->start;
     do {
         if (funct(node->data, data))
             return node->data;
@@ -146,9 +116,9 @@ void *cl_find(list_t *list, void *data, int (*comp_funct)(void *, void *)) {
     return NULL;
 }
 
-void cl_free_list(circular_list_t list) {
-    node_list_ptr node = list->start;
-    node_list_ptr tmp;
+void cl_free_list(circular_list_ptr list) {
+    node_ptr node = list->start;
+    node_ptr tmp;
     do {
         tmp = node;
         node = node->next;
@@ -158,8 +128,8 @@ void cl_free_list(circular_list_t list) {
     kfree(list);
 }
 
-circular_list_iterator_t new_circular_list_iterator(list_t *l) {
-    circular_list_iterator_t new_iterator = kmalloc(sizeof(iterator_t));
+circular_list_iterator_ptr new_circular_list_iterator(list_ptr l) {
+    circular_list_iterator_ptr new_iterator = (circular_list_iterator_ptr)kmalloc(sizeof(iterator_t));
     new_iterator->start = l->start;
     new_iterator->current = l->start;
     new_iterator->end = l->end;
@@ -167,18 +137,18 @@ circular_list_iterator_t new_circular_list_iterator(list_t *l) {
     return new_iterator;
 }
 
-void cl_free_iterator(iterator_t *i) {
+void cl_free_iterator(iterator_ptr i) {
     kfree(i);
 }
 
-void cl_to_begin(list_t *l, circular_list_iterator_t i) {
+void cl_to_begin(list_ptr l, circular_list_iterator_ptr i) {
     i->start = l->start;
     i->current = l->start;
     i->end = l->end;
     i->visited = 0;
 }
 
-int cl_has_next(circular_list_iterator_t i) {
+int cl_has_next(circular_list_iterator_ptr i) {
     if (i->current == i->start && i->visited) {
         return 0;
     }
@@ -186,20 +156,20 @@ int cl_has_next(circular_list_iterator_t i) {
     return 1;
 }
 
-void *cl_next(iterator_t *i) {
+void *cl_next(iterator_ptr i) {
     void *data = i->current->data;
     i->current = i->current->next;
     return data;
 }
 
-void cl_subscribe_iterator(list_t *l, iterator_t *iterator) {
+void cl_subscribe_iterator(list_ptr l, iterator_ptr iterator) {
     for (size_t i = 0; i < MAX_ITERATORS; i++) {
         if (l->iterators[i] == NULL)
             l->iterators[i] = iterator;
     }
 }
 
-void cl_unsubscribe_iterator(list_t *l, iterator_t *iterator) {
+void cl_unsubscribe_iterator(list_ptr l, iterator_ptr iterator) {
     for (size_t i = 0; i < MAX_ITERATORS; i++) {
         if (l->iterators[i] == iterator) {
             l->iterators[i] = NULL;

@@ -7,10 +7,9 @@
 #include "../../include/process/process.h"
 #include <registers.h>
 #include <scheduler.h>
-#include <semaphore/semaphore.h>
 #include <syscalls.h>
-#include <time.h>
-#include <video.h>
+#include <timer.h>
+#include <video.h> 
 #include <videoDriver.h>
 
 #define ADDRESS_LIMIT 0xFFFFFFFF
@@ -27,10 +26,10 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
 
     process_t *current_process = get_current_process();
 
-    if (fd >= current_process->dataD_index)
+    if (fd >= current_process->data_d_index)
         return -2;
 
-    dataDescriptor_t dataD = current_process->dataDescriptors[fd];
+    data_descriptor_ptr dataD = current_process->data_descriptors[fd];
 
     if(dataD == NULL)
         return -2;
@@ -38,7 +37,7 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
     if (getMode_dataDescriptor(dataD) != WRITE_MODE)
         return -1;
 
-    pipe_t pipe;
+    pipe_ptr pipe;
     uint16_t i;
     char c;
 
@@ -72,17 +71,17 @@ int16_t sys_read(int fd, char *buffer, uint16_t count)
 
     process_t *current_process = get_current_process();
 
-    if (fd >= current_process->dataD_index)
+    if (fd >= current_process->data_d_index)
         return -2;
 
-    dataDescriptor_t dataD = current_process->dataDescriptors[fd];
+    data_descriptor_ptr dataD = current_process->data_descriptors[fd];
     if(dataD == NULL)
         return -2;
 
     if (getMode_dataDescriptor(dataD) != READ_MODE)
         return -2;
 
-    pipe_t pipe;
+    pipe_ptr pipe;
     uint16_t i;
     char aux[BUFFER_SIZE];
 
@@ -234,10 +233,10 @@ int sys_sem_post(sem_ptr sem) {
 
 void sys_close(unsigned int fd) {
     process_t *process = get_current_process();
-    if (fd >= process->dataD_index)
+    if (fd >= process->data_d_index)
         return;
-    close_dataDescriptor(process->dataDescriptors[fd]);
-    process->dataDescriptors[fd] = NULL;
+    close_dataDescriptor(process->data_descriptors[fd]);
+    process->data_descriptors[fd] = NULL;
 }
 
 int sys_create_pipe(char *name, int fd[2]) {
@@ -252,11 +251,11 @@ int sys_sem_close(sem_ptr sem) {
     return sem_close(sem);
 }
 
-int sys_info_pipe(char *name, pipe_info_t *info) {
+int sys_info_pipe(char *name, pipe_info_ptr info) {
     return info_pipe(name, info);
 }
 
-int sys_info_all_pipes(pipe_info_t *info[], unsigned int size) {
+int sys_info_all_pipes(pipe_info_ptr info[], unsigned int size) {
     return info_all_pipes(info, size);
 }
 

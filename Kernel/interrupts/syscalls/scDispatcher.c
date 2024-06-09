@@ -2,6 +2,7 @@
 #include <naiveConsole.h>
 #include <syscalls.h>
 #include <videoDriver.h>
+#include <scheduler.h>
 
 int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
                          uint64_t arg3, uint64_t arg4, uint64_t arg5,
@@ -73,9 +74,9 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 	case 26:
 		return sys_sem_close((sem_ptr)arg0);
 	case 27:
-		return sys_info_pipe((char *)arg0, (pipe_info_t *)arg1);
+		return sys_info_pipe((char *)arg0, (pipe_info_ptr)arg1);
 	case 28:
-		return sys_info_all_pipes((pipe_info_t **)arg0, (unsigned int)arg1);
+		return sys_info_all_pipes((pipe_info_ptr *)arg0, (unsigned int)arg1);
 	case 29:
 		return sys_get_semaphores((copy_sem_t **)arg0);
 	case 30:
@@ -91,7 +92,7 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 		sys_setfg((int)arg0);
 		break;
 	case 35:
-		sys_proctable((process_table_t *)arg0);
+		sys_proctable((process_table_ptr)arg0);
 		break;
 	case 36:
 		return sys_getpid();

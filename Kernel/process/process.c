@@ -14,7 +14,7 @@ static void start(function_t function, int argc, char *argv[]) {
 }
 
 int search_by_pid(void *process, void *pid) {
-    return ((process_t *)process)->pid == *((pid_t *)pid);
+    return ((process_ptr)process)->pid == *((pid_t *)pid);
 }
 
 static char **get_argv_copy(int argc, char *argv[]) {
@@ -30,11 +30,8 @@ static char **get_argv_copy(int argc, char *argv[]) {
     return argv_copy;
 }
 
-static context_t *get_init_context(process_t *process, function_t main,
-                                   int argc, char *argv[]) {
-    context_t *context =
-        (context_t *)((uint64_t)process + K_PROCESS_STACK_SIZE -
-                      sizeof(context_t));
+static context_ptr get_init_context(process_ptr process, function_t main, int argc, char *argv[]) {
+    context_ptr context = (context_ptr)((uint64_t)process + K_PROCESS_STACK_SIZE - sizeof(context_t));
 
     context->rdi = (uint64_t)main;
     context->rsi = (uint64_t)argc;
@@ -50,8 +47,8 @@ static context_t *get_init_context(process_t *process, function_t main,
     return context;
 }
 
-process_t *new_process(function_t main, int argc, char *argv[]) {
-    process_t *process = (process_t *)kmalloc(sizeof(process_t));
+process_ptr new_process(function_t main, int argc, char *argv[]) {
+    process_ptr process = (process_ptr) kmalloc(sizeof(process_t));
     if (process == NULL)
         return NULL;
 
@@ -73,12 +70,12 @@ process_t *new_process(function_t main, int argc, char *argv[]) {
     process->g_context = get_context_id();
 
     /* Creates stdin in dataDescriptor 0*/
-    process->dataDescriptors[0] = create_dataDescriptor(STD_T, READ_MODE);
+    process->data_descriptors[0] = create_dataDescriptor(STD_T, READ_MODE);
 
     /* Creates stdout in dataDescriptor 0*/
-    process->dataDescriptors[1] = create_dataDescriptor(STD_T, WRITE_MODE);
+    process->data_descriptors[1] = create_dataDescriptor(STD_T, WRITE_MODE);
 
-    process->dataD_index = 2;
+    process->data_d_index = 2;
 
     return process;
 }

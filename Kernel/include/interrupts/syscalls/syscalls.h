@@ -5,6 +5,8 @@
 #include <rtc.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <pipe.h>
+#include <./include/semaphore/semaphore.h>
 
 #define ERROR   -1
 #define SUCCESS 0
@@ -14,11 +16,6 @@ enum STD {
     STDOUT,
     STDERR
 };
-
-typedef struct sem *sem_ptr;
-typedef struct copy_sem copy_sem_t;
-typedef struct pipe_info pipe_info_t;
-typedef struct process_table process_table_t;
 
 int16_t sys_read(int fd, char *buffer, uint16_t count);
 int16_t sys_write(int fd, char *buffer, uint16_t count);
@@ -50,8 +47,8 @@ void sys_free(void *ptr);
 void sys_close(unsigned int fd);
 int sys_create_pipe(char *name, int fd[2]);
 int sys_open_pipe(char *name, int fd[2]);
-int sys_info_pipe(char *name, pipe_info_t *info);
-int sys_info_all_pipes(pipe_info_t *info[], unsigned int size);
+int sys_info_pipe(char *name, pipe_info_ptr info);
+int sys_info_all_pipes(pipe_info_ptr info[], unsigned int size);
 int sys_dup2(unsigned int oldfd, unsigned int newfd);
 void sys_setfg(int pid);
 int sys_getpid();

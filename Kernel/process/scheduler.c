@@ -10,23 +10,23 @@
 #define PID_ERR        -1
 #define MAX_TERM_COUNT 2
 
-static circular_list_t process_list;
-static circular_list_iterator_t rr_iterator;
+static circular_list_ptr process_list;
+static circular_list_iterator_ptr rr_iterator;
 
-static process_t *current_process;
-static process_t *foreground_process;
+static process_ptr current_process;
+static process_ptr foreground_process;
 
 static int priority_timer_tick = 0;
 
 static void remove_process(int pid);
 
 int search_by_status(void *process, void *status) {
-    return ((process_t *)process)->status == *((pstatus_t *)status);
+    return ((process_ptr)process)->status == *((pstatus_ptr)status);
 }
 
 static int search_by_channel(void *process, void *channel) {
-    return ((process_t *)process)->status == WAITING &&
-           ((process_t *)process)->channel == channel;
+    return ((process_ptr)process)->status == WAITING &&
+           ((process_ptr)process)->channel == channel;
 }
 
 void init_scheduler() {
@@ -46,7 +46,7 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
         return PID_ERR;
 
     list_ptr children_list = current_process->children;
-    process_t *target_child = NULL;
+    process_ptr target_child = NULL;
 
     while (true) {
         if (pid >= 0) {
@@ -81,7 +81,7 @@ void sleep(void * channel) {
 }
 
 int wakeup(void * channel) {
-    process_t *target = cl_find(process_list, channel, search_by_channel);
+    process_ptr target = cl_find(process_list, channel, search_by_channel);
     if (target == NULL)
         return PID_ERR;
 
@@ -95,7 +95,7 @@ int add_process(function_t main, int argc, char *argv[]) {
     if (process_count() >= MAX_PROC_COUNT)
         return PID_ERR;
 
-    process_t *process = new_process(main, argc, argv);
+    process_ptr process = new_process(main, argc, argv);
     if (process == NULL)
         return PID_ERR;
 
@@ -109,19 +109,19 @@ int add_process(function_t main, int argc, char *argv[]) {
     return process->pid;
 }
 
-static void remove_children(process_t *process) {
+static void remove_children(process_ptr process) {
     if (size(process->children) == 0)
         return;
 
     to_begin(process->children);
     while (hasNext(process->children)) {
-        process_t *child = next(process->children);
+        process_ptr child = next(process->children);
         remove_process(child->pid);
     }
 }
 
 static void remove_process(int pid) {
-    process_t *target = cl_remove(process_list, &pid);
+    process_ptr target = cl_remove(process_list, &pid);
     if (target == NULL)
         return;
 
@@ -134,11 +134,11 @@ static void remove_process(int pid) {
 }
 
 void exit_process(int status) {
-    close_dataDescriptor(current_process->dataDescriptors[0]);
-    close_dataDescriptor(current_process->dataDescriptors[1]);
+    close_dataDescriptor(current_process->data_descriptors[0]);
+    close_dataDescriptor(current_process->data_descriptors[1]);
 
-    current_process->dataDescriptors[0] = NULL;
-    current_process->dataDescriptors[1] = NULL;
+    current_process->data_descriptors[0] = NULL;
+    current_process->data_descriptors[1] = NULL;
 
     remove_children(current_process);
     wakeup(current_process->parent);
@@ -151,12 +151,12 @@ void exit_process(int status) {
 }
 
 int kill_process(int pid) {
-    process_t *target = cl_find(process_list, &pid, search_by_pid);
+    process_ptr target = cl_find(process_list, &pid, search_by_pid);
     if (target == NULL)
         return PID_ERR;
 
-    close_dataDescriptor(target->dataDescriptors[0]);
-    close_dataDescriptor(target->dataDescriptors[1]);
+    close_dataDescriptor(target->data_descriptors[0]);
+    close_dataDescriptor(target->data_descriptors[1]);
 
     remove_children(target);
     wakeup(target->parent);
@@ -170,16 +170,16 @@ int kill_process(int pid) {
     return pid;
 }
 
-process_t *get_current_process() {
+process_ptr get_current_process() {
     return current_process;
 }
 
-process_t *get_process(pid_t pid) {
+process_ptr get_process(pid_t pid) {
     return cl_find(process_list, &pid, search_by_pid);
 }
 
 void set_foreground_process(int pid) {
-    process_t *found = cl_find(process_list, &pid, search_by_pid);
+    process_ptr found = cl_find(process_list, &pid, search_by_pid);
     if (found == NULL)
         return;
 
@@ -189,12 +189,12 @@ void set_foreground_process(int pid) {
     foreground_process->priority = HIGHEST;
 }
 
-process_t *get_foreground_process() {
+process_ptr get_foreground_process() {
     return foreground_process;
 }
 
 int get_process_table(process_table_t *table) {
-    circular_list_iterator_t iterator = new_circular_list_iterator(process_list);
+    circular_list_iterator_ptr iterator = new_circular_list_iterator(process_list);
 
     int row = 0;
     cl_subscribe_iterator(process_list, iterator);
@@ -226,7 +226,7 @@ int get_process_table(process_table_t *table) {
     return row;
 }
 
-context_t *schedule(context_t *rsp) {
+context_ptr schedule(context_t *rsp) {
     if (process_count() == 0)
         return rsp;
 

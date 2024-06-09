@@ -3,19 +3,13 @@
 #include <pmm.h>
 #include <scheduler.h>
 
-typedef struct dataDescriptor {
-    DATA_TYPE type;
-    mode_t mode;
-    pipe_t pipe;
-} dataDescriptor;
-
-dataDescriptor_t create_dataDescriptor(DATA_TYPE type, mode_t mode) {
+data_descriptor_ptr create_dataDescriptor(DATA_TYPE type, mode_t mode) {
 
     if (!((mode == READ_MODE || mode == WRITE_MODE) &&
           (type == PIPE_T || type == STD_T)))
         return NULL;
 
-    dataDescriptor_t newDataD = kmalloc(sizeof(dataDescriptor));
+    data_descriptor_ptr newDataD = kmalloc(sizeof(data_descriptor_t));
 
     if (newDataD != NULL) {
         newDataD->type = type;
@@ -26,33 +20,33 @@ dataDescriptor_t create_dataDescriptor(DATA_TYPE type, mode_t mode) {
     return newDataD;
 }
 
-DATA_TYPE getDataType_dataDescriptor(dataDescriptor_t dataD) {
+DATA_TYPE getDataType_dataDescriptor(data_descriptor_ptr dataD) {
     if (dataD == NULL)
         return -1;
 
     return dataD->type;
 }
 
-mode_t getMode_dataDescriptor(dataDescriptor_t dataD) {
+mode_t getMode_dataDescriptor(data_descriptor_ptr dataD) {
     return dataD->mode;
 }
 
-pipe_t getPipe_dataDescriptor(dataDescriptor_t dataD) {
+pipe_ptr getPipe_dataDescriptor(data_descriptor_ptr dataD) {
     if (dataD == NULL || dataD->type != PIPE_T)
         return NULL;
 
     return dataD->pipe;
 }
 
-int setPipe_dataDescriptor(dataDescriptor_t dataD, pipe_t pipe) {
+int setPipe_dataDescriptor(data_descriptor_ptr dataD, pipe_ptr pipe) {
     if (dataD != NULL && dataD->type == PIPE_T) {
         dataD->pipe = pipe;
         return 0;
-    }
+    } 
     return -1;
 }
 
-void close_dataDescriptor(dataDescriptor_t dataD) {
+void close_dataDescriptor(data_descriptor_ptr dataD) {
     if (dataD == NULL)
         return;
 
@@ -65,12 +59,12 @@ void close_dataDescriptor(dataDescriptor_t dataD) {
 int dup2(unsigned int oldfd, unsigned int newfd) {
     process_t *process = get_current_process();
 
-    if (newfd >= process->dataD_index || oldfd >= process->dataD_index)
+    if (newfd >= process->data_d_index || oldfd >= process->data_d_index)
         return -1;
 
-    dataDescriptor_t aux = process->dataDescriptors[oldfd];
-    process->dataDescriptors[oldfd] = process->dataDescriptors[newfd];
-    process->dataDescriptors[newfd] = aux;
+    data_descriptor_ptr aux = process->data_descriptors[oldfd];
+    process->data_descriptors[oldfd] = process->data_descriptors[newfd];
+    process->data_descriptors[newfd] = aux;
    
     return 0;
 }

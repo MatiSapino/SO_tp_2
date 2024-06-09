@@ -19,11 +19,14 @@ typedef struct process_entry {
     char parent_name[MAX_NAME_LENGTH];
     int status;
 } process_entry_t;
+typedef process_entry_t * process_entry_ptr;
 
 typedef struct process_table {
     process_entry_t entries[PROCESS_TABLE_MAX_SIZE];
     int count;
 } process_table_t;
+typedef process_table_t * process_table_ptr;
+
 
 pid_t wait_process(pid_t pid, int *status_ptr);
 

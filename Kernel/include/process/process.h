@@ -8,9 +8,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define LOWEST               1
-#define MEDIUM               5
-#define HIGHEST              10
+#define LOWEST   1
+#define MEDIUM   5
+#define HIGHEST  10
 
 #define K_PROCESS_STACK_SIZE (1024 * 4)
 
@@ -19,8 +19,7 @@ typedef enum pstatus {
     READY,
     TERMINATED,
 } pstatus_t;
-
-typedef int pid_t;
+typedef pstatus_t * pstatus_ptr;
 
 typedef struct context {
     uint64_t r15;
@@ -47,29 +46,31 @@ typedef struct context {
     uint64_t rsp;
     uint64_t ss;
 } context_t;
+typedef context_t * context_ptr;
 
-typedef struct process process_t;
 
 typedef struct process {
     uint8_t k_stack[K_PROCESS_STACK_SIZE];
-    context_t *context;
+    context_ptr context;
     pid_t pid;
     pstatus_t status;
-    process_t *parent;
+    process_ptr parent;
     context_id_t g_context;
-    dataDescriptor_t dataDescriptors[128];
-    size_t dataD_index;
-    void *channel;
+    data_descriptor_ptr data_descriptors[128];
+    size_t data_d_index;
+    void * channel;
     list_ptr children;
     int exit_status;
     int priority;
     char **argv;
     int argc;
 } process_t;
+typedef process_t * process_ptr;
+
 
 typedef int (*function_t)(int, char *[]);
 
-process_t *new_process(function_t main, int argc, char *argv[]);
+process_ptr new_process(function_t main, int argc, char *argv[]);
 void free_process(process_t *process);
 int search_by_pid(void *process, void *pid);
 

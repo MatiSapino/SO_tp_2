@@ -7,31 +7,14 @@
 #define ERROR -1
 #define SUCCESS 0
 
-typedef struct sem
-{
-    char name[40];
-    int value;
-    int lock;
-    list_ptr blocked_processes;
-} sem_t;
-
-typedef struct copy_sem
-{
-    char name[40];
-    int value;
-    int lock;
-    int blocked_processes[];
-} copy_sem_t;
-
 static list_ptr sem_list;
 static int sem_count;
 
 extern int _xadd(int *var_ptr, int value);
 extern int _xchg(int *var_ptr, int value);
 
-static int comparison_function(void *semaphore, void *name)
-{
-    sem_t *sem_test = (sem_t *)semaphore;
+static int comparison_function(void *semaphore, void *name){
+    sem_ptr sem_test = (sem_ptr)semaphore;
     if (strcmp(sem_test->name, (char *)name) == 0)
     {
         return 1;
@@ -40,7 +23,7 @@ static int comparison_function(void *semaphore, void *name)
 }
 
 static int process_comparison_function(void * pid, void * other_pid){
-    return (*(int *)pid) == (*(int *)other_pid);
+    return (*(pid_t *)pid) == (*(pid_t *)other_pid);
 }
 
 // spinlock
@@ -53,8 +36,7 @@ static void release(int *lock) {
     _xchg(lock, 0);
 }
 
-void init_sem_list()
-{
+void init_sem_list(){
     sem_list = new_linked_list(comparison_function);
 }
 
@@ -83,7 +65,7 @@ int sem_wait(sem_ptr sem) {
     if (sem->value < 0)
     {
         //TODO: check
-        process_t *current_process = get_current_process();
+        process_ptr current_process = get_current_process();
         add(sem->blocked_processes, &current_process->pid);
         release(&sem->lock);
         sleep(sem);
@@ -129,7 +111,7 @@ static int get_blocked_processes(sem_t sem, int blocked_processes[]){
     return i;
 }
 
-int get_semaphores(copy_sem_t * sems[]){
+int get_semaphores(copy_sem_ptr sems[]){
     int i=0;
     to_begin(sem_list);
     while (hasNext(sem_list)){

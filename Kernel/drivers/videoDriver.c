@@ -236,6 +236,7 @@ void character(uint64_t hexColor, char c){
         if (cursorY >= getMaxHeight()){ 
             moveOneLineUp();
         }
+        
         drawChar(hexColor, c);
         cursorX += font_size*8;
         if (cursorX >= getMaxWidth()) {

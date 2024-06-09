@@ -2,7 +2,6 @@
 #include <font.h>
 #include <naiveConsole.h>
 #include <lib.h>
-#include <keyboard_buffer.h>
 
 unsigned int SCREEN_WIDTH = 1024;
 unsigned int SCREEN_HEIGHT = 768;
@@ -258,23 +257,6 @@ void drawRegisters(int value){
      newline();
 }
 
-void changeSize(double new_size){
-    cleanBuffer();
-    if ((font_size + new_size) == 0)
-        return;
-    if ((font_size + new_size) == 5)
-        return;
-    font_size += new_size; 
-}
-
-
-void setSize(int new_size){
-    cleanBuffer();
-    if(new_size > 0){
-        font_size = new_size;
-    }
-    
-}
 
 void drawCursor(){
     drawRectangle(GREEN, cursorX, cursorY, font_size*8, font_size*16);

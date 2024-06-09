@@ -90,32 +90,6 @@ void philosopher(int argc, char * argv[]){
     }
 }
 
-void remove_phylo(){
-
-    call_sem_wait(mutex);
-
-    if(phylo_count == 1){
-        call_sem_post(mutex);
-        return;
-    }
-
-    int phylo = phylo_count-1;
-
-    call_kill(pid[phylo]);
-    call_sem_close(s[phylo]);
-
-    phylo_count--;
-
-    
-    if(state[phylo] == EATING){
-        test(phylo-1);
-        test(0);
-    }
-    state[phylo] = '\0';
-
-    call_sem_post(mutex);
-}
-
 void receptionist(){
     int c;
     while((c = getchar()) != EOF){
@@ -134,7 +108,7 @@ void receptionist(){
             break;
         case 'Q':
         case 'q':
-            // FALTA QUE SE TERMINE EL PROCESO
+           // tengo que quitear
             break;
         default:
             break;
@@ -142,27 +116,7 @@ void receptionist(){
     }
 }
 
-void add_phylo(){
-
-    call_sem_wait(mutex);
-
-    if(phylo_count == MAX_PHYLO){
-        call_sem_post(mutex);
-        return;
-    }
-
-    char aux[8];
-    itoa(phylo_count,aux,10);
-    strcpy(name+10,aux);
-    s[phylo_count] = call_sem_open(name,0);
-    char * argv[1];
-    argv[0] = aux;
-    pid[phylo_count++] = call_run(philosopher,1,argv);
-
-    call_sem_post(mutex);
-}
-
-int phylo(int argc, char *argv[]){
+int phylo(int argc, char *argv[]) {
 
     mutex = call_sem_open("mutex",1);
     state_sem = call_sem_open("state_sem",1);
@@ -191,3 +145,54 @@ int phylo(int argc, char *argv[]){
 
     return 0;
 }
+
+
+
+void remove_phylo() {
+
+    call_sem_wait(mutex);
+
+    if(phylo_count == 1){
+        call_sem_post(mutex);
+        return;
+    }
+
+    int phylo = phylo_count-1;
+
+    call_kill(pid[phylo]);
+    call_sem_close(s[phylo]);
+
+    phylo_count--;
+
+    
+    if(state[phylo] == EATING){
+        test(phylo-1);
+        test(0);
+    }
+    state[phylo] = '\0';
+
+    call_sem_post(mutex);
+}
+
+
+
+void add_phylo() {
+
+    call_sem_wait(mutex);
+
+    if(phylo_count == MAX_PHYLO){
+        call_sem_post(mutex);
+        return;
+    }
+
+    char aux[8];
+    itoa(phylo_count,aux,10);
+    strcpy(name+10,aux);
+    s[phylo_count] = call_sem_open(name,0);
+    char * argv[1];
+    argv[0] = aux;
+    pid[phylo_count++] = call_run(philosopher,1,argv);
+
+    call_sem_post(mutex);
+}
+

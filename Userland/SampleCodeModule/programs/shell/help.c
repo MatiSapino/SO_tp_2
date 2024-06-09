@@ -14,7 +14,7 @@ static void help_cmds() {
     formatter("filter", "pipe", "phylo", "loop");
     formatter("printmem", "divzero", "invopcode", "welcome");
     own_printf("\nTests:\n");
-    formatter("testmm", "testprocesses", "testpriority", "testsync");
+    formatter("testmm", "testproc", "testprio", "testsync");
     own_printf("\nOperadors:\n [c1] | [c2]     Connects a pipe between [c1] and [c2] commands.\n [c1] &          Runs command [c1] on background.\n");
     own_printf("Type \"help [command]\" for information about a specific command.\n");
 }

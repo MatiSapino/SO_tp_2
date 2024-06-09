@@ -1,5 +1,7 @@
-#ifndef _SEMAPHORE_H_
-#define _SEMAPHORE_H_
+#ifndef _MY_SEM_H_
+#define _MY_SEM_H_
+
+#include <linked_list.h> 
 
 #define MAX_SEM_VALUE 5
 #define MAX_SEMAPHORES 100

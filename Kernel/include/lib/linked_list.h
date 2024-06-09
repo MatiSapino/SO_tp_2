@@ -3,9 +3,10 @@
 
 #define MAX_ITERATORS 2
 
+
 typedef struct node {
     void *data;
-    node_ptr next;
+    struct node * next;
 } node_t;
 typedef node_t * node_ptr;
 

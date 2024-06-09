@@ -1,5 +1,5 @@
 #include <lib/dataDescriptor.h>
-#include <pipe/pipe.h>
+#include <pipe.h>
 #include <pmm.h>
 #include <scheduler.h>
 

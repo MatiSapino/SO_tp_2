@@ -14,6 +14,8 @@
 
 #define K_PROCESS_STACK_SIZE (1024 * 4)
 
+typedef int pid_t;
+
 typedef enum pstatus {
     WAITING = 0,
     READY,
@@ -54,7 +56,7 @@ typedef struct process {
     context_ptr context;
     pid_t pid;
     pstatus_t status;
-    process_ptr parent;
+    struct process * parent;
     context_id_t g_context;
     data_descriptor_ptr data_descriptors[128];
     size_t data_d_index;
@@ -66,7 +68,6 @@ typedef struct process {
     int argc;
 } process_t;
 typedef process_t * process_ptr;
-
 
 typedef int (*function_t)(int, char *[]);
 

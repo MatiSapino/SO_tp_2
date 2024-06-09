@@ -10,7 +10,7 @@
 #define PROCESS_TABLE_MAX_SIZE 16
 
 typedef struct process_entry {
-    int pid;
+    pid_t pid;
     char name[MAX_NAME_LENGTH];
     int priority;
     void *stack;
@@ -32,18 +32,18 @@ pid_t wait_process(pid_t pid, int *status_ptr);
 
 extern void _force_schedule();
 
-context_t *schedule(context_t *rsp);
+context_ptr schedule(context_ptr rsp);
 int add_process(function_t main, int argc, char *argv[]);
 void exit_process(int status);
 int kill_process(pid_t pid);
-process_t *get_current_process();
-process_t *get_process(pid_t pid);
-process_t *get_foreground_process();
+process_ptr get_current_process();
+process_ptr get_process(pid_t pid);
+process_ptr get_foreground_process();
 void set_foreground_process(int pid);
 void sleep(void * channel);
 int wakeup(void * channel);
 void init_scheduler();
-int get_process_table(process_table_t *table);
+int get_process_table(process_table_ptr table);
 int search_by_status(void *process, void *status);
 
 #endif

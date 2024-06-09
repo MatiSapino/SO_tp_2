@@ -288,7 +288,7 @@ void sys_proctable(process_table_t *table) {
 }
 
 int sys_getpid() {
-    process_t *process = get_current_process();
+    process_ptr process = get_current_process();
     if (process == NULL)
         return -1;
 

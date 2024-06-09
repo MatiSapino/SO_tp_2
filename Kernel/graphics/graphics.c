@@ -1,25 +1,5 @@
 #include <graphics.h>
 
-#define LEFT_TOP_CORNER     0xDA
-#define RIGHT_TOP_CORNER    0xBF
-#define LEFT_BOTTOM_CORNER  0xC0
-#define RIGHT_BOTTOM_CORNER 0XD9
-#define HZ_LINE             0xC4
-#define VT_LINE             0xB3
-#define MIDDLE_TOP          0xC2
-#define MIDDLE_BOTTOM       0xC1
-#define SQUARE              0xFE
-
-typedef struct gcontext {
-    area_t area;
-    position_t last_cursor_pos;
-} gcontext_t;
-
-typedef enum {
-    FULL_DISTRIBUTION = 0,
-    SPLIT_DISTRIBUTION
-} distribution_t;
-
 static int allocated_windows_count = 0;
 distribution_t current_distribution = FULL_DISTRIBUTION;
 

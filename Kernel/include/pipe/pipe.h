@@ -2,7 +2,7 @@
 #define _PIPE_H_
 
 #include <stdlib.h>
-#include <circular_linked_list.h> 
+#include <linked_list.h> 
 
 
 #define PIPE_SIZE (1024)

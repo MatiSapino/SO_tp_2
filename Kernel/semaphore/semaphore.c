@@ -1,5 +1,5 @@
-#include "../include/semaphore/semaphore.h"
 #include <scheduler.h>
+#include <my_sem.h>
 #include <pmm.h>
 #include <linked_list.h>
 #include <lib.h>

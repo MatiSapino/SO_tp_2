@@ -3,7 +3,7 @@
 #include <linked_list.h>
 #include "../include/pipe/pipe.h"
 #include <pmm.h>
-#include <scheduler.h>
+#include <scheduler.h> 
 
 static list_ptr pipe_list;
 
@@ -24,8 +24,8 @@ static void wakeup_helper(void * channel, list_ptr blocked_list) {
 }
 
 static void sleep_helper(void * channel,list_ptr blocked_list){
-    process_t * process = get_current_process();
-    add(blocked_list,&process->pid);
+    process_ptr process = get_current_process();
+    add(blocked_list, &(process->pid));
     sleep(channel);
 }
 
@@ -39,7 +39,7 @@ static void set_data_descriptors(pipe_ptr pipe, int pipe_dataD[2]) {
     setPipe_dataDescriptor(writeEnd, pipe);
     pipe->writeopen++;
 
-    process_t *process = get_current_process();
+    process_ptr process = get_current_process();
     pipe_dataD[0] = process->data_d_index;
     process->data_descriptors[process->data_d_index++] = readEnd;
     pipe_dataD[1] = process->data_d_index;

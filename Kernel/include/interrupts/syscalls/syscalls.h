@@ -2,11 +2,12 @@
 #define _SYSCALLS_H_
 
 #include <registers.h>
+#include <scheduler.h>
 #include <rtc.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <pipe.h>
-#include <./include/semaphore/semaphore.h>
+#include <my_sem.h>
 
 #define ERROR   -1
 #define SUCCESS 0
@@ -53,7 +54,7 @@ int sys_dup2(unsigned int oldfd, unsigned int newfd);
 void sys_setfg(int pid);
 int sys_getpid();
 int sys_set_priority(int pid, int priority);
-void sys_proctable(process_table_t *table);
+void sys_proctable(process_table_ptr table);
 void sys_sleep(int seconds);
 void sleepms(int mseconds);
 

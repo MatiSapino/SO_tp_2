@@ -22,7 +22,11 @@ int kill(int argc, char *argv[]) {
     if (status == ERROR) {
         own_printf("kill: process does not exist\n");
         return -1;
-    } else {
+    } 
+    if(pid == 0){
+        own_printf("kill: cannot kill shell\n");
+    }
+    else {
         call_kill(pid);
     }
 

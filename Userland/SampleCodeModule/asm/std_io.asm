@@ -38,6 +38,8 @@ GLOBAL call_sleep_process
 GLOBAL call_switch_screen_mode
 GLOBAL call_new_line
 GLOBAL call_sleep_ms
+GLOBAL call_get_last_key
+GLOBAL call_clear_buffer
 
 section .text
 
@@ -127,3 +129,7 @@ call_new_line:
     call_to_handler 39
 call_sleep_ms:
     call_to_handler 40
+call_get_last_key:
+    call_to_handler 41
+call_clear_buffer:
+    call_to_handler 42

@@ -318,3 +318,7 @@ void sleepms(int mseconds) {
 	while (mseconds > ticks_elapsed() * 18 - startTime * 18)
 		_hlt();
 }
+
+char get_last_key(){
+    return kbd_get_last_key();
+}

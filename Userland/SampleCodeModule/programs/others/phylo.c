@@ -21,6 +21,8 @@ char name[32];
 int pid[MAX_PHYLO];
 int phylo_count;
 
+int quit;
+
 void philosopher(int argc, char * argv[]);
 void pick_forks(int i);
 void put_forks(int i);
@@ -30,17 +32,32 @@ int left(int i);
 int right(int i);
 void add_phylo();
 void remove_phylo();
+void exit_philosohpers();
+void initialize_phylo();
 
-int left(int i){
+void initialize_phylo() {
+    quit = 0;
+     for(int i = 0 ; i < N ; i++){
+        char aux[8];
+        itoa(i,aux,10);
+        strcpy(name+10,aux);
+        s[i] = call_sem_open(name,0);
+        char * argv[1];
+        argv[0] = aux;
+        pid[phylo_count++] = call_run(philosopher,1,argv);
+    }
+
+}
+
+int left(int i) {
     return (i + phylo_count - 1) % phylo_count;
 }
 
-int right(int i){
+int right(int i) {
     return (i + 1) % phylo_count;
 }
 
-void test(int i)
-{
+void test(int i) {
     if (state[i] == HUNGRY && state[left(i)] != EATING && state[right(i)] != EATING)
     {
         state[i] = EATING;
@@ -49,15 +66,13 @@ void test(int i)
     }
 }
 
-void printState()
-{
+void printState() {
     call_sem_wait(state_sem);
     own_printf("%s\n", state);
     call_sem_post(state_sem);
 }
 
-void pick_forks(int i)
-{
+void pick_forks(int i) {
     call_sem_wait(mutex);
     state[i] = HUNGRY;
     test(i);
@@ -65,8 +80,7 @@ void pick_forks(int i)
     call_sem_wait(s[i]);
 }
 
-void put_forks(int i)
-{
+void put_forks(int i) {
     call_sem_wait(mutex);
     state[i] = THINKING;
     test(left(i));
@@ -74,27 +88,32 @@ void put_forks(int i)
     call_sem_post(mutex);
 }
 
-void aux_sleep(){
+void aux_sleep() {
     for(int i = 0 ; i < 10000000 ; i++){
 
     }
 }
 
-void philosopher(int argc, char * argv[]){
+void philosopher(int argc, char * argv[]) {
+    quit = 0;                                       // esto va a estar al pedo despues
     int i = (int)strtol(argv[0],NULL,10);
-    while(1){
+    while(!quit){
         aux_sleep();
         pick_forks(i);
         aux_sleep();
         put_forks(i);
+        if(call_get_last_key() == 'q' || call_get_last_key() == 'Q'){
+            quit = 1;
+        }
     }
+    exit_philosohpers();
 }
 
-void receptionist(){
+void receptionist() {
     int c;
     while((c = getchar()) != EOF){
 
-        own_printf("%c\n",c);
+        // own_printf("%c\n",c);
         
         switch (c)
         {
@@ -108,7 +127,7 @@ void receptionist(){
             break;
         case 'Q':
         case 'q':
-           // tengo que quitear
+           break;
             break;
         default:
             break;
@@ -116,7 +135,7 @@ void receptionist(){
     }
 }
 
-int phylo(int argc, char *argv[]) {
+int phylo_program(int argc, char *argv[]) {
 
     mutex = call_sem_open("mutex",1);
     state_sem = call_sem_open("state_sem",1);
@@ -125,15 +144,7 @@ int phylo(int argc, char *argv[]) {
 
     phylo_count = 0;
 
-    for(int i = 0 ; i < N ; i++){
-        char aux[8];
-        itoa(i,aux,10);
-        strcpy(name+10,aux);
-        s[i] = call_sem_open(name,0);
-        char * argv[1];
-        argv[0] = aux;
-        pid[phylo_count++] = call_run(philosopher,1,argv);
-    }
+   initialize_phylo();                                  // creats first 5 philosophers
     
     call_run(receptionist,0,NULL);
 
@@ -170,6 +181,7 @@ void remove_phylo() {
         test(0);
     }
     state[phylo] = '\0';
+    own_printf("Philosopher removed\n");
 
     call_sem_post(mutex);
 }
@@ -192,7 +204,15 @@ void add_phylo() {
     char * argv[1];
     argv[0] = aux;
     pid[phylo_count++] = call_run(philosopher,1,argv);
+    own_printf("Philosopher added\n");
 
     call_sem_post(mutex);
+}
+
+void exit_philosohpers() {
+    for(int i=0; i<phylo_count; i++) {
+        remove_phylo();
+    }
+    own_printf("Exiting program\n");
 }
 

@@ -90,7 +90,7 @@ cmd_entry_t cmd_table[] = {{"help", help},
                            {"block", block},
                            {"testpipes", test_pipes},
                            {"testmm", testmm},
-                           {"phylo", phylo},
+                           {"phylo", phylo_program},
                            {"processstatus", processStatus},
                            {"kill", kill},
                            {"nice", nice},
@@ -391,7 +391,7 @@ int shell() {
         read_input(cmd_buff);
         char *input = cmd_buff;
 
-        if (cmd_buff[0] == '\0')
+        if (cmd_buff[0] == '\0')                            // if there is nothing in the buffer just go to the next iteration of the loop
             continue;
 
         int pid = -1, proc_status = -1;

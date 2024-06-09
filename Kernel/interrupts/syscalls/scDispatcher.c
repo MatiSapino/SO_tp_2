@@ -107,6 +107,10 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 	case 40:
 		sleepms((int)arg0);
 		break;
+	case 41:
+		return get_last_key();
+	case 42:
+	
 	default:
 		return 0;
 	}

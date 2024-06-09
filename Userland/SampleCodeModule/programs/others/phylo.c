@@ -127,6 +127,8 @@ void receptionist() {
             break;
         case 'Q':
         case 'q':
+
+            // somehow quit
            break;
             break;
         default:
@@ -214,5 +216,6 @@ void exit_philosohpers() {
         remove_phylo();
     }
     own_printf("Exiting program\n");
+    
 }
 

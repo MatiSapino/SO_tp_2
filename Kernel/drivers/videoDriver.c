@@ -177,15 +177,13 @@ void newline(){
 }
 
 void tab(){
-    int tabWidth = 15;
-        deleteCursor();
+    int tabWidth = 16;
         int spaces = tabWidth - (cursorX / (int)font_size*8) % tabWidth;
 
         for (int i = 0; i < spaces; i++) {
             drawChar(WHITE, ' ');
             cursorX += font_size*8;
         }
-        drawCursor();
         return;
 }
 
@@ -205,8 +203,18 @@ void character(uint64_t hexColor, char c){
             backspace();
             return;
         }
+
         if (c == '\t') { // Tab
+            deleteCursor();
             tab();
+            if(cursorX >= getMaxWidth()){
+                cursorX = 0;
+                cursorY += font_size*18;
+            }
+             if (cursorY >= getMaxHeight() - font_size*16 + 1){
+                moveOneLineUp();
+             }
+            drawCursor();
             return;
         }
         if (c == '\n') { // Salto de línea
@@ -219,22 +227,21 @@ void character(uint64_t hexColor, char c){
             drawCursor();
             return;
         }
+        deleteCursor();
         //Carácter
         if (cursorX >= getMaxWidth()) {
-            deleteCursor();
             cursorX = 0;
             cursorY += font_size*16;
-            drawCursor();
         }
         if (cursorY >= getMaxHeight()){ 
-            deleteCursor();
-            cursorX = 0;
             moveOneLineUp();
-            deleteCursor();
         }
-        deleteCursor();
         drawChar(hexColor, c);
         cursorX += font_size*8;
+        if (cursorX >= getMaxWidth()) {
+            cursorX = 0;
+            cursorY += font_size*16;
+        }
         drawCursor();
         return;
 }

@@ -58,5 +58,6 @@ int sys_getpid();
 int sys_set_priority(int pid, int priority);
 void sys_proctable(process_table_t *table);
 void sys_sleep(int seconds);
+void sleepms(int mseconds);
 
 #endif

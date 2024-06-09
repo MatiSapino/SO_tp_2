@@ -104,6 +104,9 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 	case 39:
 		newline();
 		return 0;
+	case 40:
+		sleepms((int)arg0);
+		break;
 	default:
 		return 0;
 	}

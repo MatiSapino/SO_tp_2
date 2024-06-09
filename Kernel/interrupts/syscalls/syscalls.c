@@ -312,3 +312,9 @@ void sys_switch_screen_mode(int mode) {
         split_screen_distribution();
     }
 }
+
+void sleepms(int mseconds) {
+	int startTime = ticks_elapsed();
+	while (mseconds > ticks_elapsed() * 18 - startTime * 18)
+		_hlt();
+}

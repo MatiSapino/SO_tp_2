@@ -61,5 +61,6 @@ void sys_proctable(process_table_t *table);
 void sys_sleep(int seconds);
 void sleepms(int mseconds);
 char get_last_key();
+int sys_get_process_foreground();
 
 #endif

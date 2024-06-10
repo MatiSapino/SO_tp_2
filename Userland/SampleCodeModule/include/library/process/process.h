@@ -23,4 +23,6 @@ typedef struct process_table {
 
 int call_get_process_table(process_table_t *table);
 
+int call_get_process_foreground();
+
 #endif /* _PROCESS_H_ */

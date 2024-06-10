@@ -8,14 +8,14 @@ char *command_names_array[100] = {
     "help",     "clear",   "time",      "fibonacci", "primes",  "ps",
     "mem",      "sem",     "sem",       "kill",      "nice",    "block",
     "cat",      "wc",      "filter",    "pipe",      "phylo",   "loop",
-    "printmem", "divzero", "invopcode", "welcome",   "inforeg", "test-inforeg"};
+    "printmem", "divzero", "invopcode", "welcome", "testmm", "testproc", "testprio", "testsync"};
 
 void (*command_functions_array[100])(void) = {
     help_help,      help_clear,   help_time,    help_fibonacci,  help_primes,
     help_ps,        help_mem,     help_sem,     help_sem,        help_kill,
     help_nice,      help_block,   help_cat,     help_wc,         help_filter,
     help_pipe,      help_phylo,   help_loop,    help_printmem,   help_divzero,
-    help_invopcode, help_welcome, help_inforeg, help_testinforeg};
+    help_invopcode, help_welcome, help_testmm, help_testproc, help_testprio, help_testsync};
 
 static void formatter(char *name1, char *name2, char *name3, char *name4) {
     own_printf(" %15s    %15s    %15s    %15s\n", name1, name2, name3, name4);
@@ -61,16 +61,6 @@ void help_divzero() {
         "\nCommand:\n    divzero         Forces divide-by-zero exception.\n");
 }
 
-void help_inforeg() {
-    own_printf(
-        "\nCommand:\n    inforeg         Shows the last snapshot taken.\n");
-    own_printf("\nDescription:\n    Prints the value of CPU registers from the "
-               "last snapshot taken.\n");
-    own_printf("    by pressing the shortcut [CTRL] + [R], a gray animation\n");
-    own_printf(
-        "    will be shown, and then the snapshot is going to be saved\n");
-    own_printf("    and ready for future requests.\n\n");
-}
 
 void help_invopcode() {
     own_printf(
@@ -93,16 +83,6 @@ void help_printmem() {
     own_printf("\nCommand:\n    printmem       Prints memory contents.\n");
 }
 
-void help_testinforeg() {
-    own_printf(
-        "\nCommand:\n    test-inforeg    Testing program for inforeg.\n");
-    own_printf("\nDescription:\n    Fills CPU registers with dummy values and "
-               "runs in a infinite loop\n");
-    own_printf("    until SIGINT. While looping, the user can take a snapshot "
-               "for later use\n");
-    own_printf("    with inforeg command\n");
-    own_printf("\nNote:\n    Type \"help inforeg\" for more information.\n\n");
-}
 
 void help_pipe() {
     own_printf("\nOperator:\n    [c1] | [c2]     Runs both [c1] and [c2] "
@@ -162,6 +142,23 @@ void help_phylo() {
 void help_loop() {
     own_printf("Command:\n loop [seconds]    Prints \"Hello World!\" in a loop "
                "for the amount of seconds written          \n");
+}
+
+void help_testmm(){
+    own_printf("Command:\n help_testmm [???] Tests memory manager");
+}
+
+void help_testproc(){
+    own_printf("Command:\n help_testproc [???] Tests processes");
+}
+
+void help_testprio(){
+    own_printf("Command:\n help_testprio [???] Tests priorities");
+
+}
+
+void help_testsync(){
+    own_printf("Command:\n help_testsync [???] Tests synchronization");
 }
 
 int help(int argc, char *argv[]) {

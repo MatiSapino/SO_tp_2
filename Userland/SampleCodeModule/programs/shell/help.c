@@ -41,7 +41,7 @@ void help_fibonacci() {
 }
 
 void help_primes() {
-    own_printf("\nCommand:\n    primes          Prints prime numbers.)\n");
+    own_printf("\nCommand:\n    primes          Prints prime numbers.\n");
 }
 
 void help_time() {
@@ -53,93 +53,59 @@ void help_divzero() {
 }
 
 void help_inforeg() {
-    puts("");
-    puts("Command:");
-    puts("    inforeg         Shows the last snapshot taken.");
-    puts("");
-    puts("Description:");
-    puts("    Prints the value of CPU registers from the last snapshot taken.");
-    puts("    by pressing the shortcut [CTRL] + [R], a gray animation");
-    puts("    will be shown, and then the snapshot is going to be saved");
-    puts("    and ready for future requests.");
-    puts("");
+    own_printf("\nCommand:\n    inforeg         Shows the last snapshot taken.\n");
+    own_printf("\nDescription:\n    Prints the value of CPU registers from the last snapshot taken.\n");
+    own_printf("    by pressing the shortcut [CTRL] + [R], a gray animation\n");
+    own_printf("    will be shown, and then the snapshot is going to be saved\n");
+    own_printf("    and ready for future requests.\n\n");
 }
 
 void help_invopcode() {
-    puts("");
-    puts("Command:");
-    puts("    invopcode       Forces invalid opcode exception.");
-    puts("");
+    own_printf("\nCommand:\n    invopcode       Forces invalid opcode exception.\n");
 }
 
 void help_welcome() {
-    puts("");
-    puts("Command:");
-    puts("    welcome        The OS boot screen.");
-    puts("");
+    own_printf("\nCommand:\n    welcome        The OS boot screen.\n");
 }
 
 void help_clear() {
-    puts("");
-    puts("Command:");
-    puts("    clear           Clears the screen.");
-    puts("");
+    own_printf("\nCommand:\n    clear           Clears the screen.\n");
 }
 
 void help_help(){
-    own_printf("Command: \n help      displays available commands");
+    own_printf("Command: \n help      displays available commands\n");
 }
 
 void help_printmem() {
-    puts("");
-    puts("Command:");
-    puts("    fibonacci       Prints fibonacci sequence.");
-    puts("");
+    own_printf("\nCommand:\n    printmem       Prints memory contents.\n");
 }
 
 void help_testinforeg() {
-    puts("");
-    puts("Command:");
-    puts("    test-inforeg    Testing program for inforeg.");
-    puts("");
-    puts("Description:");
-    puts("    Fills CPU registers with dummy values and runs in a infinite "
-         "loop");
-    puts("    until SIGINT. While looping, the user can take a snapshot for "
-         "later use");
-    puts("    with inforeg command");
-    puts("Note:");
-    puts("    Type \"help inforeg\" for more information.");
-    puts("");
+    own_printf("\nCommand:\n    test-inforeg    Testing program for inforeg.\n");
+    own_printf("\nDescription:\n    Fills CPU registers with dummy values and runs in a infinite loop\n");
+    own_printf("    until SIGINT. While looping, the user can take a snapshot for later use\n");
+    own_printf("    with inforeg command\n");
+    own_printf("\nNote:\n    Type \"help inforeg\" for more information.\n\n");
 }
 
 void help_pipe() {
-    puts("");
-    puts("Operator:");
-    puts("    [c1] | [c2]     Runs both [c1] and [c2] commands in split screen "
-         "mode.");
-    puts("");
-    puts("Synopsis:");
-    puts("    [c1] | [c2]");
-    puts("    [c1] | [c2] [argv[0]]");
-    puts("    [c1] [argv[0]] | [c2] [argv[0]]");
-    puts("");
-    puts("Description:");
-    puts("    Extra spaces between commands, arguments and operator");
-    puts("    are always ignored.");
-    puts("");
+    own_printf("\nOperator:\n    [c1] | [c2]     Runs both [c1] and [c2] commands in split screen mode.\n");
+    own_printf("\nSynopsis:\n    [c1] | [c2]\n");
+    own_printf("    [c1] | [c2] [argv[0]]\n");
+    own_printf("    [c1] [argv[0]] | [c2] [argv[0]]\n\n");
+    own_printf("Description:\n    Extra spaces between commands, arguments and operator are always ignored.\n\n");
 }
 
 void help_ps(){
-    own_printf("Command:\n   ps         Lists running processes with their pids\n");
+    own_printf("\nCommand:\n    ps         Lists running processes with their pids\n\n");
 }
 
 void help_mem(){
-    own_printf("Command:\n mem          Shows memory usage status in bytes\n");
+    own_printf("\nCommand:\n    mem          Shows memory usage status in bytes\n\n");
 }
 
 void help_sem(){
-    own_printf("Command:\n sem          Shows all active semaphores\n");
+    own_printf("\nCommand:\n    sem          Shows all active semaphores\n\n");
 }
 
 void help_kill(){

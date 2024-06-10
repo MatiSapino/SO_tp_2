@@ -11,7 +11,6 @@
 #include <syscalls.h>
 #include "../../include/interrupts/time/time.h"
 #include <video.h>
-#include <videoDriver.h>
 
 #define ADDRESS_LIMIT 0xFFFFFFFF
 
@@ -39,6 +38,7 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
         return -1;
 
     pipe_t pipe;
+    context_id_t gc;
     uint16_t i;
     char c;
 
@@ -48,15 +48,15 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
             return pipewrite(pipe, buffer, count);
 
         default:
+            gc = current_process->g_context;
 
             i = 0;
             while (i < count) {
                 c = buffer[i];
                 if (c == '\n') {
-                    newline();
-                } 
-                else{
-                    character(GREEN, c);
+                    gprint_new_line(gc);
+                } else {
+                    gprint_char(c, gc);
                 }
                 i++;
             }
@@ -112,7 +112,7 @@ int16_t sys_read(int fd, char *buffer, uint16_t count)
 
 
 void sys_clear_screen() {
-    clearScreen();
+    clear_screen();
 }
 
 void sys_exit(int status)
@@ -136,7 +136,10 @@ uint8_t sys_cntrl_listener(uint8_t *listener) {
 }
 
 void sys_delete_char() {
-    backspace();
+    process_t *current_process = get_current_process();
+    context_id_t gc = current_process->g_context;
+
+    gdelete_char(gc);
 }
 
 int sys_kill(int pid) {

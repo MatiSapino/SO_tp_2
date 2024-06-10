@@ -1,7 +1,6 @@
 #include <scDispatcher.h>
 #include <naiveConsole.h>
 #include <syscalls.h>
-#include <videoDriver.h>
 
 int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
                          uint64_t arg3, uint64_t arg4, uint64_t arg5,
@@ -102,13 +101,13 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 		sys_switch_screen_mode((int)arg0);
 		break;
 	case 39:
-		newline();
+		// newline();
 		return 0;
 	case 40:
 		sleepms((int)arg0);
 		break;
 	case 41:
-		return get_last_key();
+		// return get_last_key();
 	case 42:
 	
 	default:

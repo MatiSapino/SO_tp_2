@@ -7,7 +7,7 @@ static void formatter(char *name1, char *name2, char *name3, char *name4) {
 }
 
 static void help_cmds() {
-    own_printf("\nAvilable commands:\n");
+    own_printf("\nAvailable commands:\n");
     formatter("clear", "time", "fibonacci", "primes");
     formatter("ps", "mem", "sem", "kill");
     formatter("nice", "block", "cat", "wc");
@@ -139,14 +139,14 @@ static void help_block(){
 }
 
 static void help_cat(){
-    own_printf("Command:\n cat [???]          Prints through stdout the file recieved\n");                       // falta revisar
+    own_printf("Command:\n cat          Prints through stdout the file recieved\n");                      
 }
 
 static void help_wc(){
-    own_printf("Command:\n wc [???]          Counts lines from input\n");                       // falta revisar
+    own_printf("Command:\n wc          Counts lines from input\n");                     
 }
 static void help_filter(){
-    own_printf("Command:\n wc [???]          Filters vowels from input\n");                       // falta revisar
+    own_printf("Command:\n filter          Filters vowels from input\n");                      
 }
 static void help_phylo(){
      own_printf("Command:\n phylo            Runs dining philosophers problem simulation\n");                       

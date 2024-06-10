@@ -69,6 +69,15 @@ int own_printf(char *str, ...) {
                     min = strlen(tmp);
                     break;
                 }
+                case 'l': {
+                    if (str[i+1] == 'd') {
+                        ltoa(va_arg(vl, long), tmp, 10);
+                        strcpy(&buff[j], tmp);
+                        j += strlen(tmp);
+                        min = strlen(tmp);
+                    }
+                    break;
+                }
                 case 's': {
                     char *src = va_arg(vl, char *);
                     strcpy(&buff[j], src);

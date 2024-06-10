@@ -91,7 +91,7 @@ void get_struct_time(time_rtc_t *struct_time) {
     struct_time->year = get_year();
     struct_time->month = get_month();
     struct_time->day = get_day_month();
-    struct_time->hour = get_hour();
+    struct_time->hour = get_hour()-3;
     struct_time->minutes = get_minutes();
     struct_time->seconds = get_seconds();
 }

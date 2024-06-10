@@ -54,18 +54,12 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
         if (pid >= 0) {
             target_child = find(children_list, &pid, search_by_pid);
             if (target_child != NULL && target_child->status == TERMINATED) {
-                drawWord("\nENTRO\n");
                 if (status_ptr != NULL){
                     *status_ptr = target_child->exit_status;
                 }
                 remove_process(target_child->pid);
                 return target_child->pid;
-            } if (target_child == NULL){
-                drawWord("\ntarger_child es null\n");
-            } if (target_child->status != TERMINATED){
-                drawWord("\ntarger_child->status no es terminated\n");
             }
-            
         } 
         else {
             int terminated = TERMINATED;

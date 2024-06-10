@@ -55,14 +55,14 @@ int myprocinc(int argc, char *argv[]) {
     return 0;
 }
 
-int test_sync(int argc, char *argv[]) { //{n, use_sem, 0}
+ int test_sync(int argc, char *argv[]) {
 
     if (argc < 3) {
         own_printf("test_sync: missing arguments\n");
         return -1;
     }
 
-    if (argc > 3) {
+    if (argc > 4) {
         own_printf("test_sync: too many arguments\n");
         return -1;
     }

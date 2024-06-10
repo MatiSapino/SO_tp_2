@@ -95,10 +95,7 @@ int puts(const char *str);
 
 int own_printf(char *str, ...);
 int own_scanf(char *str, ...);
-void call_new_line();
+int call_get_fg_bg_status(int pid);
 
-
-char call_get_last_key();
-void call_clear_buffer();
 
 #endif

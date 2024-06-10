@@ -101,14 +101,8 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
 		sys_switch_screen_mode((int)arg0);
 		break;
 	case 39:
-		// newline();
-		return 0;
-	case 40:
-		sleepms((int)arg0);
-		break;
-	case 41:
-		// return get_last_key();
-	case 42:
+		
+		return sys_get_process_status((int)arg0);
 	
 	default:
 		return 0;

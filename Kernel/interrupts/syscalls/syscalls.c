@@ -328,3 +328,10 @@ void sleepms(int mseconds) {
 char get_last_key(){
     return kbd_get_last_key();
 }
+
+ int sys_get_process_status(int pid){
+    process_t *process = get_process(pid);
+
+
+
+ }

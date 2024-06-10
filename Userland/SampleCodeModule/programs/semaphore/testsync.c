@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <testsync.h>
 #include <userland_semaphore.h>
 #include <std_io.h>
@@ -7,7 +9,6 @@
 #define TOTAL_PAIR_PROCESSES 2
 
 int64_t global = 0;        // shared memory
-sem_ptr global_sem = NULL; // used to close semaphore from test_sync
 
 void slowInc(int64_t *p, int inc) {
     uint64_t aux = *p;
@@ -20,7 +21,6 @@ int myprocinc(int argc, char *argv[]) {
     uint64_t n;
     int8_t inc;
     int8_t use_sem;
-    sem_ptr sem = NULL;
 
     if (argc != 4)
         return -1;
@@ -33,7 +33,7 @@ int myprocinc(int argc, char *argv[]) {
         return -1;
 
     if (use_sem)
-        if (!(sem = call_sem_open(SEM_ID, 1))) {
+        if (!(call_sem_open(SEM_ID, 1))) {
             own_printf("test_sync: error opening semaphore\n");
             return -1;
         }
@@ -41,19 +41,20 @@ int myprocinc(int argc, char *argv[]) {
     uint64_t i;
     for (i = 0; i < n; i++) {
         if (use_sem)
-            call_sem_wait(sem);
+            call_sem_wait(SEM_ID);
         slowInc(&global, inc);
         if (use_sem)
-            call_sem_post(sem);
+            call_sem_post(SEM_ID);
     }
 
     if (use_sem)
-        global_sem = sem;
+        call_sem_close(SEM_ID);
 
     return 0;
 }
 
 int test_sync(int argc, char *argv[]) { //{n, use_sem, 0}
+    int pids[2 * TOTAL_PAIR_PROCESSES];
 
     if (argc < 3) {
         own_printf("test_sync: missing arguments\n");
@@ -75,12 +76,11 @@ int test_sync(int argc, char *argv[]) { //{n, use_sem, 0}
         return -1;
     }
 
-    int exit_status;
-    int pids[2 * TOTAL_PAIR_PROCESSES];
-    global = 0;
-
     char *argvDec[] = {"myprocinc", argv[1], "-1", argv[2]};
     char *argvInc[] = {"myprocinc", argv[1], "1", argv[2]};
+
+    global = 0;
+    int exit_status;
 
     uint64_t i;
     for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
@@ -92,9 +92,6 @@ int test_sync(int argc, char *argv[]) { //{n, use_sem, 0}
         call_waitpid(pids[i], &exit_status);
         call_waitpid(pids[i + TOTAL_PAIR_PROCESSES], &exit_status);
     }
-
-    if (satoi(argv[2]) > 0)
-        call_sem_close(global_sem);
 
     own_printf("testsync: final value: %d\n", global);
 

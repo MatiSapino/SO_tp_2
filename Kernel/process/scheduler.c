@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "interrupts/time/time.h"
 #include <circular_linked_list.h>
 #include <idtLoader.h>

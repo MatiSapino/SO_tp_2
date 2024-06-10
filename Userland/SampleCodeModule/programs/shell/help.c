@@ -158,7 +158,7 @@ void help_testprio(){
 }
 
 void help_testsync(){
-    own_printf("Command:\n help_testsync [inc_amount] [proc_amount] [if_uses_sem]  Tests synchronization\n");
+    own_printf("Command:\n testsync [inc_amount] [proc_amount] [if_uses_sem]  Tests synchronization\n");
 }
 
 int help(int argc, char *argv[]) {

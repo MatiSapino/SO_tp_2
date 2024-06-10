@@ -1,5 +1,5 @@
-#ifndef _DATA_DESCRIPTOR_H_
-#define _DATA_DESCRIPTOR_H_
+#ifndef _DATADESCRIPTOR_H_
+#define _DATADESCRIPTOR_H_
 
 #include <stdbool.h>
 #include <pipe/pipe.h>

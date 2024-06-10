@@ -1,4 +1,3 @@
-#include <block.h>
 #include <clear.h>
 #include <div0.h>
 #include <fibonacci.h>
@@ -30,6 +29,7 @@
 #include <testsync.h>
 #include <time.h>
 #include <welcome.h>
+#include <my_block.h>
 
 #define LINE_LENGTH    512
 #define TOKEN_LENGTH   512
@@ -132,7 +132,8 @@ static int run_command(char *name, int argc, char *argv[]) {
         return -2;
     }
 
-    return call_run(function, argc, argv);
+    int pid = call_run(function, argc, argv);
+    return pid;
 }
 
 

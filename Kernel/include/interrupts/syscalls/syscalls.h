@@ -7,6 +7,7 @@
 #include <stdint.h>
 
 #define ERROR   -1
+#define STATUS_ERR -2
 #define SUCCESS 0
 
 enum STD {

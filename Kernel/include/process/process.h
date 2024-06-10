@@ -18,6 +18,7 @@ typedef enum pstatus {
     WAITING = 0,
     READY,
     TERMINATED,
+    RUNNING,
 } pstatus_t;
 
 typedef int pid_t;

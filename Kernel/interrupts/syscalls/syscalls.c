@@ -1,6 +1,6 @@
 #include <dataDescriptor.h>
 #include <interrupts.h>
-#include <keyboard.h>
+#include <keyboard.h> 
 #include <lib/defs.h>
 #include <pipe/pipe.h>
 #include <pmm.h>
@@ -9,7 +9,7 @@
 #include <scheduler.h>
 #include <semaphore/semaphore.h>
 #include <syscalls.h>
-#include <time.h>
+#include "../../include/interrupts/time/time.h"
 #include <video.h>
 #include <videoDriver.h>
 
@@ -144,11 +144,12 @@ int sys_kill(int pid) {
 }
 
 int sys_block(int pid) {
-    process_t *process = get_process(pid);
+    process_t *process = get_process(pid); 
     if (process != NULL) {
         process->status = WAITING;
         return SUCCESS;
     }
+    
     return ERROR;
 }
 
@@ -182,21 +183,23 @@ int sys_get_proc_status(int pid) {
     if (process == NULL) {
         return ERROR;
     }
+    if (process->status == TERMINATED)
+        return STATUS_ERR;
     return process->status;
 }
 
 int sys_set_priority(int pid, int priority) {
     process_t *process = get_process(pid);
-    if (process == NULL) {
+    if (process == NULL || pid == 0) {
         return ERROR;
     }
 
     // clamp priority value
-    if (process->priority >= HIGHEST)
-        process->priority = HIGHEST;
-    else if (process->priority <= LOWEST)
-        process->priority = LOWEST;
-    else
+    // if (process->priority >= HIGHEST)
+    //     process->priority = HIGHEST;
+    // else if (process->priority < LOWEST)
+    //     process->priority = LOWEST;
+    // else
         process->priority = priority;
     return SUCCESS;
 }

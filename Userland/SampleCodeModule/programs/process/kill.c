@@ -23,6 +23,10 @@ int kill(int argc, char *argv[]) {
         own_printf("kill: process does not exist\n");
         return -1;
     } 
+    if (status == -2) {
+        own_printf("kill: cannot kill a terminated process\n");
+        return -1;
+    } 
     if(pid == 0){
         own_printf("kill: cannot kill shell\n");
     }

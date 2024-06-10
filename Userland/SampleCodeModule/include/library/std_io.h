@@ -86,6 +86,7 @@ int call_set_priority(int pid, int priority);
 int call_sleep_process(int seconds);
 int call_getpid();
 
+
 int call_switch_screen_mode(int mode);
 
 int getchar();

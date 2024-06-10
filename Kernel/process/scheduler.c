@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 #define PID_ERR        -1
+#define STATUS_ERR     -2
 #define MAX_TERM_COUNT 2
 
 static circular_list_t process_list;

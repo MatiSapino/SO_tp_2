@@ -95,16 +95,13 @@ void aux_sleep() {
 }
 
 void philosopher(int argc, char * argv[]) {
-    quit = 0;                                       // esto va a estar al pedo despues
     int i = (int)strtol(argv[0],NULL,10);
     while(!quit){
         aux_sleep();
         pick_forks(i);
         aux_sleep();
         put_forks(i);
-        if(call_get_last_key() == 'q' || call_get_last_key() == 'Q'){
-            quit = 1;
-        }
+        
     }
     exit_philosohpers();
 }

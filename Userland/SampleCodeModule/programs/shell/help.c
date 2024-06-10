@@ -2,6 +2,18 @@
 #include <std_io.h>
 #include <string_s.h>
 
+char* command_names_array[100] = {
+    "help", "clear", "time", "fibonacci", "primes", "ps", "mem", "sem",
+    "sem", "kill", "nice", "block", "cat", "wc", "filter", "pipe", "phylo", "loop", "printmem", "divzero", "invopcode", "welcome", "inforeg", "test-inforeg"
+};
+
+void (*command_functions_array[100])(void) = {
+    help_help, help_clear, help_time, help_fibonacci, help_primes, help_ps, 
+    help_mem, help_sem, help_sem, help_kill, help_nice, help_block, help_cat, help_wc, 
+    help_filter, help_pipe, help_phylo, help_loop, help_printmem, help_divzero, help_invopcode, help_welcome, help_inforeg, help_testinforeg
+};
+
+
 static void formatter(char *name1, char *name2, char *name3, char *name4) {
     own_printf(" %15s    %15s    %15s    %15s\n", name1, name2, name3, name4);
 }
@@ -19,28 +31,28 @@ static void help_cmds() {
     own_printf("Type \"help [command]\" for information about a specific command.\n");
 }
 
-static void help_error(char *cmd) {
+void help_error(char *cmd) {
     own_printf("Entry for command %s not found.\nType \"help\" to show available commands.\n",
            cmd);
 }
 
-static void help_fibonacci() {
+void help_fibonacci() {
     own_printf("\nCommand:\n     fibonacci       Prints fibonacci sequence.\n");
 }
 
-static void help_primes() {
+void help_primes() {
     own_printf("\nCommand:\n    primes          Prints prime numbers.)\n");
 }
 
-static void help_time() {
+void help_time() {
     own_printf("\nCommand:\n     time            Displays system day and hour.\n");
 }
 
-static void help_divzero() {
+void help_divzero() {
     own_printf("\nCommand:\n    divzero         Forces divide-by-zero exception.\n");
 }
 
-static void help_inforeg() {
+void help_inforeg() {
     puts("");
     puts("Command:");
     puts("    inforeg         Shows the last snapshot taken.");
@@ -53,35 +65,39 @@ static void help_inforeg() {
     puts("");
 }
 
-static void help_invopcode() {
+void help_invopcode() {
     puts("");
     puts("Command:");
     puts("    invopcode       Forces invalid opcode exception.");
     puts("");
 }
 
-static void help_welcome() {
+void help_welcome() {
     puts("");
     puts("Command:");
     puts("    welcome        The OS boot screen.");
     puts("");
 }
 
-static void help_clear() {
+void help_clear() {
     puts("");
     puts("Command:");
     puts("    clear           Clears the screen.");
     puts("");
 }
 
-static void help_printmem() {
+void help_help(){
+    own_printf("Command: \n help      displays available commands");
+}
+
+void help_printmem() {
     puts("");
     puts("Command:");
     puts("    fibonacci       Prints fibonacci sequence.");
     puts("");
 }
 
-static void help_testinforeg() {
+void help_testinforeg() {
     puts("");
     puts("Command:");
     puts("    test-inforeg    Testing program for inforeg.");
@@ -97,7 +113,7 @@ static void help_testinforeg() {
     puts("");
 }
 
-static void help_pipe() {
+void help_pipe() {
     puts("");
     puts("Operator:");
     puts("    [c1] | [c2]     Runs both [c1] and [c2] commands in split screen "
@@ -114,105 +130,63 @@ static void help_pipe() {
     puts("");
 }
 
-static void help_ps(){
+void help_ps(){
     own_printf("Command:\n   ps         Lists running processes with their pids\n");
 }
 
-static void help_mem(){
+void help_mem(){
     own_printf("Command:\n mem          Shows memory usage status in bytes\n");
 }
 
-static void help_sem(){
+void help_sem(){
     own_printf("Command:\n sem          Shows all active semaphores\n");
 }
 
-static void help_kill(){
+void help_kill(){
     own_printf("Command:\n kill [pid]   Recieves a pid and kills that process\n");  
 }
 
-static void help_nice(){
+void help_nice(){
     own_printf("Command:\n nice [pid] [prio]  Recieves a pid and modifies the priority of the process\n");  
 }
 
-static void help_block(){
+void help_block(){
     own_printf("Command:\n block [pid]        Recieves a pid and changes the status to waiting\n");  
 }
 
-static void help_cat(){
+void help_cat(){
     own_printf("Command:\n cat          Prints through stdout the file recieved\n");                      
 }
 
-static void help_wc(){
+void help_wc(){
     own_printf("Command:\n wc          Counts lines from input\n");                     
 }
-static void help_filter(){
+void help_filter(){
     own_printf("Command:\n filter          Filters vowels from input\n");                      
 }
-static void help_phylo(){
+void help_phylo(){
      own_printf("Command:\n phylo            Runs dining philosophers problem simulation\n");                       
 }
 
-static void help_loop(){
+void help_loop(){
     own_printf("Command:\n loop [seconds]    Prints \"Hello World!\" in a loop for the amount of seconds written          \n");
 }
 
-int help(int argc, char *argv[]) {
-    if (argc == 1)
+int help(int argc, char *argv[]){
+    if (argc == 1){
         help_cmds();
-
-    else if (strcmp("clear", argv[1]) == 0)
-        help_clear();
-    else if (strcmp("time", argv[1]) == 0)
-        help_time();
-    else if (strcmp("fibonacci", argv[1]) == 0)
-        help_fibonacci();
-    else if (strcmp("primes", argv[1]) == 0)
-        help_primes();
-    else if(strcmp("ps", argv[1]) == 0)
-        help_ps();
-    else if(strcmp("mem", argv[1]) == 0)
-        help_mem();
-    else if (strcmp("printmem", argv[1]) == 0)
-        help_printmem();
-    else if(strcmp("sem", argv[1]) == 0)
-        help_sem();
-    else if(strcmp("kill", argv[1]) == 0)
-        help_kill();
-    else if(strcmp("nice", argv[1]) == 0)
-        help_nice();
-    else if(strcmp("block", argv[1]) == 0)
-        help_block();
-    else if(strcmp("cat", argv[1]) == 0)
-        help_cat();
-    else if(strcmp("wc", argv[1]) == 0)
-        help_wc();
-    else if(strcmp("filter", argv[1]) == 0)
-        help_filter();
-    else if (strcmp("pipe", argv[1]) == 0)
-        help_pipe();
-    else if (strcmp("phylo", argv[1]) == 0)
-        help_phylo();
-    else if (strcmp("loop", argv[1]) == 0)
-        help_loop();
-    else if (strcmp("inforeg", argv[1]) == 0)
-        help_inforeg();
-
-    else if (strcmp("test-inforeg", argv[1]) == 0)
-        help_testinforeg();
-
-    else if (strcmp("divzero", argv[1]) == 0)
-        help_divzero();
-
-    else if (strcmp("invopcode", argv[1]) == 0)
-        help_invopcode();
-
-    else if (strcmp("welcome", argv[1]) == 0)
-        help_welcome();
-
-    
-
-    else
-        help_error(argv[1]);
-
+        return 0;
+    }
+        
+    else{
+        for(int i=0; i<100; i++){
+            if(strcmp(command_names_array[i], argv[1]) == 0){
+                command_functions_array[i]();
+                return 0;
+            }
+        }
+    }
+    help_error(argv[1]);
     return 0;
 }
+

@@ -332,6 +332,6 @@ char get_last_key(){
 int sys_get_process_foreground() {
     process_t *process = get_foreground_process();
     if (process == NULL)
-        return NULL;
+        return -1;
     return process->pid;
 }

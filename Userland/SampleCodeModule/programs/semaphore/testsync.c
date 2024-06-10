@@ -21,6 +21,7 @@ int myprocinc(int argc, char *argv[]) {
     uint64_t n;
     int8_t inc;
     int8_t use_sem;
+    sem_ptr sem = NULL;
 
     if (argc != 4)
         return -1;
@@ -32,23 +33,24 @@ int myprocinc(int argc, char *argv[]) {
     if ((use_sem = satoi(argv[3])) < 0)
         return -1;
 
-    if (use_sem)
-        if (!(call_sem_open(SEM_ID, 1))) {
+    if (use_sem){
+        sem = call_sem_open(SEM_ID, 1); 
+        if (sem == NULL) {
             own_printf("test_sync: error opening semaphore\n");
             return -1;
         }
-
+    }
     uint64_t i;
     for (i = 0; i < n; i++) {
         if (use_sem)
-            call_sem_wait(SEM_ID);
+            call_sem_wait(sem);
         slowInc(&global, inc);
         if (use_sem)
-            call_sem_post(SEM_ID);
+            call_sem_post(sem);
     }
 
     if (use_sem)
-        call_sem_close(SEM_ID);
+        call_sem_close(sem);
 
     return 0;
 }

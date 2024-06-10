@@ -55,4 +55,5 @@ int test_prio(int argc, char *argv[]) {
         call_kill(pids[i]);
         call_wait();
     }
+    return 0;
 }

@@ -3,8 +3,16 @@
 
 #define MAX_SEMAPHORES        15
 #define MAX_BLOCKED_PROCESSES 10
+#include <userland_linked_list.h>
 
-typedef struct sem *sem_ptr;
+typedef struct sem {
+    char name[40];
+    int value;
+    int lock;
+    list_ptr blocked_processes;
+} sem_t;
+
+typedef sem_t * sem_ptr;
 
 typedef struct copy_sem {
     char name[40];

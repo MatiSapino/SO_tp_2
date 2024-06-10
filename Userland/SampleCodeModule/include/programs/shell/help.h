@@ -26,5 +26,9 @@ void help_divzero();
 void help_invopcode();
 void help_welcome();
 void help_sem();
+void help_testmm();
+void help_testproc();
+void help_testprio();
+void help_testsync();
 
 #endif /* _HELP_H_ */

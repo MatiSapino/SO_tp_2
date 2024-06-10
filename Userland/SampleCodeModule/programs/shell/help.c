@@ -145,20 +145,20 @@ void help_loop() {
 }
 
 void help_testmm(){
-    own_printf("Command:\n help_testmm [???] Tests memory manager");
+    own_printf("Command:\n help_testmm [MB] Tests memory manager");
 }
 
 void help_testproc(){
-    own_printf("Command:\n help_testproc [???] Tests processes");
+    own_printf("Command:\n help_testproc [process_to_create] Tests processes");
 }
 
 void help_testprio(){
-    own_printf("Command:\n help_testprio [???] Tests priorities");
+    own_printf("Command:\n help_testprio Tests priorities");
 
 }
 
 void help_testsync(){
-    own_printf("Command:\n help_testsync [???] Tests synchronization");
+    own_printf("Command:\n help_testsync [inc_amount] [proc_amount] [if_uses_sem] Tests synchronization");
 }
 
 int help(int argc, char *argv[]) {

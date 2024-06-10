@@ -353,6 +353,7 @@ static void pipe_exec_right(int argc, char *argv[]) {
     call_close(fd[1]); // close write
 
     function(argc, argv);
+
 }
 
 static void pipe_exec(cmd_t *left, cmd_t *right) {

@@ -6,6 +6,7 @@
 #include "../include/process/process.h"
 #include "../include/process/scheduler.h"
 #include <stdbool.h>
+#include <videoDriver.h>
 
 #define PID_ERR        -1
 #define STATUS_ERR     -2
@@ -41,7 +42,7 @@ int process_count() {
 }
 
 pid_t wait_process(pid_t pid, int *status_ptr) {
-
+    
     // if no children, return
     if (size(current_process->children) == 0 || pid < -1)
         return PID_ERR;
@@ -51,15 +52,22 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
 
     while (true) {
         if (pid >= 0) {
-            target_child = find(children_list, &pid, NULL);
-
+            target_child = find(children_list, &pid, search_by_pid);
             if (target_child != NULL && target_child->status == TERMINATED) {
-                if (status_ptr != NULL)
+                drawWord("\nENTRO\n");
+                if (status_ptr != NULL){
                     *status_ptr = target_child->exit_status;
+                }
                 remove_process(target_child->pid);
                 return target_child->pid;
+            } if (target_child == NULL){
+                drawWord("\ntarger_child es null\n");
+            } if (target_child->status != TERMINATED){
+                drawWord("\ntarger_child->status no es terminated\n");
             }
-        } else {
+            
+        } 
+        else {
             int terminated = TERMINATED;
             target_child = find(children_list, &terminated, search_by_status);
 

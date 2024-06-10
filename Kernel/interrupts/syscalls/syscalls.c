@@ -115,8 +115,7 @@ void sys_clear_screen() {
     clearScreen();
 }
 
-void sys_exit(int status)
-{
+void sys_exit(int status){
     exit_process(status);
 }
 

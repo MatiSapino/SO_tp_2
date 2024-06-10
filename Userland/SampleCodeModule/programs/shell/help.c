@@ -146,7 +146,7 @@ static void help_wc(){
     own_printf("Command:\n wc [???]          Counts lines from input\n");                       // falta revisar
 }
 static void help_filter(){
-    own_printf("Command:\n wc [???]          Filters vowels from input\n");                       // falta revisar
+    own_printf("Command:\n filter [???]          Filters vowels from input\n");                       // falta revisar
 }
 static void help_phylo(){
      own_printf("Command:\n phylo            Runs dining philosophers problem simulation\n");                       

@@ -22,7 +22,7 @@ static void formatter(char *name1, char *name2, char *name3, char *name4) {
 }
 
 static void help_cmds() {
-    own_printf("\nAvailable commands:\n");
+    own_printf("Available commands:\n");
     formatter("clear", "time", "fibonacci", "primes");
     formatter("ps", "mem", "sem", "kill");
     formatter("nice", "block", "cat", "wc");
@@ -44,35 +44,35 @@ void help_error(char *cmd) {
 }
 
 void help_fibonacci() {
-    own_printf("\nCommand:\n     fibonacci       Prints fibonacci sequence.\n");
+    own_printf("Command:\n     fibonacci       Prints fibonacci sequence.\n");
 }
 
 void help_primes() {
-    own_printf("\nCommand:\n    primes          Prints prime numbers.\n");
+    own_printf("Command:\n    primes          Prints prime numbers.\n");
 }
 
 void help_time() {
     own_printf(
-        "\nCommand:\n     time            Displays system day and hour.\n");
+        "Command:\n     time            Displays system day and hour.\n");
 }
 
 void help_divzero() {
     own_printf(
-        "\nCommand:\n    divzero         Forces divide-by-zero exception.\n");
+        "Command:\n    divzero         Forces divide-by-zero exception.\n");
 }
 
 
 void help_invopcode() {
     own_printf(
-        "\nCommand:\n    invopcode       Forces invalid opcode exception.\n");
+        "Command:\n    invopcode       Forces invalid opcode exception.\n");
 }
 
 void help_welcome() {
-    own_printf("\nCommand:\n    welcome        The OS boot screen.\n");
+    own_printf("Command:\n    welcome        The OS boot screen.\n");
 }
 
 void help_clear() {
-    own_printf("\nCommand:\n    clear           Clears the screen.\n");
+    own_printf("Command:\n    clear           Clears the screen.\n");
 }
 
 void help_help() {
@@ -80,12 +80,12 @@ void help_help() {
 }
 
 void help_printmem() {
-    own_printf("\nCommand:\n    printmem       Prints memory contents.\n");
+    own_printf("Command:\n    printmem       Prints memory contents.\n");
 }
 
 
 void help_pipe() {
-    own_printf("\nOperator:\n    [c1] | [c2]     Runs both [c1] and [c2] "
+    own_printf("Operator:\n    [c1] | [c2]     Runs both [c1] and [c2] "
                "commands in split screen mode.\n");
     own_printf("\nSynopsis:\n    [c1] | [c2]\n");
     own_printf("    [c1] | [c2] [argv[0]]\n");
@@ -95,17 +95,17 @@ void help_pipe() {
 }
 
 void help_ps() {
-    own_printf("\nCommand:\n    ps         Lists running processes with their "
+    own_printf("Command:\n    ps         Lists running processes with their "
                "pids\n\n");
 }
 
 void help_mem() {
     own_printf(
-        "\nCommand:\n    mem          Shows memory usage status in bytes\n\n");
+        "Command:\n    mem          Shows memory usage status in bytes\n\n");
 }
 
 void help_sem() {
-    own_printf("\nCommand:\n    sem          Shows all active semaphores\n\n");
+    own_printf("Command:\n    sem          Shows all active semaphores\n\n");
 }
 
 void help_kill() {
@@ -149,7 +149,7 @@ void help_testmm(){
 }
 
 void help_testproc(){
-    own_printf("Command:\n testproc [process_to_create]     Tests processes\n");
+    own_printf("Command:\n testproc [process_to_create]     Creates, kills and modifies processes randomly\n");
 }
 
 void help_testprio(){

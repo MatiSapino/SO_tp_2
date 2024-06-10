@@ -106,28 +106,29 @@ void philosopher(int argc, char *argv[]) {
 }
 
 void receptionist() {
-    int c;
-    while ((c = getchar()) != EOF) {
+    int c, exit_loop = 1;
+    while((c = getchar()) != EOF && exit_loop){
 
         // own_printf("%c\n",c);
-
-        switch (c) {
-            case 'A':
-            case 'a':
-                add_phylo();
-                break;
-            case 'R':
-            case 'r':
-                remove_phylo();
-                break;
-            case 'Q':
-            case 'q':
-
-                // somehow quit
-                break;
-                break;
-            default:
-                break;
+        
+        switch (c)
+        {
+        case 'A':
+        case 'a':
+            add_phylo();
+            break;
+        case 'R':
+        case 'r':
+            remove_phylo();
+            break;
+        case 'Q':
+        case 'q':
+            exit_loop = 0;
+            // somehow quit
+           break;
+            break;
+        default:
+            break;
         }
     }
 }

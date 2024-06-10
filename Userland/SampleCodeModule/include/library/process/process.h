@@ -20,7 +20,6 @@ typedef struct process_table {
     int count;
 } process_table_t;
 
-
 int call_get_process_table(process_table_t *table);
 
 int call_get_process_foreground();

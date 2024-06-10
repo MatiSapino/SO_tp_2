@@ -1,7 +1,7 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <pmm.h>
 #include "../../include/process/process.h"
+#include <pmm.h>
 
 #define P_INIT_EFLAGS 0x202
 #define P_INIT_CS     0x8

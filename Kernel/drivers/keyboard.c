@@ -1,10 +1,9 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include "../include/process/process.h"
 #include <keyboard.h>
 #include <lib/defs.h>
 #include <scheduler.h>
-#include "../include/process/process.h"
-
 
 #define KBD_ENCODER_PORT 0x60
 #define KBD_CTRL_PORT    0x64
@@ -159,7 +158,7 @@ static char kbd_shift_US_1[KBD_SIZE] = {
     'F', 'G', 'H',
     'J', 'K', 'L',
     ':', '"', '~',
-    0,   '|',   'Z',
+    0,   '|', 'Z',
     'X', 'C', 'V',
     'B', 'N', 'M',
     '<', '>', '?',

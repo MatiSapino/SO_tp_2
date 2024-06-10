@@ -13,78 +13,78 @@ typedef enum {
 
 /**
  * @brief Create a window object
- * 
- * @param area 
- * @return area_t 
+ *
+ * @param area
+ * @return area_t
  */
 area_t create_window(area_t area);
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void full_screen_distribution();
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void split_screen_distribution();
 
 /**
- * @brief 
- * 
- * @param c 
- * @param id 
+ * @brief
+ *
+ * @param c
+ * @param id
  */
 void gprint_char(const char c, context_id_t id);
 
 /**
- * @brief 
- * 
- * @param str 
- * @param id 
+ * @brief
+ *
+ * @param str
+ * @param id
  */
 void gprint_string(const char *str, context_id_t id);
 
 /**
- * @brief 
- * 
- * @param id 
+ * @brief
+ *
+ * @param id
  */
 void gprint_new_line(context_id_t id);
 
 /**
- * @brief 
- * 
- * @param id 
+ * @brief
+ *
+ * @param id
  */
 void gdelete_char(context_id_t id);
 
 /**
- * @brief 
- * 
- * @param id 
+ * @brief
+ *
+ * @param id
  */
 void gclear_screen(context_id_t id);
 
 /**
  * @brief Get the context id object
- * 
- * @return context_id_t 
+ *
+ * @return context_id_t
  */
 context_id_t get_context_id();
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void gsnapshot();
 
 /**
- * @brief 
- * 
- * @param target 
+ * @brief
+ *
+ * @param target
  */
 void gfocus(context_id_t target);
 

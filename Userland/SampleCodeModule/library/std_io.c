@@ -2,8 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <std_io.h>
 #include <std_lib.h>
-#include <string_s.h>
 #include <stdarg.h>
+#include <string_s.h>
 #include <testUtil.h>
 
 int getchar() {
@@ -29,7 +29,6 @@ int puts(const char *str) {
     new_str[i] = '\0';
     return call_write(STDOUT, new_str, length + 1);
 }
-
 
 int own_printf(char *str, ...) {
     va_list vl;

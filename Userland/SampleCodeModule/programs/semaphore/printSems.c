@@ -1,9 +1,9 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <mem.h>
-#include <userland_semaphore.h>
-#include <std_io.h>
 #include <printSems.h>
+#include <std_io.h>
+#include <userland_semaphore.h>
 
 int printsems(int argc, char *argv[]) {
 

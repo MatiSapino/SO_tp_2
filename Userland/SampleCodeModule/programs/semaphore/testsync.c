@@ -1,14 +1,14 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <testsync.h>
-#include <userland_semaphore.h>
 #include <std_io.h>
+#include <testsync.h>
 #include <testUtil.h>
+#include <userland_semaphore.h>
 
 #define SEM_ID               "sem"
 #define TOTAL_PAIR_PROCESSES 2
 
-int64_t global = 0;        // shared memory
+int64_t global = 0; // shared memory
 
 void slowInc(int64_t *p, int inc) {
     uint64_t aux = *p;

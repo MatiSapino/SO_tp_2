@@ -1,10 +1,10 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <testmm.h>
 #include <mem.h>
 #include <std_io.h>
 #include <std_lib.h>
 #include <string_s.h>
+#include <testmm.h>
 #include <testUtil.h>
 
 #define MAX_BLOCKS 128

@@ -9,18 +9,14 @@
      TO_UPPER(X) == 'O' || TO_UPPER(X) == 'U')
 #define SIZE_BUFFER 2048
 
-int filter(int argc, char *argv[])
-{
+int filter(int argc, char *argv[]) {
     int16_t c;
     int i = 0;
     char buffer[SIZE_BUFFER];
-    while (((c = getchar()) != (int16_t)-1) && i < (SIZE_BUFFER - 2))
-    {
-        if (!IS_VOWEL(c))
-        {
+    while (((c = getchar()) != (int16_t)-1) && i < (SIZE_BUFFER - 2)) {
+        if (!IS_VOWEL(c)) {
             buffer[i++] = c;
-            if (c == '\n')
-            {
+            if (c == '\n') {
                 buffer[i] = '\0';
                 own_printf("%s", buffer);
                 i = 0;
@@ -28,8 +24,7 @@ int filter(int argc, char *argv[])
         }
     }
 
-    if (i != 0)
-    {
+    if (i != 0) {
         buffer[i++] = '\n';
         buffer[i] = '\0';
         own_printf("%s", buffer);
@@ -38,24 +33,20 @@ int filter(int argc, char *argv[])
     return 0;
 }
 
-int cat(int argc, char *argv[])
-{
+int cat(int argc, char *argv[]) {
     int16_t c;
     int i = 0;
     char buffer[SIZE_BUFFER];
-    while (((c = getchar()) != (int16_t)-1) && i < (SIZE_BUFFER - 2))
-    {
+    while (((c = getchar()) != (int16_t)-1) && i < (SIZE_BUFFER - 2)) {
         buffer[i++] = c;
-        if (c == '\n')
-        {
+        if (c == '\n') {
             buffer[i] = '\0';
             own_printf("%s", buffer);
             i = 0;
         }
     }
 
-    if (i != 0)
-    {
+    if (i != 0) {
         buffer[i++] = '\n';
         buffer[i] = '\0';
         own_printf("%s", buffer);
@@ -64,17 +55,14 @@ int cat(int argc, char *argv[])
     return 0;
 }
 
-int wc(int argc, char *argv[])
-{
+int wc(int argc, char *argv[]) {
     int16_t c;
     int count = 0;
     int i = 0;
     char buffer[SIZE_BUFFER];
-    while (((c = getchar()) != (int16_t)-1))
-    {
+    while (((c = getchar()) != (int16_t)-1)) {
         buffer[i++] = c;
-        if (c == '\n')
-        {
+        if (c == '\n') {
             count++;
             buffer[i] = '\0';
             own_printf("%s", buffer);
@@ -82,8 +70,7 @@ int wc(int argc, char *argv[])
         }
     }
 
-    if (i != 0)
-    {
+    if (i != 0) {
         buffer[i++] = '\n';
         buffer[i] = '\0';
         own_printf("%s", buffer);

@@ -1,17 +1,17 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include "../../include/interrupts/time/time.h"
+#include "../../include/process/process.h"
 #include <dataDescriptor.h>
 #include <interrupts.h>
-#include <keyboard.h> 
+#include <keyboard.h>
 #include <lib/defs.h>
 #include <pipe/pipe.h>
 #include <pmm.h>
-#include "../../include/process/process.h"
 #include <registers.h>
 #include <scheduler.h>
 #include <semaphore/semaphore.h>
 #include <syscalls.h>
-#include "../../include/interrupts/time/time.h"
 #include <video.h>
 
 #define ADDRESS_LIMIT 0xFFFFFFFF
@@ -21,8 +21,7 @@ enum DISTRIBUTION {
     SPLIT_DISTRIBUTION
 };
 
-int16_t sys_write(int fd, char *buffer, uint16_t count)
-{
+int16_t sys_write(int fd, char *buffer, uint16_t count) {
     if (fd < 0)
         return -2;
 
@@ -33,7 +32,7 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
 
     dataDescriptor_t dataD = current_process->dataDescriptors[fd];
 
-    if(dataD == NULL)
+    if (dataD == NULL)
         return -2;
 
     if (getMode_dataDescriptor(dataD) != WRITE_MODE)
@@ -67,8 +66,7 @@ int16_t sys_write(int fd, char *buffer, uint16_t count)
     }
 }
 
-int16_t sys_read(int fd, char *buffer, uint16_t count)
-{
+int16_t sys_read(int fd, char *buffer, uint16_t count) {
     if (fd < 0)
         return -2;
 
@@ -78,7 +76,7 @@ int16_t sys_read(int fd, char *buffer, uint16_t count)
         return -2;
 
     dataDescriptor_t dataD = current_process->dataDescriptors[fd];
-    if(dataD == NULL)
+    if (dataD == NULL)
         return -2;
 
     if (getMode_dataDescriptor(dataD) != READ_MODE)
@@ -111,19 +109,16 @@ int16_t sys_read(int fd, char *buffer, uint16_t count)
     }
 }
 
-
-
 void sys_clear_screen() {
     clear_screen();
 }
 
-void sys_exit(int status)
-{
+void sys_exit(int status) {
     exit_process(status);
 }
 
 uint8_t sys_gettime(time_rtc_t *struct_time, int utc_offset) {
-    //set_UTC_offset(utc_offset);
+    // set_UTC_offset(utc_offset);
     get_struct_time();
     return SUCCESS;
 }
@@ -149,12 +144,12 @@ int sys_kill(int pid) {
 }
 
 int sys_block(int pid) {
-    process_t *process = get_process(pid); 
+    process_t *process = get_process(pid);
     if (process != NULL) {
         process->status = WAITING;
         return SUCCESS;
     }
-    
+
     return ERROR;
 }
 
@@ -205,7 +200,7 @@ int sys_set_priority(int pid, int priority) {
     // else if (process->priority < LOWEST)
     //     process->priority = LOWEST;
     // else
-        process->priority = priority;
+    process->priority = priority;
     return SUCCESS;
 }
 
@@ -322,12 +317,12 @@ void sys_switch_screen_mode(int mode) {
 }
 
 void sleepms(int mseconds) {
-	int startTime = ticks_elapsed();
-	while (mseconds > ticks_elapsed() * 18 - startTime * 18)
-		_hlt();
+    int startTime = ticks_elapsed();
+    while (mseconds > ticks_elapsed() * 18 - startTime * 18)
+        _hlt();
 }
 
-char get_last_key(){
+char get_last_key() {
     return kbd_get_last_key();
 }
 

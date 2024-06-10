@@ -1,16 +1,15 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#include <testPipe.h>
 #include <infoPipe.h>
+#include <ipc.h>
+#include <std_io.h>
+#include <testPipe.h>
 #include <userland_pipe.h>
 #include <userland_semaphore.h>
-#include <std_io.h>
-#include <ipc.h>
 
 sem_ptr sem_shell;
 
-void process_left()
-{
+void process_left() {
     call_sem_wait(sem_shell);
     int fd[2];
     if (call_create_pipe("my_pipe", fd) == -1)
@@ -26,8 +25,7 @@ void process_left()
     call_exit(0);
 }
 
-void process_right()
-{
+void process_right() {
     int fd[2];
     call_sem_wait(sem_shell);
     if (call_open_pipe("my_pipe", fd) == -1)
@@ -45,8 +43,7 @@ void process_right()
     call_exit(0);
 }
 
-int test_pipes(int argc, char *argv[])
-{
+int test_pipes(int argc, char *argv[]) {
     sem_shell = call_sem_open("shell_sem", 1);
     call_run(process_left, 0, NULL);
     call_run(process_right, 0, NULL);

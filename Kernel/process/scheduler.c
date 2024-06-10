@@ -1,12 +1,12 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include "../include/process/scheduler.h"
+#include "../include/process/process.h"
 #include "interrupts/time/time.h"
 #include <circular_linked_list.h>
 #include <idtLoader.h>
 #include <lib/linked_list.h>
 #include <pmm.h>
-#include "../include/process/process.h"
-#include "../include/process/scheduler.h"
 #include <stdbool.h>
 
 #define PID_ERR        -1
@@ -77,13 +77,13 @@ pid_t wait_process(pid_t pid, int *status_ptr) {
     }
 }
 
-void sleep(void * channel) {
+void sleep(void *channel) {
     current_process->channel = channel;
     current_process->status = WAITING;
     _force_schedule();
 }
 
-int wakeup(void * channel) {
+int wakeup(void *channel) {
     process_t *target = cl_find(process_list, channel, search_by_channel);
     if (target == NULL)
         return PID_ERR;
@@ -197,7 +197,8 @@ process_t *get_foreground_process() {
 }
 
 int get_process_table(process_table_t *table) {
-    circular_list_iterator_t iterator = new_circular_list_iterator(process_list);
+    circular_list_iterator_t iterator =
+        new_circular_list_iterator(process_list);
 
     int row = 0;
     cl_subscribe_iterator(process_list, iterator);

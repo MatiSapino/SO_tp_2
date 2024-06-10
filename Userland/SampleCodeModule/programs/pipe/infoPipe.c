@@ -1,48 +1,42 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <infoPipe.h>
-#include <userland_pipe.h>
 #include <mem.h>
-#include <std_lib.h>
 #include <std_io.h>
+#include <std_lib.h>
 #include <string_s.h>
+#include <userland_pipe.h>
 
 #define MAX_PIPES 32
 
 int columns[7];
 
-static void print_tabs(int amount)
-{
+static void print_tabs(int amount) {
     char buffer[80] = {0};
     int i = 0;
-    while (i < amount)
-    {
+    while (i < amount) {
         buffer[i++] = ' ';
     }
     own_printf("%s", buffer);
 }
 
-static void print_header()
-{
-    own_printf("NAME           | BLOCKED | BLOCKED PIDS      | R_OPEN  | W_OPEN  | R   | W   \n");
+static void print_header() {
+    own_printf("NAME           | BLOCKED | BLOCKED PIDS      | R_OPEN  | "
+               "W_OPEN  | R   | W   \n");
 }
 
-static int get_spaces(char *str, int col)
-{
+static int get_spaces(char *str, int col) {
     return columns[col] - strlen(str);
 }
 
-static void pids_to_str(int pids[], char dest[], int size)
-{
+static void pids_to_str(int pids[], char dest[], int size) {
 
     int i = 0;
-    for (int j = 0; i < size; j++)
-    {
+    for (int j = 0; i < size; j++) {
         char aux[8] = {0};
         itoa(pids[j], aux, 10);
         int k = 0;
-        while (aux[k] != 0)
-        {
+        while (aux[k] != 0) {
             dest[i++] = aux[k++];
         }
         dest[i++] = ' ';
@@ -50,24 +44,20 @@ static void pids_to_str(int pids[], char dest[], int size)
     dest[i++] = '\0';
 }
 
-static void print_line(pipe_info_t *info)
-{
+static void print_line(pipe_info_t *info) {
 
     char aux[80] = {0};
 
     // NAME
     int len = 0;
-    if ((len = strlen(info->name)) > columns[0])
-    {
+    if ((len = strlen(info->name)) > columns[0]) {
         strcpy(aux, info->name);
         aux[columns[0] - 1] = '.';
         aux[columns[0] - 2] = '.';
         aux[columns[0] - 3] = '.';
         aux[columns[0]] = '\0';
         own_printf("%s ", aux);
-    }
-    else
-    {
+    } else {
         own_printf("%s ", info->name);
     }
     print_tabs(get_spaces(info->name, 0));
@@ -81,12 +71,9 @@ static void print_line(pipe_info_t *info)
 
     // BLOCKED_PIDS
     pids_to_str(info->blocked_pid, aux, info->blocked_count);
-    if (info->blocked_count == 0)
-    {
+    if (info->blocked_count == 0) {
         print_tabs(get_spaces("", 2));
-    }
-    else
-    {
+    } else {
         own_printf("%s", aux);
         print_tabs(get_spaces(aux, 2));
     }
@@ -117,8 +104,7 @@ static void print_line(pipe_info_t *info)
     putchar('\n');
 }
 
-static void init_columns_size()
-{
+static void init_columns_size() {
     columns[0] = strlen("NAME          ");
     columns[1] = strlen(" BLOCKED");
     columns[2] = strlen(" BLOCKED PIDS     ");
@@ -128,8 +114,7 @@ static void init_columns_size()
     columns[6] = strlen(" W  ");
 }
 
-void info_pipe(char *name)
-{
+void info_pipe(char *name) {
 
     pipe_info_t *pipe_info = (pipe_info_t *)call_malloc(sizeof(pipe_info_t));
     call_info_pipe(name, pipe_info);
@@ -141,12 +126,10 @@ void info_pipe(char *name)
     putchar('\n');
 }
 
-int info_all_pipes(int argc, char *argv[])
-{
+int info_all_pipes(int argc, char *argv[]) {
 
     pipe_info_t *arr[MAX_PIPES] = {0};
-    for (int i = 0; i < MAX_PIPES; i++)
-    {
+    for (int i = 0; i < MAX_PIPES; i++) {
         arr[i] = (pipe_info_t *)call_malloc(sizeof(pipe_info_t));
     }
     int amount = call_info_all_pipes(arr, MAX_PIPES);
@@ -154,15 +137,13 @@ int info_all_pipes(int argc, char *argv[])
     init_columns_size();
     print_header();
 
-    for (int i = 0; i < amount; i++)
-    {
+    for (int i = 0; i < amount; i++) {
         print_line(arr[i]);
     }
 
     putchar('\n');
 
-    for (int i = 0; i < MAX_PIPES; i++)
-    {
+    for (int i = 0; i < MAX_PIPES; i++) {
         call_free(arr[i]);
     }
 

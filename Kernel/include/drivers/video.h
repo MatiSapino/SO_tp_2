@@ -44,125 +44,125 @@ typedef struct position {
 } position_t;
 
 /**
- * @brief 
- * 
- * @param cursor_start 
- * @param cursor_end 
+ * @brief
+ *
+ * @param cursor_start
+ * @param cursor_end
  */
 void enable_cursor(uint8_t cursor_start, uint8_t cursor_end);
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void disable_cursor();
 
 /**
- * @brief 
- * 
- * @param pos 
+ * @brief
+ *
+ * @param pos
  */
 void move_cursor(position_t pos);
 
 /**
  * @brief Get the cursor position object
- * 
- * @return position_t 
+ *
+ * @return position_t
  */
 position_t get_cursor_position();
 
 /**
- * @brief 
- * 
- * @param string 
+ * @brief
+ *
+ * @param string
  */
 void print_string(const char *string);
 
 /**
- * @brief 
- * 
- * @param c 
+ * @brief
+ *
+ * @param c
  */
 void print_char(const char c);
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void print_new_line();
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void delete_char();
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void clear_screen();
 
 /**
- * @brief 
- * 
- * @param line 
+ * @brief
+ *
+ * @param line
  */
 void clear_line(int line);
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void scroll();
 
 /**
  * @brief Set the working area object
- * 
- * @param area 
+ *
+ * @param area
  */
 void set_working_area(area_t area);
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void enable_scroll();
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void disable_scroll();
 
 /**
  * @brief Set the background color
- * 
- * @param first_row 
- * @param first_col 
- * @param last_row 
- * @param last_col 
- * @param color 
+ *
+ * @param first_row
+ * @param first_col
+ * @param last_row
+ * @param last_col
+ * @param color
  */
 void set_background_color(int first_row, int first_col, int last_row,
                           int last_col, enum colors color);
 
 /**
  * @brief Set the foreground color
- * 
- * @param first_row 
- * @param first_col 
- * @param last_row 
- * @param last_col 
- * @param color 
+ *
+ * @param first_row
+ * @param first_col
+ * @param last_row
+ * @param last_col
+ * @param color
  */
 void set_foreground_color(int first_row, int first_col, int last_row,
                           int last_col, enum colors color);
 
 /**
  * @brief Get the current working area
- * 
- * @return area_t 
+ *
+ * @return area_t
  */
 area_t get_current_working_area();
 

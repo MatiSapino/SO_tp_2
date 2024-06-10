@@ -5,7 +5,7 @@
 int welcome(int argc, char *argv[]) {
     own_printf("Welcome to the shell\nType help to show all commands\n");
 
-    // puts(" Main commands: ");    
+    // puts(" Main commands: ");
     // puts(" help clear ps ");
     // puts(" mem sem loop ");
     // puts(" nice block cat ");

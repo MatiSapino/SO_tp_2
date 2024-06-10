@@ -1,9 +1,9 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+#include "../include/pipe/pipe.h"
 #include <lib.h>
 #include <lib/defs.h>
 #include <linked_list.h>
-#include "../include/pipe/pipe.h"
 #include <pmm.h>
 #include <scheduler.h>
 
@@ -38,18 +38,18 @@ static int comparison_function(void *pipe, void *name) {
     return !strcmp(pipe_test->name, name_test);
 }
 
-static int process_pipe_comparison_function(void * pid, void * other_pid){
+static int process_pipe_comparison_function(void *pid, void *other_pid) {
     return (*(int *)pid) == (*(int *)other_pid);
 }
 
-static void wakeup_helper(void * channel, list_ptr blocked_list) {
+static void wakeup_helper(void *channel, list_ptr blocked_list) {
     int pid = wakeup(channel);
     remove(blocked_list, (void *)&pid);
 }
 
-static void sleep_helper(void * channel,list_ptr blocked_list){
-    process_t * process = get_current_process();
-    add(blocked_list,&process->pid);
+static void sleep_helper(void *channel, list_ptr blocked_list) {
+    process_t *process = get_current_process();
+    add(blocked_list, &process->pid);
     sleep(channel);
 }
 

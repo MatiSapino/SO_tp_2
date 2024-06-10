@@ -4,9 +4,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define STDIN 0
-#define STDOUT 1
-#define STDERR 2
+#define STDIN           0
+#define STDOUT          1
+#define STDERR          2
 
 #define REG_SIZE        16
 #define REGISTERS_COUNT 18
@@ -86,7 +86,6 @@ int call_set_priority(int pid, int priority);
 int call_sleep_process(int seconds);
 int call_getpid();
 
-
 int call_switch_screen_mode(int mode);
 
 int getchar();
@@ -96,6 +95,5 @@ int puts(const char *str);
 int own_printf(char *str, ...);
 int own_scanf(char *str, ...);
 int call_get_fg_bg_status(int pid);
-
 
 #endif

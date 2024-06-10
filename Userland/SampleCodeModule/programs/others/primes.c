@@ -14,7 +14,7 @@ int primes(int argc, char *argv[]) {
         }
         n++;
     }
-    
+
     return 0;
 }
 

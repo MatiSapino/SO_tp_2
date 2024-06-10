@@ -73,6 +73,6 @@ int dup2(unsigned int oldfd, unsigned int newfd) {
     dataDescriptor_t aux = process->dataDescriptors[oldfd];
     process->dataDescriptors[oldfd] = process->dataDescriptors[newfd];
     process->dataDescriptors[newfd] = aux;
-   
+
     return 0;
 }

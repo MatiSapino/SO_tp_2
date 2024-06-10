@@ -37,7 +37,7 @@ static void show_registers(cpu_state_t registers) {
     own_printf("Last snapshot taken:\n");
     for (int i = 0; i < REGISTERS_COUNT; i++) {
         format_reg_str(reg_str, regs_values[i]);
-        own_printf("%s",registers_strings[i]);
+        own_printf("%s", registers_strings[i]);
         puts(reg_str);
     }
 }
@@ -49,7 +49,7 @@ int inforeg(int argc, char *argv[]) {
 
     if (!succeed) {
         own_printf("No snapshot to show.\n"
-               "Type \"help inforeg\" for more information.\n");
+                   "Type \"help inforeg\" for more information.\n");
         return -1;
     }
 

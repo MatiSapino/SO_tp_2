@@ -3,11 +3,10 @@
 #include <linked_list.h>
 #include <pmm.h>
 
-#define ERROR -1
+#define ERROR   -1
 #define SUCCESS 0
 
-typedef struct node_list_t
-{
+typedef struct node_list_t {
     void *data;
     struct node_list_t *next;
 } node_list_t;
@@ -57,7 +56,7 @@ void to_begin(list_t *l) {
     l->current = l->start;
 }
 
-int hasNext(list_t * l){
+int hasNext(list_t *l) {
     return l->current != NULL;
 }
 
@@ -85,8 +84,7 @@ void add(list_t *list, void *data) {
     list->size++;
 }
 
-int remove(list_t *list, void *data)
-{
+int remove(list_t *list, void *data) {
     list->start = delete_helper(list, list->start, data);
     list->size--;
     return SUCCESS;
@@ -108,15 +106,15 @@ void *find(list_t *list, void *data, int (*comp_funct)(void *, void *)) {
     return NULL;
 }
 
-static void free_list_helper(node_list_ptr node){
-    if (node == NULL){
+static void free_list_helper(node_list_ptr node) {
+    if (node == NULL) {
         return;
     }
     free_list_helper(node->next);
     kfree(node);
 }
 
-void free_list(list_ptr list){
+void free_list(list_ptr list) {
     free_list_helper(list->start);
     kfree(list);
 }

@@ -3,11 +3,9 @@
 #include <circular_linked_list.h>
 #include <stdlib.h>
 
-
 #define ERROR         -1
 #define SUCCESS       0
 #define MAX_ITERATORS 2
-
 
 typedef struct node_list_t *node_list_ptr;
 typedef struct node_list_t {

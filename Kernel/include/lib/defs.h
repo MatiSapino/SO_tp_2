@@ -1,7 +1,6 @@
 #ifndef _DEFS_H_
 #define _DEFS_H_
 
-
 #define ACS_PRESENT 0x80 // present segment
 #define ACS_CSEG    0x18 // code    segment
 #define ACS_DSEG    0x10 // data    segment
@@ -15,7 +14,6 @@
 #define ACS_DATA    (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
 #define ACS_STACK   (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
 
-#define EOF -1
-
+#define EOF         -1
 
 #endif

@@ -27,5 +27,4 @@ void help_invopcode();
 void help_welcome();
 void help_sem();
 
-
 #endif /* _HELP_H_ */

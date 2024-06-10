@@ -48,7 +48,6 @@ static void update_cursor_position() {
     outb(CRTC_DATA_PORT, (uint8_t)(pos >> 8));
 }
 
-
 void enable_cursor(uint8_t cursor_start, uint8_t cursor_end) {
     outb(CRTC_ADRESS_PORT, CURSOR_START_REGISTER);
     outb(CRTC_DATA_PORT, (inb(CRTC_DATA_PORT) & 0xC0) | cursor_start);

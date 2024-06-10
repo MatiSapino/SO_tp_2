@@ -1,8 +1,8 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include <std_io.h>
-#include <testUtil.h>
 #include <string_s.h>
+#include <testUtil.h>
 
 #define ERROR -1
 
@@ -24,15 +24,14 @@ int kill(int argc, char *argv[]) {
     if (status == ERROR) {
         own_printf("kill: process does not exist\n");
         return -1;
-    } 
+    }
     if (status == -2) {
         own_printf("kill: cannot kill a terminated process\n");
         return -1;
-    } 
-    if(pid == 0){
-        own_printf("kill: cannot kill shell\n");
     }
-    else {
+    if (pid == 0) {
+        own_printf("kill: cannot kill shell\n");
+    } else {
         call_kill(pid);
     }
 

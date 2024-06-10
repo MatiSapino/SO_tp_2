@@ -9,13 +9,9 @@
 #include <invopcode.h>
 #include <ipc.h>
 #include <kill.h>
-#include <mem.h>
-#include <userland_pipe.h>
-#include <userland_semaphore.h>
-#include <stdbool.h>
-#include <std_io.h>
-#include <string_s.h>
 #include <loop.h>
+#include <mem.h>
+#include <my_block.h>
 #include <nice.h>
 #include <phylo.h>
 #include <primes.h>
@@ -23,15 +19,19 @@
 #include <printmemstate.h>
 #include <printSems.h>
 #include <processStatus.h>
+#include <std_io.h>
+#include <stdbool.h>
+#include <string_s.h>
 #include <testinforeg.h>
-#include <testPipe.h>
 #include <testmm.h>
+#include <testPipe.h>
 #include <testprio.h>
 #include <testprocess.h>
 #include <testsync.h>
 #include <time.h>
+#include <userland_pipe.h>
+#include <userland_semaphore.h>
 #include <welcome.h>
-#include <my_block.h>
 
 #define LINE_LENGTH    512
 #define TOKEN_LENGTH   512
@@ -137,7 +137,6 @@ static int run_command(char *name, int argc, char *argv[]) {
     int pid = call_run(function, argc, argv);
     return pid;
 }
-
 
 static int gettoken(char **src, char *token, char *delimiters) {
     enum {
@@ -289,9 +288,9 @@ static void read_input(char *buffer) {
     own_printf("%c", PROMPT_SYMBOL);
     while ((c = getchar()) != '\n') {
         if (c == BACKSPACE_KEY) {
-                if (offset) {
+            if (offset) {
                 call_delete_char();
-                offset--;                                           // this is to not include the last char in the buffer 
+                offset--; // this is to not include the last char in the buffer
             }
         } else {
             putchar(c);
@@ -394,7 +393,8 @@ int shell() {
         read_input(cmd_buff);
         char *input = cmd_buff;
 
-        if (cmd_buff[0] == '\0')                            // if there is nothing in the buffer just go to the next iteration of the loop
+        if (cmd_buff[0] == '\0') // if there is nothing in the buffer just go to
+                                 // the next iteration of the loop
             continue;
 
         int pid = -1, proc_status = -1;

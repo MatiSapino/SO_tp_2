@@ -6,75 +6,75 @@
 #include <lib.h>
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void kbd_disable();
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void kbd_enable();
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void kbd_handler();
 
 /**
- * @brief 
- * 
+ * @brief
+ *
  */
 void kbd_clear_buffer();
 
 /**
- * @brief 
- * 
- * @return char* 
+ * @brief
+ *
+ * @return char*
  */
-int kbd_get_buffer(char * buffer_ret);
+int kbd_get_buffer(char *buffer_ret);
 
 /**
- * @brief 
- * 
- * @return uint16_t 
+ * @brief
+ *
+ * @return uint16_t
  */
 uint16_t kbd_get_current_index();
 
 /**
- * @brief 
- * 
- * @return char 
+ * @brief
+ *
+ * @return char
  */
 char kbd_get_last_key();
 
 /**
- * @brief 
- * 
- * @return char 
+ * @brief
+ *
+ * @return char
  */
 char kbd_get_rm_last_key();
 
 /**
- * @brief 
- * 
- * @return uint8_t 
+ * @brief
+ *
+ * @return uint8_t
  */
 uint8_t kbd_is_cntrl_pressed();
 
 /**
- * @brief 
- * 
- * @return uint8_t 
+ * @brief
+ *
+ * @return uint8_t
  */
 uint8_t kbd_is_save_reg_shortcut();
 
 /**
- * @brief 
- * 
- * @param listener 
+ * @brief
+ *
+ * @param listener
  */
 void kbd_sets_cntrl_listener(uint8_t *listener);
 

@@ -6,6 +6,7 @@
 #include <string_s.h>
 #include <testmm.h>
 #include <testUtil.h>
+#include <help.h> 
 
 #define MAX_BLOCKS 128
 
@@ -15,18 +16,24 @@ typedef struct MM_rq {
 } mm_rq;
 
 int testmm(int argc, char *argv[]) {
+    int flag = 0;
     mm_rq mm_rqs[MAX_BLOCKS];
     uint8_t rq;
     uint32_t total;
     uint64_t max_memory;
 
-    if (argc != 2) {
-        own_printf("testmm: error argc\n");
-        return -1;
+    if (argc != 2){
+        own_printf("argument amount is incorrect\n");
+        flag++;
     }
 
     if ((max_memory = satoi(argv[1])) <= 0) {
-        own_printf("testmm: error max_mem\n");
+        own_printf("memory amount is not valid - memory amount must be a positive number\n\n");
+        flag++;
+    }
+
+    if (flag > 0){
+        help_testmm();
         return -1;
     }
 

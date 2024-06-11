@@ -6,13 +6,13 @@
 
 char *command_names_array[100] = {
     "help",     "clear",   "time",      "fibonacci", "primes",  "ps",
-    "mem",      "sem",     "sem",       "kill",      "nice",    "block",
+    "mem",      "sem",     "kill",      "nice",    "block",
     "cat",      "wc",      "filter",    "pipe",      "phylo",   "loop",
     "printmem", "divzero", "invopcode", "welcome", "testmm", "testproc", "testprio", "testsync"};
 
 void (*command_functions_array[100])(void) = {
     help_help,      help_clear,   help_time,    help_fibonacci,  help_primes,
-    help_ps,        help_mem,     help_sem,     help_sem,        help_kill,
+    help_ps,        help_mem,    help_sem,        help_kill,
     help_nice,      help_block,   help_cat,     help_wc,         help_filter,
     help_pipe,      help_phylo,   help_loop,    help_printmem,   help_divzero,
     help_invopcode, help_welcome, help_testmm, help_testproc, help_testprio, help_testsync};

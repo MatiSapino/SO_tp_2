@@ -4,6 +4,7 @@
 #include <testsync.h>
 #include <testUtil.h>
 #include <userland_semaphore.h>
+#include <help.h> 
 
 #define SEM_ID               "sem"
 #define TOTAL_PAIR_PROCESSES 2
@@ -19,20 +20,10 @@ void slowInc(int64_t *p, int inc) {
 }
 
 int myprocinc(int argc, char *argv[]) {
-    uint64_t n;
-    int8_t inc;
-    int8_t use_sem;
+    uint64_t n = satoi(argv[1]);
+    int8_t inc = satoi(argv[2]);
+    int8_t use_sem = satoi(argv[3]);
     sem_ptr sem = NULL;
-
-    if (argc != 4)
-        return -1;
-
-    if ((n = satoi(argv[1])) <= 0)
-        return -1;
-    if ((inc = satoi(argv[2])) == 0)
-        return -1;
-    if ((use_sem = satoi(argv[3])) != 0  && use_sem != 1)
-        return -1;
 
     if (use_sem)
         if (!(sem = call_sem_open(SEM_ID, 1))) {
@@ -56,31 +47,33 @@ int myprocinc(int argc, char *argv[]) {
 }
 
  int test_sync(int argc, char *argv[]) {
+    int flag = 0;
 
-    if (argc < 3) {
-        own_printf("test_sync: missing arguments\n");
-        return -1;
-    }
-
-    if (argc > 4) {
-        own_printf("test_sync: too many arguments\n");
-        return -1;
+    if (argc != 4){
+        own_printf("argument amount is incorrect\n");
+        flag++;
     }
 
     if (satoi(argv[1]) <= 0) {
-        own_printf("test_sync: increment value is not a valid\n");
-        return -1;
+        own_printf("increment value is not valid - increment must be a positive number\n\n");
+        flag++;
     }
 
-    if (satoi(argv[2]) < 0) {
-        own_printf("test_sync: process amount value is not a valid\n");
-        return -1;
+    if (satoi(argv[2]) <= 0) {
+        own_printf("process amount value is not valid - process amount must be a positive number\n\n");
+        flag++;
     }
 
     if (satoi(argv[3]) != 0  && satoi(argv[3]) != 1){
-        own_printf("test_sync: uses_sem value is not a valid\n");
+        own_printf("uses_sem value is not valid - uses_sem must be 1 or 0\n\n");
+        flag++;
+    }
+
+    if (flag > 0){
+        help_testsync();
         return -1;
     }
+    
 
     int exit_status;
     int pids[2 * TOTAL_PAIR_PROCESSES];

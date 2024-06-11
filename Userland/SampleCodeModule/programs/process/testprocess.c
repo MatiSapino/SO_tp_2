@@ -3,6 +3,7 @@
 #include <std_io.h>
 #include <testprocess.h>
 #include <testUtil.h>
+#include <help.h>
 
 typedef struct P_rq {
     int pid;
@@ -10,17 +11,27 @@ typedef struct P_rq {
 } p_rq;
 
 int test_proc(int argc, char *argv[]) {
+    int flag = 0;
     uint8_t rq;
     uint8_t alive = 0;
     uint8_t action;
     uint64_t max_processes;
     char *argvAux[] = {"test-proc"};
 
-    if (argc != 2)
-        return -1;
+    if (argc != 2){
+        own_printf("argument amount is incorrect\n");
+        flag++;
+    }
 
-    if ((max_processes = satoi(argv[1])) <= 0)
+    if ((max_processes = satoi(argv[1])) <= 0){
+        own_printf("process amount value is not valid - process amount must be a positive number\n\n");
+        flag++;
+    }
+
+    if (flag > 0){
+        help_testproc();
         return -1;
+    }
 
     p_rq p_rqs[max_processes];
 

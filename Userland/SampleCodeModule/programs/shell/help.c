@@ -80,7 +80,7 @@ void help_help() {
 }
 
 void help_printmem() {
-    own_printf("Command:\n    printmem       Prints memory contents.\n");
+    own_printf("Command:\n    printmem [Lowest memory value]      Prints memory contents from the position given.\n");
 }
 
 

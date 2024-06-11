@@ -4,21 +4,23 @@
 #include <std_io.h>
 #include <string_s.h>
 #include <testUtil.h>
+#include <help.h> 
 
 #define ERROR -1
 
 int block(int argc, char *argv[]) {
-    if (argc < 2) {
-        own_printf("block: missing arguments\n");
-        return -1;
+    int flag = 0;
+    int pid;
+    if (argc != 2){
+        own_printf("argument amount is incorrect\n");
+        flag++;
     }
-    if (argc > 2) {
-        own_printf("block: too many arguments\n");
-        return -1;
+    if ((pid = satoi(argv[1])) <= 0) {
+        own_printf("not a valid pid - cannot block shell\n\n");
+        flag++;
     }
-    int pid = satoi(argv[1]);
-    if ((pid == 0 && strcmp("0", argv[1]) != 0) || pid < 0) {
-        own_printf("block: not a valid pid\n");
+    if (flag > 0){
+        help_block();
         return -1;
     }
     int status = call_get_proc_status(pid);

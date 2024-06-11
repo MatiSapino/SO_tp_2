@@ -4,24 +4,30 @@
 #include <std_io.h>
 #include <string_s.h>
 #include <testUtil.h>
+#include <help.h>
 
 #define ERROR -1
 
 int nice(int argc, char *argv[]) {
-    if (argc < 3) {
-        own_printf("nice: missing arguments\n");
-        return -1;
-    }
-    if (argc > 3) {
-        own_printf("nice: too many arguments\n");
-        return -1;
-    }
+    int flag = 0;
     int pid = satoi(argv[1]);
-    if ((pid == 0 && strcmp("0", argv[1]) != 0) || pid < 0) {
-        own_printf("nice: not a valid pid\n");
+    int priority = satoi(argv[2]);
+    if (argc != 3){
+        own_printf("argument amount is incorrect\n");
+        flag++;
+    }
+    if (pid <= 0) {
+        own_printf("not a valid pid - cannot change shell priority\n\n");
+        flag++;
+    }
+    if (priority < 1 || priority > 10) {
+        own_printf("not a valid priority - priority must be between 1-10\n\n");
+        flag++;
+    }
+    if (flag > 0){
+        help_nice();
         return -1;
     }
-    int priority = satoi(argv[2]);
     int ret = call_set_priority(pid, priority);
     if (ret == ERROR) {
         own_printf("nice: process does not exist\n");

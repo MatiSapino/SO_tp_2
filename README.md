@@ -32,9 +32,14 @@
     ```
 
 4. Build the Toolchain and Kernel from the project root directory:
+   Without BUDDY: 
     ```
     ./build.sh
     ```
+   With BUDDY: 
+    ```
+    ./build.sh MEMFLAGS=-DBUDDY
+    ``` 
     
 # Booting   
 To boot the OS, type the following command inside project root directory:

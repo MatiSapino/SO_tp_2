@@ -6,9 +6,6 @@ SOURCES_ASM=$(wildcard asm/*.asm)
 OBJECTS=$(SOURCES:.c=.o)
 OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
 LOADERSRC=loader.asm
-# Uncomment to use buddy memory allocator
-# MEMFLAGS=-D BUDDY
-MEMFLAGS=
 
 LOADEROBJECT=$(LOADERSRC:.asm=.o)
 STATICLIBS=

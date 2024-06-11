@@ -3,6 +3,7 @@
 #include <printmem.h>
 #include <std_io.h>
 #include <std_lib.h>
+#include <help.h>
 
 #define PRINT_SIZE 32 // number of bytes
 
@@ -10,9 +11,25 @@ int printmem(int argc, char *argv[]) {
     uint8_t buffer[PRINT_SIZE];
     char *endp;
     long address = strtol(argv[1], &endp, 16);
+    int flag = 0;
+
+    if(argc < 2){
+        own_printf("Invalid argument. Needs to specify memory position\n");
+        flag++;
+    }
+
+    if(argv[1] < 0){
+        own_printf("Invalid argument. Cannot have a negative memory position\n");
+        flag++;
+    }
 
     if (*endp != '\0') {
         own_printf("Invalid argument.\n");
+        flag++;
+    }
+
+    if(flag != 0){
+        help_printmem();
         return -1;
     }
 

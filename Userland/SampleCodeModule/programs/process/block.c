@@ -10,12 +10,11 @@
 
 int block(int argc, char *argv[]) {
     int flag = 0;
-    int pid;
+    int pid = satoi(argv[1]);
     if (argc != 2){
         own_printf("argument amount is incorrect\n");
         flag++;
-    }
-    if ((pid = satoi(argv[1])) <= 0) {
+    } else if (pid <= 0) {
         own_printf("not a valid pid - cannot block shell\n\n");
         flag++;
     }

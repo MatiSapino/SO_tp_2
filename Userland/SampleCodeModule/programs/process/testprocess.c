@@ -15,15 +15,13 @@ int test_proc(int argc, char *argv[]) {
     uint8_t rq;
     uint8_t alive = 0;
     uint8_t action;
-    uint64_t max_processes;
+    uint64_t max_processes = satoi(argv[1]);
     char *argvAux[] = {"test-proc"};
 
     if (argc != 2){
         own_printf("argument amount is incorrect\n");
         flag++;
-    }
-
-    if ((max_processes = satoi(argv[1])) <= 0){
+    } else if (max_processes <= 0){ 
         own_printf("process amount value is not valid - process amount must be a positive number\n\n");
         flag++;
     }

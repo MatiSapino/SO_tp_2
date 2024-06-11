@@ -52,21 +52,21 @@ int myprocinc(int argc, char *argv[]) {
     if (argc != 4){
         own_printf("argument amount is incorrect\n");
         flag++;
-    }
+    } else {
+        if (satoi(argv[1]) <= 0) {
+            own_printf("increment value is not valid - increment must be a positive number\n\n");
+            flag++;
+        }
 
-    if (satoi(argv[1]) <= 0) {
-        own_printf("increment value is not valid - increment must be a positive number\n\n");
-        flag++;
-    }
+        if (satoi(argv[2]) <= 0) {
+            own_printf("process amount value is not valid - process amount must be a positive number\n\n");
+            flag++;
+        }
 
-    if (satoi(argv[2]) <= 0) {
-        own_printf("process amount value is not valid - process amount must be a positive number\n\n");
-        flag++;
-    }
-
-    if (satoi(argv[3]) != 0  && satoi(argv[3]) != 1){
-        own_printf("uses_sem value is not valid - uses_sem must be 1 or 0\n\n");
-        flag++;
+        if (satoi(argv[3]) != 0  && satoi(argv[3]) != 1){
+            own_printf("uses_sem value is not valid - uses_sem must be 1 or 0\n\n");
+            flag++;
+        }
     }
 
     if (flag > 0){

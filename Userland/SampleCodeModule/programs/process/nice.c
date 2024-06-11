@@ -15,14 +15,15 @@ int nice(int argc, char *argv[]) {
     if (argc != 3){
         own_printf("argument amount is incorrect\n");
         flag++;
-    }
-    if (pid <= 0) {
-        own_printf("not a valid pid - cannot change shell priority\n\n");
-        flag++;
-    }
-    if (priority < 1 || priority > 10) {
-        own_printf("not a valid priority - priority must be between 1-10\n\n");
-        flag++;
+    } else {
+        if (pid <= 0) {
+            own_printf("not a valid pid - cannot change shell priority\n\n");
+            flag++;
+        }
+        if (priority < 1 || priority > 10) {
+            own_printf("not a valid priority - priority must be between 1-10\n\n");
+            flag++;
+        }
     }
     if (flag > 0){
         help_nice();

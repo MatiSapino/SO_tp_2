@@ -25,9 +25,7 @@ int testmm(int argc, char *argv[]) {
     if (argc != 2){
         own_printf("argument amount is incorrect\n");
         flag++;
-    }
-
-    if ((max_memory = satoi(argv[1])) <= 0) {
+    } else if ((max_memory = satoi(argv[1])) <= 0) {
         own_printf("memory amount is not valid - memory amount must be a positive number\n\n");
         flag++;
     }

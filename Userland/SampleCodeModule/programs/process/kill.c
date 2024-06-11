@@ -10,32 +10,25 @@
 int kill(int argc, char *argv[]) {
     int flag = 0;
     int pid = satoi(argv[1]);
-    if (argc < 2) {
-        own_printf("kill: missing arguments\n");
+    if (argc != 2){
+        own_printf("argument amount is incorrect\n");
         flag++;
-    }
-
-    else{
-        if (argc > 2) {
-        own_printf("kill: too many arguments\n");
-        flag++;
-        }
-    
-        if ((pid == 0 && strcmp("0", argv[1]) != 0) || pid < 0) {
-            own_printf("kill: not a valid pid\n");
+    } else{
+        if (pid < 0) {
+            own_printf("not a valid pid - pid must be a positive value\n\n");
             flag++;
         }
         int status = call_get_proc_status(pid);
         if (status == ERROR) {
-            own_printf("kill: process does not exist\n");
+            own_printf("process does not exist\n");
             flag++;
         }
         if (status == -2) {
-            own_printf("kill: cannot kill a terminated process\n");
+            own_printf("cannot kill a terminated process\n");
             flag++;
         }
         if (pid == 0) {
-            own_printf("kill: cannot kill shell\n");
+            own_printf("cannot kill shell\n");
             flag++;
         } 
     }

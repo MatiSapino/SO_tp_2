@@ -107,7 +107,10 @@ void philosopher(int argc, char *argv[]) {
 
 void receptionist() {
     int c, exit_loop = 1;
-    while((c = getchar()) != EOF && exit_loop) {      
+    while((c = getchar()) != EOF && exit_loop){
+
+        // own_printf("%c\n",c);
+        
         switch (c)
         {
         case 'A':
@@ -121,6 +124,7 @@ void receptionist() {
         case 'Q':
         case 'q':
             exit_loop = 0;
+            // somehow quit
            break;
             break;
         default:

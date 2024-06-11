@@ -140,8 +140,7 @@ void help_phylo() {
 }
 
 void help_loop() {
-    own_printf("Command:\n loop [seconds]    Prints \"Hello World!\" in a loop "
-               "for the amount of seconds written          \n");
+    own_printf("Command:\n loop [seconds]    Prints \"Hello World!\" in a loop every [seconds] amount of time          \n");
 }
 
 void help_testmm(){

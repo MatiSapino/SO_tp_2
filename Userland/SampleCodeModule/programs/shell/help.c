@@ -125,7 +125,7 @@ void help_block() {
 
 void help_cat() {
     own_printf(
-        "Command:\n cat          Prints through stdout the input recieved\n");
+        "Command:\n cat          Prints through stdout the file recieved\n");
 }
 
 void help_wc() {
@@ -148,7 +148,7 @@ void help_testmm(){
 }
 
 void help_testproc(){
-    own_printf("Command:\n testproc [process_amount]     Creates, kills and modifies processes randomly\n");
+    own_printf("Command:\n testproc [process_to_create]     Creates, kills and modifies processes randomly\n");
 }
 
 void help_testprio(){

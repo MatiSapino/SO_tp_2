@@ -3,6 +3,7 @@
 #include <process.h>
 #include <std_io.h>
 #include <testUtil.h>
+#include <mem.h> 
 
 // Random
 static uint32_t m_z = 362436069;
@@ -29,6 +30,35 @@ uint8_t memcheck(void *start, uint8_t value, uint32_t size) {
             return 0;
 
     return 1;
+}
+
+size_t strlen_custom(const char* str) {
+    size_t length = 0;
+    while (str[length] != '\0') {
+        length++;
+    }
+    return length;
+}
+
+char * concat(const char* str1, const char* str2) {
+    char* result;
+    // Find the length of the input strings
+    size_t len1 = strlen_custom(str1);
+    size_t len2 = strlen_custom(str2);
+    result = call_malloc(sizeof(char)*(len1+len2));
+    // Copy the first string to the result
+    for (size_t i = 0; i < len1; i++) {
+        result[i] = str1[i];
+    }
+
+    // Append the second string to the result
+    for (size_t i = 0; i < len2; i++) {
+        result[len1 + i] = str2[i];
+    }
+
+    // Null-terminate the concatenated string
+    result[len1 + len2] = '\0';
+    return result;
 }
 
 // Parameters
@@ -62,8 +92,10 @@ void bussy_wait(uint64_t n) {
 }
 
 void endless_loop() {
-    while (1)
-        ;
+    int wait = 100000;
+    while (1){
+        bussy_wait(wait);
+    }
 }
 
 void endless_loop_print(uint64_t wait) {

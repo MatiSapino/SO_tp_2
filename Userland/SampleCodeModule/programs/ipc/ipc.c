@@ -6,7 +6,7 @@
 #define TO_UPPER(X) ((X) - ('a' - 'A'))
 #define IS_VOWEL(X)                                                            \
     (TO_UPPER(X) == 'A' || TO_UPPER(X) == 'E' || TO_UPPER(X) == 'I' ||         \
-     TO_UPPER(X) == 'O' || TO_UPPER(X) == 'U')
+     TO_UPPER(X) == 'O' || TO_UPPER(X) == 'U' || X == 'A' || X == 'E' || X == 'I' || X == 'O' || X == 'U')
 #define SIZE_BUFFER 2048
 
 int filter(int argc, char *argv[]) {

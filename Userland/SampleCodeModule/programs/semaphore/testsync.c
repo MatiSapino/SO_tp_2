@@ -31,7 +31,7 @@ int myprocinc(int argc, char *argv[]) {
         return -1;
     if ((inc = satoi(argv[2])) == 0)
         return -1;
-    if ((use_sem = satoi(argv[3])) < 0)
+    if ((use_sem = satoi(argv[3])) != 0  && use_sem != 1)
         return -1;
 
     if (use_sem)
@@ -68,12 +68,17 @@ int myprocinc(int argc, char *argv[]) {
     }
 
     if (satoi(argv[1]) <= 0) {
-        own_printf("test_sync: increment is not a valid argument\n");
+        own_printf("test_sync: increment value is not a valid\n");
         return -1;
     }
 
     if (satoi(argv[2]) < 0) {
-        own_printf("test_sync: use_sem is not a valid argument\n");
+        own_printf("test_sync: process amount value is not a valid\n");
+        return -1;
+    }
+
+    if (satoi(argv[3]) != 0  && satoi(argv[3]) != 1){
+        own_printf("test_sync: uses_sem value is not a valid\n");
         return -1;
     }
 
@@ -81,10 +86,10 @@ int myprocinc(int argc, char *argv[]) {
     int pids[2 * TOTAL_PAIR_PROCESSES];
     global = 0;
 
-    char *argvDec[] = {"myprocinc", argv[1], "-1", argv[2]};
-    char *argvInc[] = {"myprocinc", argv[1], "1", argv[2]};
+    char *argvDec[] = {"myprocinc", argv[2], concat("-", argv[1]) , argv[3]};
+    char *argvInc[] = {"myprocinc", argv[2], argv[1], argv[3]};
 
-    uint64_t i;
+    uint64_t i; 
     for (i = 0; i < TOTAL_PAIR_PROCESSES; i++) {
         pids[i] = call_run(myprocinc, 4, argvDec);
         pids[i + TOTAL_PAIR_PROCESSES] = call_run(myprocinc, 4, argvInc);

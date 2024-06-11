@@ -69,7 +69,8 @@ int own_printf(char *str, ...) {
                     break;
                 }
                 case 'l': {
-                    if (str[i+1] == 'd') {
+                    i++;
+                    if (str[i] == 'd') {
                         ltoa(va_arg(vl, long), tmp, 10);
                         strcpy(&buff[j], tmp);
                         j += strlen(tmp);

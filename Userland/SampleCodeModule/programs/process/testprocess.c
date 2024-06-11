@@ -14,7 +14,7 @@ int test_proc(int argc, char *argv[]) {
     uint8_t alive = 0;
     uint8_t action;
     uint64_t max_processes;
-    char *argvAux[] = {"endless"};
+    char *argvAux[] = {"test-proc"};
 
     if (argc != 2)
         return -1;
@@ -34,6 +34,7 @@ int test_proc(int argc, char *argv[]) {
                 own_printf("test_processes: ERROR creating process\n");
                 return -1;
             } else {
+                own_printf("pid: %d Created and Ready\n", p_rqs[rq].pid);
                 p_rqs[rq].state = READY;
                 alive++;
             }
@@ -55,6 +56,7 @@ int test_proc(int argc, char *argv[]) {
                                     "test_processes: ERROR killing process\n");
                                 return -1;
                             }
+                            own_printf("pid: %d Killed\n", p_rqs[rq].pid);
                             call_wait();
                             p_rqs[rq].state = TERMINATED;
                             alive--;
@@ -68,6 +70,7 @@ int test_proc(int argc, char *argv[]) {
                                     "test_processes: ERROR blocking process\n");
                                 return -1;
                             }
+                            own_printf("pid: %d Waiting\n", p_rqs[rq].pid);
                             p_rqs[rq].state = WAITING;
                         }
                         break;
@@ -82,8 +85,11 @@ int test_proc(int argc, char *argv[]) {
                             "test_processes: ERROR unblocking process\n");
                         return -1;
                     }
+                    own_printf("pid: %d Ready\n", p_rqs[rq].pid);
+
                     p_rqs[rq].state = READY;
                 }
         }
     }
+    return 0;
 }

@@ -10,5 +10,7 @@ int64_t satoi(char *str);
 void bussy_wait(uint64_t n);
 void endless_loop();
 void endless_loop_print(uint64_t wait);
+char * concat(const char* str1, const char* str2);
+size_t strlen_custom(const char* str);
 
 #endif

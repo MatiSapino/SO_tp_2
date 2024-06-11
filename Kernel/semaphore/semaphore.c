@@ -78,7 +78,6 @@ int sem_wait(sem_ptr sem) {
     acquire(&sem->lock);
     sem->value--;
     if (sem->value < 0) {
-        // TODO: check
         process_t *current_process = get_current_process();
         add(sem->blocked_processes, &current_process->pid);
         release(&sem->lock);

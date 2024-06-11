@@ -84,7 +84,7 @@ int64_t syscall_dispatcher(uint64_t arg0, uint64_t arg1, uint64_t arg2,
             return sys_dup2((unsigned int)arg0, (unsigned int)arg1);
         case 31:
             return (int64_t)sys_malloc(
-                (size_t)arg0); // casteo puede romper todo
+                (size_t)arg0); 
         case 32:
             sys_free((void *)arg0);
             break;

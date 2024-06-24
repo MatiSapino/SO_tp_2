@@ -44,5 +44,5 @@
 # Booting   
 To boot the OS, type the following command inside project root directory:
    ```
-   ./run.sh
+   sudo ./run.sh
    ```
